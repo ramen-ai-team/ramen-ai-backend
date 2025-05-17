@@ -51,14 +51,17 @@ test:
 production:
   primary: &primary_production
     <<: *default
-    database: ramen_ai_backend_production
-    username: ramen_ai_backend
-    password: <%= ENV["RAMEN_AI_BACKEND_DATABASE_PASSWORD"] %>
-  cache:
-    <<: *primary_production
-    database: ramen_ai_backend_production_cache
-    migrations_paths: db/cache_migrate
-  queue:
-    <<: *primary_production
-    database: ramen_ai_backend_production_queue
-    migrations_paths: db/queue_migrate
+production:
+  <<: *default
+  database: <%= ENV["PRODUCTION_DB_NAME"] %>
+  username: <%= ENV["PRODUCTION_DB_USERNAME"] %>
+  password: <%= Rails.application.credentials.gcp[:db_password] %>
+  host: "<%= ENV.fetch('DB_SOCKET_DIR') { '/cloudsql' } %>/<%= ENV['CLOUD_SQL_CONNECTION_NAME'] %>"
+  # cache:
+  #   <<: *primary_production
+  #   database: ramen_ai_backend_production_cache
+  #   migrations_paths: db/cache_migrate
+  # queue:
+  #   <<: *primary_production
+  #   database: ramen_ai_backend_production_queue
+  #   migrations_paths: db/queue_migrate

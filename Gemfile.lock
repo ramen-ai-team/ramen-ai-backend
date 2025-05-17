@@ -346,6 +346,7 @@ DEPENDENCIES
   bootsnap
   brakeman
   debug
+  dotenv
   factory_bot_rails
   kamal
   mysql2 (~> 0.5)
