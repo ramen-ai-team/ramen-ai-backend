@@ -24,3 +24,6 @@ Layout/LineLength:
   AllowedPatterns: ['\A#']
   Exclude:
     - "db/migrate/*.rb"
+
+Layout/SpaceInsideArrayLiteralBrackets:
+  EnforcedStyle: no_space
