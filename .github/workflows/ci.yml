@@ -7,34 +7,6 @@ on:
   pull_request:
 
 jobs:
-  test:
-    env:
-      RAILS_ENV: test
-
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Set up Ruby
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: '3.2' # Adjust to your Ruby version
-
-      - name: Cache bundle
-        uses: actions/cache@v3
-        with:
-          path: vendor/bundle
-          key: ${{ runner.os }}-bundle-${{ hashFiles('**/Gemfile.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-bundle-
-
-      - name: Install dependencies
-        run: |
-          gem install bundler
-          bundle install --jobs 4 --retry 3
-
   rubocop:
     runs-on: ubuntu-latest
 
@@ -45,20 +17,8 @@ jobs:
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: '3.2' # Adjust to your Ruby version
-
-      - name: Cache bundle
-        uses: actions/cache@v3
-        with:
-          path: vendor/bundle
-          key: ${{ runner.os }}-bundle-${{ hashFiles('**/Gemfile.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-bundle-
-
-      - name: Install dependencies
-        run: |
-          gem install bundler
-          bundle install --jobs 4 --retry 3
+          ruby-version: '.tool-versions'
+          bundler-cache: true
 
       - name: Run RuboCop
         run: |
@@ -66,6 +26,8 @@ jobs:
 
   rspec:
     runs-on: ubuntu-latest
+    env:
+      RAILS_ENV: test
 
     steps:
       - name: Checkout code
@@ -74,20 +36,8 @@ jobs:
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: '3.2' # Adjust to your Ruby version
-
-      - name: Cache bundle
-        uses: actions/cache@v3
-        with:
-          path: vendor/bundle
-          key: ${{ runner.os }}-bundle-${{ hashFiles('**/Gemfile.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-bundle-
-
-      - name: Install dependencies
-        run: |
-          gem install bundler
-          bundle install --jobs 4 --retry 3
+          ruby-version: '.tool-versions'
+          bundler-cache: true
 
       - name: Set up database
         run: |
