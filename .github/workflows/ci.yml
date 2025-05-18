@@ -7,27 +7,18 @@ on:
   pull_request:
 
 jobs:
-  rubocop:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Set up Ruby
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: '.tool-versions'
-          bundler-cache: true
-
-      - name: Run RuboCop
-        run: |
-          bundle exec rubocop
-
-  rspec:
+  build:
     runs-on: ubuntu-latest
     env:
       RAILS_ENV: test
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: password1234
+        ports:
+          - 3306:3306
+        options: --health-cmd "mysqladmin ping" --health-interval 10s --health-timeout 5s --health-retries 10
 
     steps:
       - name: Checkout code
@@ -41,7 +32,12 @@ jobs:
 
       - name: Set up database
         run: |
+          cp config/database.yml.ci config/database.yml
           bin/rails db:prepare
+
+      - name: Run RuboCop
+        run: |
+          bundle exec rubocop
 
       - name: Run RSpec
         run: |
