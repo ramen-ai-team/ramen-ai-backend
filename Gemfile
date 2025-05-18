@@ -20,6 +20,8 @@ gem "thruster", require: false
 
 gem "dotenv"
 
+gem "pagy"
+
 # Use Rack CORS for handling Cross-Origin Resource Sharing (CORS), making cross-origin Ajax possible
 # gem "rack-cors"
 
@@ -35,6 +37,9 @@ group :development do
   gem "rubocop-performance", require: false
   gem "rubocop-rspec", require: false
   gem "rubocop-rails-omakase", require: false
+
+  gem "better_errors"
+  gem "binding_of_caller"
 end
 
 group :test do
