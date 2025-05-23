@@ -56,8 +56,8 @@ production:
   database: <%= ENV["PRODUCTION_DB_NAME"] %>
   username: <%= ENV["PRODUCTION_DB_USERNAME"] %>
   password: <%= Rails.application.credentials.dig(:gcp, :db_password) %>
-  host: 127.0.0.1
-  # socket: "<%= ENV.fetch('DB_SOCKET_DIR') { '/cloudsql' } %>/<%= ENV['CLOUD_SQL_CONNECTION_NAME'] %>"
+  socket: "<%= ENV.fetch('DB_SOCKET_DIR') { '/cloudsql' } %>/<%= ENV['CLOUD_SQL_CONNECTION_NAME'] %>"
+  host: localhost
   # cache:
   #   <<: *primary_production
   #   database: ramen_ai_backend_production_cache
