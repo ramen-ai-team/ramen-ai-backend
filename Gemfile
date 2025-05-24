@@ -30,6 +30,7 @@ group :development, :test do
 
   gem "brakeman", require: false
   gem "factory_bot_rails"
+  gem "rspec-rails"
 end
 
 group :development do
@@ -41,8 +42,4 @@ group :development do
 
   gem "better_errors"
   gem "binding_of_caller"
-end
-
-group :test do
-  gem "rspec-rails"
 end
