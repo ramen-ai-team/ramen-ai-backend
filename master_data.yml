@@ -1,0 +1,43 @@
+genres:
+  - name: "ラーメン"
+  - name: "つけ麺"
+  - name: "油そば"
+
+noodles:
+  - name: "細麺"
+  - name: "太麺"
+  - name: "縮れ麺"
+  - name: "手打ち麺"
+
+soups:
+  - name: "醤油"
+  - name: "味噌"
+  - name: "塩"
+  - name: "鶏ガラ"
+  - name: "豚骨"
+  - name: "魚介"
+  - name: "担々麺"
+  - name: "家系"
+  - name: "二郎系"
+
+shops:
+  - name: "ラーメン太郎"
+  - name: "ラーメン花子"
+  - name: "ラーメン二郎 生田店"
+
+menus:
+  - shop: "ラーメン太郎"
+    name: "醤油ラーメン"
+    genre: "ラーメン"
+    noodle: "細麺"
+    soup: "鶏ガラ"
+  - shop: "ラーメン花子"
+    name: "魚介つけ麺"
+    genre: "つけ麺"
+    noodle: "太麺"
+    soup: "魚介"
+  - shop: "ラーメン二郎 生田店"
+    name: "小ラーメン"
+    genre: "ラーメン"
+    noodle: "太麺"
+    soup: "二郎系"

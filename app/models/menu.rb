@@ -6,4 +6,6 @@ class Menu < ApplicationRecord
   has_one :noodle, through: :menu_noodle
   has_one :menu_soup, dependent: :destroy
   has_one :soup, through: :menu_soup
+
+  validates :name, presence: true
 end
