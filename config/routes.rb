@@ -7,6 +7,10 @@ Rails.application.routes.draw do
 
   root "application#top"
 
-  resources :shops
-  resources :random_menus, only: [:index]
+  namespace :api do
+    namespace :v1 do
+      resources :shops
+      resources :random_menus, only: [:index]
+    end
+  end
 end

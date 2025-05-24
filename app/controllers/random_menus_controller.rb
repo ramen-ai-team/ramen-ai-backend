@@ -1,8 +1,0 @@
-class RandomMenusController < ApplicationController
-  def index
-    pagy, menus = pagy(Menu.order("RAND()"))
-    menu_list = ApiEntity::MenuList.new(menus:)
-    pagy_headers_merge(pagy)
-    render json: menu_list, status: :ok
-  end
-end
