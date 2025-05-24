@@ -18,7 +18,7 @@ module Api
         @shop = Shop.new(shop_params)
 
         if @shop.save
-          render json: ApiEntity::Shop.new(shop: @shop), status: :created, location: @shop
+          render json: ApiEntity::Shop.new(shop: @shop), status: :created, location: api_v1_shop_url(@shop)
         else
           render json: @shop.errors, status: :unprocessable_entity
         end
