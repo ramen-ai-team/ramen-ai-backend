@@ -8,4 +8,5 @@ Rails.application.routes.draw do
   root "application#top"
 
   resources :shops
+  resources :random_menus, only: [:index]
 end
