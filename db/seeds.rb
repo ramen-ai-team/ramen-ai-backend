@@ -1,6 +1,8 @@
 require 'yaml'
 
-master_data = YAML.load_file(Rails.root.join('master_data.yml'))
+master_data = YAML.load_file(Rails.root.join("db", "seeds", "#{Rails.env.downcase}.yml"))
+
+return if master_data.blank?
 
 master_data['genres'].each do |genre_data|
   Genre.find_or_create_by!(name: genre_data['name'])
