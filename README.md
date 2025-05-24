@@ -1,24 +1,16 @@
-# README
+## Setup
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+DevContainerによる開発環境の構築
+1. VSCodeを開く
+2. 左下の「><」アイコンをクリック
+3. 「Reopen in Container」を選択
+4. コンテナが立ち上がるまで待つ
+5. ターミナルを開く
 
-Things you may want to cover:
 
-* Ruby version
+## API
 
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+### `/api/v1/random_menus`
+- メソッド: `GET`
+- 説明: ランダムなメニューを取得する
+- input: `limit` (optional) - 取得するメニューの数 (default: 10)
