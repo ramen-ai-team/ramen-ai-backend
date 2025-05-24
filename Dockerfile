@@ -51,6 +51,13 @@ RUN bundle exec bootsnap precompile app/ lib/
 # Final stage for app image
 FROM base
 
+# Install Cloud SQL Proxy
+RUN apt-get update -qq && \
+    apt-get install --no-install-recommends -y wget && \
+    wget https://storage.googleapis.com/cloudsql-proxy/v1.33.1/cloud_sql_proxy.linux.amd64 -O /usr/local/bin/cloud_sql_proxy && \
+    chmod +x /usr/local/bin/cloud_sql_proxy && \
+    rm -rf /var/lib/apt/lists /var/cache/apt/archives
+
 # Copy built artifacts: gems, application
 COPY --from=build "${BUNDLE_PATH}" "${BUNDLE_PATH}"
 COPY --from=build /rails /rails
@@ -61,9 +68,9 @@ RUN groupadd --system --gid 1000 rails && \
     chown -R rails:rails db log tmp
 USER 1000:1000
 
-# Entrypoint prepares the database.
+# Entrypoint prepares the database and starts Cloud SQL Proxy.
 ENTRYPOINT ["/rails/bin/docker-entrypoint"]
 
 # Start server via Thruster by default, this can be overwritten at runtime
 EXPOSE 8080
-CMD ["sh", "-c", "./bin/thrust ./bin/rails server -b 0.0.0.0 -p ${PORT}"]
+CMD ["sh", "-c", "/usr/local/bin/cloud_sql_proxy -instances=943228427206:asia-northeast1:ramen-ai-db-instance=tcp:5432 & ./bin/thrust ./bin/rails server -b 0.0.0.0 -p ${PORT}"]
