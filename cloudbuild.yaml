@@ -26,7 +26,6 @@ steps:
         /buildstep/execute.sh \
           -i gcr.io/${PROJECT_ID}/${_SERVICE_NAME}\
           -s ${PROJECT_ID}:${_DEPLOY_REGION}:${_INSTANCE_NAME} \
-          -e RAILS_MASTER_KEY=$$RAILS_MASTER_KEY \
           -e CLOUD_SQL_CONNECTION_NAME="943228427206:asia-northeast1:ramen-ai-db-instance" \
           -- bundle exec rails db:migrate
 
@@ -58,10 +57,6 @@ substitutions:
   _AR_REPOSITORY: cloud-run-source-deploy
   _AR_PROJECT_ID: ramen-ai
   _SERVICE_NAME: ramen-ai-backend-service
-availableSecrets:
-  secretManager:
-    - versionName: projects/$PROJECT_ID/secrets/RAILS_MASTER_KEY/versions/1
-      env: RAILS_MASTER_KEY
 tags:
   - gcp-cloud-build-deploy-cloud-run
   - gcp-cloud-build-deploy-cloud-run-managed
