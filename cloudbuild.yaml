@@ -25,8 +25,8 @@ steps:
       - -c
       - |
         /buildstep/execute.sh \
-          -i gcr.io/${PROJECT_ID}/${_SERVICE_NAME}\
-          -s ${PROJECT_ID}:${_DEPLOY_REGION}:${_INSTANCE_NAME} \
+          -i gcr.io/$_AR_HOSTNAME/$_AR_PROJECT_ID/$_AR_REPOSITORY/$REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA\
+          -s ${_AR_PROJECT_ID}:${_DEPLOY_REGION}:${_INSTANCE_NAME} \
           -e CLOUD_SQL_CONNECTION_NAME="943228427206:asia-northeast1:ramen-ai-db-instance" \
           -- bundle exec rails db:migrate
 
