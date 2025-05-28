@@ -26,11 +26,11 @@ master_data['menus'].each do |menu_data|
   noodle = Noodle.find_by!(name: menu_data['noodle'])
   soup = Soup.find_by!(name: menu_data['soup'])
 
-  Menu.find_or_create_by!(
+  menu = Menu.find_or_create_by!(
     name: menu_data['name'],
-    shop: shop,
-    genre: genre,
-    noodle: noodle,
-    soup: soup
+    shop: shop
   )
+  menu.genre = genre
+  menu.noodle = noodle
+  menu.soup = soup
 end
