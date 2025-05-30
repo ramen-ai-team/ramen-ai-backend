@@ -18,18 +18,18 @@ steps:
       - >-
         $_AR_HOSTNAME/$_AR_PROJECT_ID/$_AR_REPOSITORY/$REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA
 
-  # - id: Apply Migrations
-  #   name: gcr.io/google-appengine/exec-wrapper
-  #   entrypoint: "bash"
-  #   args:
-  #     - -c
-  #     - |
-  #       /buildstep/execute.sh \
-  #         -i gcr.io/$_AR_HOSTNAME/$_AR_PROJECT_ID/$_AR_REPOSITORY/$REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA\
-  #         -s ${_AR_PROJECT_ID}:${_DEPLOY_REGION}:${_INSTANCE_NAME} \
-  #         -e RAILS_ENV=production \
-  #         -e CLOUD_SQL_CONNECTION_NAME="ramen-ai:asia-northeast1:ramen-ai-db-instance" \
-  #         -- bundle exec rails db:migrate
+  - id: Apply Migrations
+    name: gcr.io/google-appengine/exec-wrapper
+    entrypoint: "bash"
+    args:
+      - -c
+      - |
+        /buildstep/execute.sh \
+          -i gcr.io/$_AR_HOSTNAME/$_AR_PROJECT_ID/$_AR_REPOSITORY/$REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA\
+          -s ${_AR_PROJECT_ID}:${_DEPLOY_REGION}:${_INSTANCE_NAME} \
+          -e RAILS_ENV=production \
+          -e CLOUD_SQL_CONNECTION_NAME="ramen-ai:asia-northeast1:ramen-ai-db-instance" \
+          -- bundle exec rails db:migrate
 
   - id: Deploy
     name: "gcr.io/google.com/cloudsdktool/cloud-sdk:slim"
