@@ -21,6 +21,7 @@ steps:
   - id: Apply Migrations
     name: gcr.io/google-appengine/exec-wrapper
     entrypoint: "bash"
+    secretEnv: ["RAILS_MASTER_KEY"]
     args:
       - -c
       - |
@@ -59,6 +60,10 @@ substitutions:
   _AR_REPOSITORY: cloud-run-source-deploy
   _AR_PROJECT_ID: ramen-ai
   _SERVICE_NAME: ramen-ai-backend-service
+availableSecrets:
+  secretManager:
+    - versionName: projects/943228427206/secrets/RAILS_MASTER_KEY/versions/1
+      env: "RAILS_MASTER_KEY"
 tags:
   - gcp-cloud-build-deploy-cloud-run
   - gcp-cloud-build-deploy-cloud-run-managed
