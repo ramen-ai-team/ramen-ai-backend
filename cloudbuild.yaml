@@ -30,6 +30,7 @@ steps:
           -s ${_AR_PROJECT_ID}:${_DEPLOY_REGION}:${_INSTANCE_NAME} \
           -e RAILS_ENV=production \
           -e CLOUD_SQL_CONNECTION_NAME="${_AR_PROJECT_ID}:${_DEPLOY_REGION}:${_INSTANCE_NAME}" \
+          -e RAILS_MASTER_KEY=$$RAILS_MASTER_KEY \
           -- bundle exec rails db:migrate
 
   - id: Deploy
