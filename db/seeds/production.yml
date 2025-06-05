@@ -1,0 +1,19 @@
+genres:
+  - name: "ラーメン"
+  - name: "つけ麺"
+  - name: "油そば"
+
+noodles:
+  - name: "細麺"
+  - name: "太麺"
+
+soups:
+  - name: "醤油"
+  - name: "味噌"
+  - name: "塩"
+  - name: "豚骨"
+  - name: "煮干し"
+  - name: "鶏白湯"
+  - name: "担々麺"
+  - name: "家系"
+  - name: "二郎系"
