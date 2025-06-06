@@ -1,0 +1,15 @@
+{
+  "devDependencies": {
+    "husky": "^9.1.7",
+    "lint-staged": "^16.0.0"
+  },
+  "scripts": {
+    "prepare": "husky"
+  },
+  "lint-staged": {
+    "*.rb": [
+      "bundle exec rubocop --auto-correct",
+      "bundle exec rspec"
+    ]
+  }
+}
