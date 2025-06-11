@@ -9,9 +9,6 @@ class GeminiApi
     <<~TEXT
       以下はある人が選択したラーメンの嗜好です。これを踏まえて、最もおすすめのラーメンを教えて下さい
       #{menus.map { |menu| "- ジャンル：#{menu.genre.name}、麺：#{menu.noodle.name}、味：#{menu.soup.name}" }.join("\n")}
-
-      レスポンスは以下のフォーマットで出力してください
-      {"recommended_ramen": {"genre": "ラーメン", "noodles": "細麺", "soups": "醤油"}, reason: "そのラーメンをおすすめする理由を250文字以内で"}
     TEXT
   end
 
@@ -19,8 +16,8 @@ class GeminiApi
     raise ArgumentError, "Text must be provided" if text.nil? || text.strip.empty?
 
     response = call(text)
-    if response["error"]
-      Rails.logger.error("Gemini API Error: #{response['error']}")
+    if response.is_a?(Hash) && response["error"]
+      Rails.logger.error("Gemini API Error: #{response['error']['message']}")
       return
     end
 
@@ -32,9 +29,6 @@ class GeminiApi
       end.flatten
     end.flatten.join
     JSON.parse(response_text)
-  rescue StandardError => e
-    Rails.logger.error("Gemini API Error: #{e.class}")
-    Rails.logger.error(e.message)
   end
 
   private
@@ -58,6 +52,28 @@ class GeminiApi
             "text": text
           }
         ]
+      },
+      "generationConfig": {
+        "responseMimeType": "application/json",
+        "responseSchema": {
+          "type": "OBJECT",
+          "properties": {
+            "recommended_ramen": {
+              "type": "OBJECT",
+              "properties": {
+                "genre": { "type": "STRING", "enum": Genre.pluck(:name) },
+                "noodles": { "type": "STRING", "enum": Noodle.pluck(:name) },
+                "soups": { "type": "STRING", "enum": Soup.pluck(:name) }
+              },
+              "required": ["genre", "noodles", "soups"]
+            },
+            "reason": {
+              "type": "STRING",
+              "description": "250文字以内でそのラーメンをおすすめする理由を記載してください"
+            }
+          },
+          "propertyOrdering": ["recommended_ramen", "reason"]
+        }
       }
     }.to_json
 
