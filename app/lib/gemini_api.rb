@@ -3,7 +3,16 @@ require "uri"
 require "json"
 
 class GeminiApi
-  LOCATION = "us-central1".freeze
+  LOCATION = "global".freeze
+  API_ENDPOINT = "aiplatform.googleapis.com".freeze
+  GENERATE_CONTENT_API = "streamGenerateContent".freeze
+
+  def self.credential
+    authorizer = Google::Auth::ServiceAccountCredentials.make_creds(
+      scope: "https://www.googleapis.com/auth/cloud-platform"
+    )
+    authorizer.fetch_access_token!
+  end
 
   def self.generate_request_text(menus)
     <<~TEXT
@@ -34,10 +43,10 @@ class GeminiApi
   private
 
   def self.call(text)
-    access_token = "" # gcloud auth print-access-token
+    access_token = credential["access_token"]
     project_id = "ramen-ai"
-    model_id = "gemini-2.5-flash-preview-05-20"
-    uri = URI.parse("https://#{LOCATION}-aiplatform.googleapis.com/v1/projects/#{project_id}/locations/#{LOCATION}/publishers/google/models/#{model_id}:streamGenerateContent")
+    model_id = "gemini-2.5-pro-preview-06-05"
+    uri = URI.parse("https://#{API_ENDPOINT}/v1/projects/#{project_id}/locations/#{LOCATION}/publishers/google/models/#{model_id}:#{GENERATE_CONTENT_API}")
     http = Net::HTTP.new(uri.host, uri.port)
     http.use_ssl = true
 
