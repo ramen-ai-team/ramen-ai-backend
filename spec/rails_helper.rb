@@ -9,7 +9,6 @@ abort("The Rails environment is running in production mode!") if Rails.env.produ
 # return unless Rails.env.test?
 require 'rspec/rails'
 require 'factory_bot'
-require 'vcr'
 require 'webmock'
 # Add additional requires below this line. Rails is not loaded until this point!
 
@@ -74,18 +73,5 @@ RSpec.configure do |config|
   # config.filter_gems_from_backtrace("gem name")
   config.include FactoryBot::Syntax::Methods
   config.include JsonAPIHelper, type: :request
-
-  VCR.configure do |config|
-    config.cassette_library_dir = 'spec/support/vcr'
-    config.hook_into :webmock
-    config.allow_http_connections_when_no_cassette = true
-    config.default_cassette_options = { match_requests_on: [:method, :uri, :body] }
-    config.configure_rspec_metadata!
-    # リクエストの`Authorization`の値がある場合は直に取得して秘匿するようにした。
-    config.filter_sensitive_data("assertion=<TOKEN>") do |interaction|
-      interaction.request.body.match("assertion=([^&]+)") do |match|
-        match[0] if match
-      end
-    end
-  end
+  config.include GeminiStubHelper
 end

@@ -6,17 +6,20 @@ genres:
 noodles:
   - name: "細麺"
   - name: "太麺"
+  - name: "中太麺"
+  - name: "ちぢれ麺"
 
 soups:
   - name: "醤油"
   - name: "味噌"
   - name: "塩"
   - name: "豚骨"
-  - name: "煮干し"
+  - name: "魚介"
   - name: "鶏白湯"
   - name: "担々麺"
   - name: "家系"
   - name: "二郎系"
+  - name: "ベジポタ"
 
 shops:
   - name: "ラーメン荘 歴史を刻め 世田谷"

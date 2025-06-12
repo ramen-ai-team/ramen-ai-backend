@@ -27,7 +27,7 @@ jobs:
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: '.tool-versions'
+          ruby-version: ".tool-versions"
           bundler-cache: true
 
       - name: Set up database
@@ -41,4 +41,4 @@ jobs:
 
       - name: Run RSpec
         run: |
-          bundle exec rspec
+          bundle exec rspec --format progress --color

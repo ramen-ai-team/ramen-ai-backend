@@ -33,8 +33,7 @@ group :development, :test do
   gem "brakeman", require: false
   gem "factory_bot_rails"
   gem "rspec-rails"
-  gem "vcr"
-  gem "webmock"
+  gem "webmock", require: false
 end
 
 group :development do
