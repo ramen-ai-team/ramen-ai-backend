@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe Api::V1::RecommendedMenusController, type: :request do
   describe 'POST /api/v1/recommended_menus' do
-    it 'returns a recommended menu based on menu_ids' do
+    it 'returns a recommended menu based on menu_ids', :vcr do
       # 例としてmenu_idsを1と2とする
       menu_ids = [1, 2]
       post '/api/v1/recommended_menus', params: { menu_ids: menu_ids }
