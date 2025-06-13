@@ -27,6 +27,7 @@ gem "rack-cors"
 
 gem "googleauth"
 
+gem "google-cloud-storage"
 gem "image_processing", ">= 1.2"
 
 group :development, :test do

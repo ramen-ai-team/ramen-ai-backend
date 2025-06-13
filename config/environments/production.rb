@@ -64,4 +64,6 @@ Rails.application.configure do
   config.hosts = [
     /.*\.run\.app/
   ]
+
+  config.active_storage.service = :google
 end
