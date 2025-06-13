@@ -7,5 +7,11 @@ class Menu < ApplicationRecord
   has_one :menu_soup, dependent: :destroy
   has_one :soup, through: :menu_soup
 
+  has_many_attached :image
+
   validates :name, presence: true
+
+  def image_url
+    image.attached? ? Rails.application.routes.url_helpers.rails_blob_url(image, only_path: true) : nil
+  end
 end

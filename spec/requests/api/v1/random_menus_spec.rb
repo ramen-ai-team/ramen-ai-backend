@@ -19,7 +19,7 @@ RSpec.describe Api::V1::RandomMenusController, type: :request do
           genre_name: 'ラーメン',
           noodle_name: '細麺',
           soup_name: '豚骨スープ',
-          image_url: be_a(String)
+          image_url: be_nil
         }]
       })
     end
