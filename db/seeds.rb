@@ -1,36 +1,50 @@
-require 'yaml'
+require 'csv'
+require 'open-uri'
 
-master_data = YAML.load_file(Rails.root.join("db", "seeds", "#{Rails.env.downcase}.yml"))
+return if Rails.env.production?
 
-return if master_data.blank?
+csv_text = File.read(Rails.root.join('csv.csv'))
+csv = CSV.parse(csv_text, :headers => true, :encoding => 'UTF-8')
 
-master_data['genres'].each do |genre_data|
-  Genre.find_or_create_by!(name: genre_data['name'])
-end
+csv.each do |row|
+  shop_name = row['店舗名']
+  menu_name = row['メニュー名']
+  genre_name = row['ジャンル']
+  noodle_name = row['麺']
+  soup_name = row['スープ']
+  image_url = row['image']
 
-master_data['noodles'].each do |noodle_data|
-  Noodle.find_or_create_by!(name: noodle_data['name'])
-end
+  next if shop_name.blank? || menu_name.blank? || genre_name.blank? || noodle_name.blank? || soup_name.blank?
+  puts "Processing: #{shop_name} - #{menu_name} - #{genre_name} - #{noodle_name} - #{soup_name}"
 
-master_data['soups'].each do |soup_data|
-  Soup.find_or_create_by!(name: soup_data['name'])
-end
+  # 店舗の作成または検索
+  shop = Shop.find_or_create_by(name: shop_name)
 
-master_data['shops'].each do |shop_data|
-  Shop.find_or_create_by!(name: shop_data['name'])
-end
+  # ジャンルの作成または検索
+  genre = Genre.find_or_create_by(name: genre_name)
 
-master_data['menus'].each do |menu_data|
-  shop = Shop.find_by!(name: menu_data['shop'])
-  genre = Genre.find_by!(name: menu_data['genre'])
-  noodle = Noodle.find_by!(name: menu_data['noodle'])
-  soup = Soup.find_by!(name: menu_data['soup'])
+  # 麺の作成または検索
+  noodle = Noodle.find_or_create_by(name: noodle_name)
 
-  menu = Menu.find_or_create_by!(
-    name: menu_data['name'],
-    shop: shop
-  )
+  # スープの作成または検索
+  soup = Soup.find_or_create_by(name: soup_name)
+
+  # メニューの作成
+  menu = Menu.create(name: menu_name, shop: shop)
+
   menu.genre = genre
   menu.noodle = noodle
   menu.soup = soup
+
+  # 画像のダウンロードとActive Storageへの保存
+  begin
+    if image_url.present?
+      downloaded_image = URI.open(image_url)
+      menu.image.attach(io: downloaded_image, filename: File.basename(image_url))
+    end
+  rescue OpenURI::HTTPError => e
+    puts "Error downloading image: #{image_url} - #{e.message}"
+  end
 end
+
+puts "Data import completed!"

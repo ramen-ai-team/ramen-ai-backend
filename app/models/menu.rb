@@ -7,7 +7,7 @@ class Menu < ApplicationRecord
   has_one :menu_soup, dependent: :destroy
   has_one :soup, through: :menu_soup
 
-  has_many_attached :image
+  has_one_attached :image
 
   validates :name, presence: true
 
