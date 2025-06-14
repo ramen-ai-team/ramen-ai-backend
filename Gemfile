@@ -8,7 +8,7 @@ gem "puma", ">= 5.0"
 # gem "bcrypt", "~> 3.1.7"
 
 gem "tzinfo-data", platforms: %i[ windows jruby ]
-gem 'csv'
+gem "csv"
 
 gem "solid_cache"
 gem "solid_queue"
