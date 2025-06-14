@@ -58,7 +58,7 @@ steps:
           -e GOOGLE_ACCOUNT_TYPE="service_account" \
           -e RAILS_MASTER_KEY=$$RAILS_MASTER_KEY \
           -e GOOGLE_PRIVATE_KEY_ID=$$GOOGLE_PRIVATE_KEY_ID \
-          -e GOOGLE_PRIVATE_KEY=$$GOOGLE_PRIVATE_KEY \
+          -e GOOGLE_PRIVATE_KEY="$$GOOGLE_PRIVATE_KEY" \
           -- bundle exec rake data:import
 
   - id: Deploy
