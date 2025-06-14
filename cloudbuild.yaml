@@ -41,26 +41,6 @@ steps:
           -e RAILS_MASTER_KEY=$$RAILS_MASTER_KEY \
           -- bundle exec rake data:import
 
-  - id: Exec Oneshot Import
-    name: gcr.io/google-appengine/exec-wrapper
-    entrypoint: "bash"
-    secretEnv: ["RAILS_MASTER_KEY", "GOOGLE_PRIVATE_KEY", "GOOGLE_PRIVATE_KEY_ID"]
-    args:
-      - -c
-      - |
-        /buildstep/execute.sh \
-          -i $_AR_HOSTNAME/$_AR_PROJECT_ID/$_AR_REPOSITORY/$REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA\
-          -s ${_AR_PROJECT_ID}:${_DEPLOY_REGION}:${_INSTANCE_NAME} \
-          -e RAILS_ENV=production \
-          -e CLOUD_SQL_CONNECTION_NAME="${_AR_PROJECT_ID}:${_DEPLOY_REGION}:${_INSTANCE_NAME}" \
-          -e GOOGLE_CLIENT_ID="114986177464229384432" \
-          -e GOOGLE_CLIENT_EMAIL="ramen-ai-vertex-ai@ramen-ai.iam.gserviceaccount.com" \
-          -e GOOGLE_ACCOUNT_TYPE="service_account" \
-          -e RAILS_MASTER_KEY=$$RAILS_MASTER_KEY \
-          -e GOOGLE_PRIVATE_KEY_ID=$$GOOGLE_PRIVATE_KEY_ID \
-          -e GOOGLE_PRIVATE_KEY="$$GOOGLE_PRIVATE_KEY" \
-          -- bundle exec rake data:import
-
   - id: Deploy
     name: "gcr.io/google.com/cloudsdktool/cloud-sdk:slim"
     args:
@@ -93,10 +73,6 @@ availableSecrets:
   secretManager:
     - versionName: projects/943228427206/secrets/RAILS_MASTER_KEY/versions/1
       env: "RAILS_MASTER_KEY"
-    - versionName: projects/943228427206/secrets/GOOGLE_PRIVATE_KEY/versions/1
-      env: "GOOGLE_PRIVATE_KEY"
-    - versionName: projects/943228427206/secrets/GOOGLE_PRIVATE_KEY_ID/versions/1
-      env: "GOOGLE_PRIVATE_KEY_ID"
 tags:
   - gcp-cloud-build-deploy-cloud-run
   - gcp-cloud-build-deploy-cloud-run-managed
