@@ -14,10 +14,17 @@ class GeminiApi
     authorizer.fetch_access_token!
   end
 
-  def self.generate_request_text(menus)
-    <<~TEXT
+  def self.generate_request_text(select_menus, not_select_menus)
+    text = <<~TEXT
       以下はある人が選択したラーメンの嗜好です。これを踏まえて、最もおすすめのラーメンを教えて下さい
-      #{menus.map { |menu| "- ジャンル：#{menu.genre.name}、麺：#{menu.noodle.name}、味：#{menu.soup.name}" }.join("\n")}
+      ## 選択されたラーメン
+      #{select_menus.map { |menu| "- ジャンル：#{menu.genre.name}、麺：#{menu.noodle.name}、味：#{menu.soup.name}" }.join("\n")}
+    TEXT
+    return text if not_select_menus.empty?
+
+    text + <<~TEXT
+      ## 選択されなかったラーメン
+      #{not_select_menus.map { |menu| "- ジャンル：#{menu.genre.name}、麺：#{menu.noodle.name}、味：#{menu.soup.name}" }.join("\n")}
     TEXT
   end
 
