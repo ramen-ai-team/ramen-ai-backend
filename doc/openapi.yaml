@@ -1,0 +1,346 @@
+---
+openapi: 3.0.3
+info:
+  title: ramen-ai-backend
+  version: 1.0.0
+servers:
+  - http://localhost:3000
+  - https://ramen-ai-backend-service-943228427206.asia-northeast1.run.app
+paths:
+  "/api/v1/random_menus":
+    get:
+      summary: index
+      tags:
+        - Api::V1::RandomMenu
+      responses:
+        "200":
+          description: returns all menus
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  menus:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        name:
+                          nullable: false
+                          type: string
+                        genre_name:
+                          type: string
+                        noodle_name:
+                          type: string
+                        soup_name:
+                          type: string
+                        image_url:
+                          nullable: true
+                          type: string
+                        shop:
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                            name:
+                              nullable: false
+                              type: string
+                          required:
+                            - id
+                            - name
+                      required:
+                        - id
+                        - name
+                        - genre_name
+                        - noodle_name
+                        - soup_name
+                        - image_url
+                        - shop
+                required:
+                  - menus
+              example:
+                menus:
+                  - id: 1
+                    name: 博多ラーメン
+                    genre_name: ラーメン
+                    noodle_name: 細麺
+                    soup_name: 豚骨スープ
+                    image_url: /rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsiZGF0YSI6OCwicHVyIjoiYmxvYl9pZCJ9fQ==--a0f70181085ac1eafbd9715ecb4faea03cd5cee3/open-id=1nDLbONOWNT9lLh4KsXLFNxn0cSl3bd7N
+                    shop:
+                      id: 1
+                      name: 博多ラーメン店
+  "/api/v1/recommended_menus":
+    post:
+      summary: create
+      tags:
+        - Api::V1::RecommendedMenu
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                select_menu_ids:
+                  type: array
+                  items:
+                    type: integer
+                not_select_menu_ids:
+                  type: array
+                  items:
+                    type: integer
+              required:
+                - select_menu_ids
+            example:
+              select_menu_ids:
+                - 1
+                - 2
+              not_select_menu_ids:
+                - 3
+                - 4
+      responses:
+        "200":
+          description: returns a recommended menu based on select_menu_ids & not_select_menu_ids
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  recommended_menu:
+                    type: object
+                    properties:
+                      recommended_ramen:
+                        type: object
+                        properties:
+                          genre:
+                            type: string
+                          noodles:
+                            type: string
+                          soups:
+                            type: string
+                        required:
+                          - genre
+                          - noodles
+                          - soups
+                      reason:
+                        type: string
+                    required:
+                      - recommended_ramen
+                      - reason
+                required:
+                  - recommended_menu
+              example:
+                recommended_menu:
+                  recommended_ramen:
+                    genre: ラーメン
+                    noodles: 太麺
+                    soups: 豚骨
+                  reason: 魚介つけ麺や二郎系ラーメンなど、濃厚でインパクトのある味をお好みのようですので、同じく濃厚な「豚骨」スープのラーメンをおすすめします。特に食べ応えのある太麺との相性は抜群で、鶏ガラとはまた違ったクリーミーで深みのある味わいをお楽しみいただけます。
+        "400":
+          description: returns an error if select_menu_ids is missing
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                  - error
+              example:
+                error: select_menu_idsが必要です
+  "/api/v1/shops":
+    get:
+      summary: index
+      tags:
+        - Api::V1::Shop
+      responses:
+        "200":
+          description: returns all shops
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  shops:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        name:
+                          type: string
+                      required:
+                        - id
+                        - name
+                required:
+                  - shops
+              example:
+                shops:
+                  - id: 2
+                    name: ラーメン二郎 生田店
+    post:
+      summary: create
+      tags:
+        - Api::V1::Shop
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                shop:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                  required:
+                    - name
+              required:
+                - shop
+            example:
+              shop:
+                name: ラーメン二郎 生田店
+      responses:
+        "201":
+          description: creates a new shop
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  name:
+                    type: string
+                required:
+                  - id
+                  - name
+              example:
+                id: 5
+                name: ラーメン二郎 生田店
+        "422":
+          description: returns an error when name is missing
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  name:
+                    type: array
+                    items:
+                      type: string
+                required:
+                  - name
+              example:
+                name:
+                  - can't be blank
+  "/api/v1/shops/{id}":
+    delete:
+      summary: destroy
+      tags:
+        - Api::V1::Shop
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          example: 9999
+      responses:
+        "204":
+          description: deletes a shop
+    get:
+      summary: show
+      tags:
+        - Api::V1::Shop
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          example: 3
+      responses:
+        "200":
+          description: returns a specific shop
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  name:
+                    type: string
+                required:
+                  - id
+                  - name
+              example:
+                id: 3
+                name: ラーメン二郎 生田店
+    patch:
+      summary: update
+      tags:
+        - Api::V1::Shop
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          example: 8
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                shop:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                  required:
+                    - name
+              required:
+                - shop
+            example:
+              shop:
+                name: ラーメン二郎 生田店
+      responses:
+        "200":
+          description: updates an existing shop
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  name:
+                    type: string
+                required:
+                  - id
+                  - name
+              example:
+                id: 7
+                name: ラーメン二郎 生田店
+        "422":
+          description: returns an error when name is missing
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  name:
+                    type: array
+                    items:
+                      type: string
+                required:
+                  - name
+              example:
+                name:
+                  - can't be blank
