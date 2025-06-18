@@ -4,6 +4,7 @@ require 'rails_helper'
 
 RSpec.describe Api::V1::RandomMenusController, type: :request do
   describe 'GET /api/v1/random_menus' do
+    let!(:shop) { create(:shop, name: '博多ラーメン店') }
     let!(:menu) { create(:menu, :with_category, name: '博多ラーメン', genre:, noodle:, soup:) }
     let!(:genre) { create(:genre, name: 'ラーメン') }
     let!(:noodle) { create(:noodle, name: '細麺') }
@@ -19,7 +20,11 @@ RSpec.describe Api::V1::RandomMenusController, type: :request do
           genre_name: 'ラーメン',
           noodle_name: '細麺',
           soup_name: '豚骨スープ',
-          image_url: be_nil
+          image_url: be_nil,
+          shop: {
+            id: shop.id,
+            name: '博多ラーメン店',
+          }
         }]
       })
     end
