@@ -13,8 +13,10 @@ module Api
         unselect_menus = Menu.where.not(id: not_select_menu_ids)
         begin
           request_text = GeminiApi.generate_request_text(select_menus, unselect_menus)
-          recommended_menu = GeminiApi.generate_content(request_text)
-          render json: { recommended_menu: recommended_menu }
+          response = GeminiApi.generate_content(request_text)
+          recommended_menu = RecommendedMenu.new(response["recommended_ramen"]).find_best_match
+          reason = response["reason"] || "おすすめの理由がありません"
+          render json: { recommended_menu: ApiEntity::MenuWithShop.new(menu: recommended_menu), reason: }
         rescue => e
           render json: { error: e.message }, status: :internal_server_error
         end

@@ -5,7 +5,7 @@ require 'rails_helper'
 RSpec.describe Api::V1::RandomMenusController, type: :request do
   describe 'GET /api/v1/random_menus' do
     let!(:shop) { create(:shop, name: '博多ラーメン店') }
-    let!(:menu) { create(:menu, :with_category, name: '博多ラーメン', genre:, noodle:, soup:) }
+    let!(:menu) { create(:menu, :with_category, name: '博多ラーメン', genre:, noodle:, soup:, shop:) }
     let!(:genre) { create(:genre, name: 'ラーメン') }
     let!(:noodle) { create(:noodle, name: '細麺') }
     let!(:soup) { create(:soup, name: '豚骨スープ') }
