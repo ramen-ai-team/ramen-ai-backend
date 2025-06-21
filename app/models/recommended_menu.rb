@@ -6,7 +6,7 @@ class RecommendedMenu
   end
 
   def find_best_match
-    menus.first
+    menus.order("RAND()").first
   end
 
   private
@@ -22,7 +22,7 @@ class RecommendedMenu
                     genres: { id: genre.id },
                     noodles: { id: noodle.id })
 
-    return @menus = memus if menus.exists?
+    return @menus = menus if menus.exists?
 
     # SoupとGenreが一致するMenuを検索
     menus = Menu.joins(:soup, :genre)
