@@ -4,6 +4,13 @@ require "open-uri"
 namespace :data do
   desc "Import data from CSV"
   task import: :environment do
+    # データ削除
+    Shop.destroy_all
+    Genre.destroy_all
+    Noodle.destroy_all
+    Soup.destroy_all
+
+    # インポート
     csv_text = File.read(Rails.root.join("csv.csv"))
     csv = CSV.parse(csv_text, headers: true, encoding: "UTF-8")
 
