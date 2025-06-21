@@ -66,4 +66,5 @@ Rails.application.configure do
   ]
 
   config.active_storage.service = :google
+  Rails.application.routes.default_url_options = { host: "https://ramen-ai-backend-service-943228427206.asia-northeast1.run.app" }
 end

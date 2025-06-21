@@ -31,7 +31,7 @@ namespace :data do
       soup = Soup.find_or_create_by(name: soup_name)
 
       # メニューの作成
-      menu = Menu.create(name: menu_name, shop: shop)
+      menu = Menu.create!(name: menu_name, shop_id: shop.id)
 
       menu.genre = genre
       menu.noodle = noodle
@@ -40,12 +40,18 @@ namespace :data do
       # 画像のダウンロードとActive Storageへの保存
       begin
         if image_url.present?
-          downloaded_image = URI.open(image_url)
-          menu.image.attach(io: downloaded_image, filename: File.basename(image_url))
+          uri = URI.parse(image_url)
+          id = Hash[URI::decode_www_form(uri.query)]["id"]
+          url = "https://drive.google.com/uc?id=#{id}"
+
+          downloaded_image = URI.open(url)
+          menu.image.attach(io: downloaded_image, filename: File.basename(url))
         end
       rescue OpenURI::HTTPError => e
         puts "Error downloading image: #{image_url} - #{e.message}"
       end
+    rescue StandardError => e
+      puts "Error processing row: #{row.inspect} - #{e.message}"
     end
 
     puts "Data import completed!"
