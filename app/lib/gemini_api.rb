@@ -85,7 +85,7 @@ class GeminiApi
             },
             "reason": {
               "type": "STRING",
-              "description": "250文字以内でそのラーメンをおすすめする理由を記載してください"
+              "description": "250文字以内でそのラーメンをおすすめする理由を記載してください。ただし、根拠として選択に関する情報を含めないでください。"
             }
           },
           "propertyOrdering": ["recommended_ramen", "reason"]
