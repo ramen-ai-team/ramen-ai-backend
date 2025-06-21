@@ -1,5 +1,5 @@
 FactoryBot.define do
   factory :noodle do
-    name { "太麺" }
+    sequence(:name) { |n| "Noodle #{n}" }
   end
 end
