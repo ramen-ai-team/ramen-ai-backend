@@ -3,17 +3,15 @@ openapi: 3.0.3
 info:
   title: ramen-ai-backend
   version: 1.0.0
-servers:
-  - http://localhost:3000
-  - https://ramen-ai-backend-service-943228427206.asia-northeast1.run.app
+servers: []
 paths:
   "/api/v1/random_menus":
     get:
       summary: index
       tags:
-        - Api::V1::RandomMenu
+      - Api::V1::RandomMenu
       responses:
-        "200":
+        '200':
           description: returns all menus
           content:
             application/json:
@@ -28,7 +26,6 @@ paths:
                         id:
                           type: integer
                         name:
-                          nullable: false
                           type: string
                         genre_name:
                           type: string
@@ -38,44 +35,42 @@ paths:
                           type: string
                         image_url:
                           nullable: true
-                          type: string
                         shop:
                           type: object
                           properties:
                             id:
                               type: integer
                             name:
-                              nullable: false
                               type: string
                           required:
-                            - id
-                            - name
+                          - id
+                          - name
                       required:
-                        - id
-                        - name
-                        - genre_name
-                        - noodle_name
-                        - soup_name
-                        - image_url
-                        - shop
+                      - id
+                      - name
+                      - genre_name
+                      - noodle_name
+                      - soup_name
+                      - image_url
+                      - shop
                 required:
-                  - menus
+                - menus
               example:
                 menus:
-                  - id: 1
-                    name: 博多ラーメン
-                    genre_name: ラーメン
-                    noodle_name: 細麺
-                    soup_name: 豚骨スープ
-                    image_url: /rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsiZGF0YSI6OCwicHVyIjoiYmxvYl9pZCJ9fQ==--a0f70181085ac1eafbd9715ecb4faea03cd5cee3/open-id=1nDLbONOWNT9lLh4KsXLFNxn0cSl3bd7N
-                    shop:
-                      id: 1
-                      name: 博多ラーメン店
+                - id: 153
+                  name: 博多ラーメン
+                  genre_name: ラーメン
+                  noodle_name: 細麺
+                  soup_name: 豚骨スープ
+                  image_url:
+                  shop:
+                    id: 448
+                    name: 博多ラーメン店
   "/api/v1/recommended_menus":
     post:
       summary: create
       tags:
-        - Api::V1::RecommendedMenu
+      - Api::V1::RecommendedMenu
       requestBody:
         content:
           application/x-www-form-urlencoded:
@@ -85,22 +80,22 @@ paths:
                 select_menu_ids:
                   type: array
                   items:
-                    type: integer
+                    type: string
                 not_select_menu_ids:
                   type: array
                   items:
-                    type: integer
+                    type: string
               required:
-                - select_menu_ids
+              - select_menu_ids
             example:
               select_menu_ids:
-                - 1
-                - 2
+              - '1'
+              - '2'
               not_select_menu_ids:
-                - 3
-                - 4
+              - '3'
+              - '4'
       responses:
-        "200":
+        '200':
           description: returns a recommended menu based on select_menu_ids & not_select_menu_ids
           content:
             application/json:
@@ -110,34 +105,54 @@ paths:
                   recommended_menu:
                     type: object
                     properties:
-                      recommended_ramen:
+                      id:
+                        type: integer
+                      name:
+                        type: string
+                      genre_name:
+                        type: string
+                      noodle_name:
+                        type: string
+                      soup_name:
+                        type: string
+                      image_url:
+                        nullable: true
+                      shop:
                         type: object
                         properties:
-                          genre:
-                            type: string
-                          noodles:
-                            type: string
-                          soups:
+                          id:
+                            type: integer
+                          name:
                             type: string
                         required:
-                          - genre
-                          - noodles
-                          - soups
-                      reason:
-                        type: string
+                        - id
+                        - name
                     required:
-                      - recommended_ramen
-                      - reason
+                    - id
+                    - name
+                    - genre_name
+                    - noodle_name
+                    - soup_name
+                    - image_url
+                    - shop
+                  reason:
+                    type: string
                 required:
-                  - recommended_menu
+                - recommended_menu
+                - reason
               example:
                 recommended_menu:
-                  recommended_ramen:
-                    genre: ラーメン
-                    noodles: 太麺
-                    soups: 豚骨
-                  reason: 魚介つけ麺や二郎系ラーメンなど、濃厚でインパクトのある味をお好みのようですので、同じく濃厚な「豚骨」スープのラーメンをおすすめします。特に食べ応えのある太麺との相性は抜群で、鶏ガラとはまた違ったクリーミーで深みのある味わいをお楽しみいただけます。
-        "400":
+                  id: 155
+                  name: Ramen 5
+                  genre_name: ラーメン
+                  noodle_name: 太麺
+                  soup_name: 豚骨
+                  image_url:
+                  shop:
+                    id: 450
+                    name: ラーメン屋
+                reason: 魚介つけ麺や二郎系ラーメンなど、濃厚でインパクトのある味をお好みのようですので、同じく濃厚な「豚骨」スープのラーメンをおすすめします。特に食べ応えのある太麺との相性は抜群で、鶏ガラとはまた違ったクリーミーで深みのある味わいをお楽しみいただけます。
+        '400':
           description: returns an error if select_menu_ids is missing
           content:
             application/json:
@@ -147,16 +162,16 @@ paths:
                   error:
                     type: string
                 required:
-                  - error
+                - error
               example:
                 error: select_menu_idsが必要です
   "/api/v1/shops":
     get:
       summary: index
       tags:
-        - Api::V1::Shop
+      - Api::V1::Shop
       responses:
-        "200":
+        '200':
           description: returns all shops
           content:
             application/json:
@@ -173,18 +188,18 @@ paths:
                         name:
                           type: string
                       required:
-                        - id
-                        - name
+                      - id
+                      - name
                 required:
-                  - shops
+                - shops
               example:
                 shops:
-                  - id: 2
-                    name: ラーメン二郎 生田店
+                - id: 452
+                  name: Shop Name
     post:
       summary: create
       tags:
-        - Api::V1::Shop
+      - Api::V1::Shop
       requestBody:
         content:
           application/x-www-form-urlencoded:
@@ -197,14 +212,14 @@ paths:
                     name:
                       type: string
                   required:
-                    - name
+                  - name
               required:
-                - shop
+              - shop
             example:
               shop:
-                name: ラーメン二郎 生田店
+                name: New Shop
       responses:
-        "201":
+        '201':
           description: creates a new shop
           content:
             application/json:
@@ -216,12 +231,12 @@ paths:
                   name:
                     type: string
                 required:
-                  - id
-                  - name
+                - id
+                - name
               example:
-                id: 5
-                name: ラーメン二郎 生田店
-        "422":
+                id: 455
+                name: New Shop
+        '422':
           description: returns an error when name is missing
           content:
             application/json:
@@ -233,38 +248,51 @@ paths:
                     items:
                       type: string
                 required:
-                  - name
+                - name
               example:
                 name:
-                  - can't be blank
+                - can't be blank
   "/api/v1/shops/{id}":
     delete:
       summary: destroy
       tags:
-        - Api::V1::Shop
+      - Api::V1::Shop
       parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
-          example: 9999
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+        example: 9999
       responses:
-        "204":
+        '204':
           description: deletes a shop
+        '404':
+          description: returns 404 if shop does not exist
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+              example:
+                error: Couldn't find Shop with 'id'=9999
     get:
       summary: show
       tags:
-        - Api::V1::Shop
+      - Api::V1::Shop
       parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
-          example: 3
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+        example: 453
       responses:
-        "200":
+        '200':
           description: returns a specific shop
           content:
             application/json:
@@ -276,22 +304,22 @@ paths:
                   name:
                     type: string
                 required:
-                  - id
-                  - name
+                - id
+                - name
               example:
-                id: 3
-                name: ラーメン二郎 生田店
+                id: 453
+                name: Shop Name
     patch:
       summary: update
       tags:
-        - Api::V1::Shop
+      - Api::V1::Shop
       parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
-          example: 8
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+        example: 458
       requestBody:
         content:
           application/x-www-form-urlencoded:
@@ -304,14 +332,14 @@ paths:
                     name:
                       type: string
                   required:
-                    - name
+                  - name
               required:
-                - shop
+              - shop
             example:
               shop:
-                name: ラーメン二郎 生田店
+                name: Updated Shop Name
       responses:
-        "200":
+        '200':
           description: updates an existing shop
           content:
             application/json:
@@ -323,12 +351,12 @@ paths:
                   name:
                     type: string
                 required:
-                  - id
-                  - name
+                - id
+                - name
               example:
-                id: 7
-                name: ラーメン二郎 生田店
-        "422":
+                id: 457
+                name: Updated Shop Name
+        '422':
           description: returns an error when name is missing
           content:
             application/json:
@@ -340,7 +368,7 @@ paths:
                     items:
                       type: string
                 required:
-                  - name
+                - name
               example:
                 name:
-                  - can't be blank
+                - can't be blank
