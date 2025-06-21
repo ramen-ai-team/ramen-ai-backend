@@ -12,6 +12,6 @@ class Menu < ApplicationRecord
   validates :name, presence: true
 
   def image_url
-    image.attached? ? Rails.application.routes.url_helpers.rails_blob_url(image, only_path: true) : nil
+    image.attached? ? Rails.application.routes.url_helpers.rails_blob_url(image, only_path: true, redirect: true) : nil
   end
 end
