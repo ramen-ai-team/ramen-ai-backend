@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_06_13_123307) do
+ActiveRecord::Schema[8.0].define(version: 2025_06_22_082109) do
   create_table "active_storage_attachments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -90,8 +90,11 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_13_123307) do
 
   create_table "shops", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
+    t.string "address", default: "", null: false
+    t.string "google_map_url"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["google_map_url"], name: "index_shops_on_google_map_url", unique: true
   end
 
   create_table "soups", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
