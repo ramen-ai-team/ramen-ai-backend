@@ -1,0 +1,52 @@
+<h1>メニュー一覧</h1>
+
+<div class="mb-3">
+  <%= link_to "新規作成", new_admin_menu_path, class: "btn btn-primary" %>
+</div>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>画像</th>
+      <th>メニュー名</th>
+      <th>ショップ</th>
+      <th>ジャンル</th>
+      <th>スープ</th>
+      <th>麺</th>
+      <th>作成日</th>
+      <th>アクション</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @menus.each do |menu| %>
+      <tr>
+        <td><%= menu.id %></td>
+        <td>
+          <% if menu.image.attached? %>
+            <%= image_tag menu.image, class: "img-thumbnail", style: "width: 60px; height: 60px; object-fit: cover;" %>
+          <% else %>
+            <span class="text-muted">画像なし</span>
+          <% end %>
+        </td>
+        <td><%= menu.name %></td>
+        <td><%= menu.shop.name %></td>
+        <td><%= menu.genre&.name %></td>
+        <td><%= menu.soup&.name %></td>
+        <td><%= menu.noodle&.name %></td>
+        <td><%= menu.created_at.strftime("%Y/%m/%d") %></td>
+        <td>
+          <%= link_to "詳細", admin_menu_path(menu), class: "btn btn-sm btn-outline-primary" %>
+          <%= link_to "編集", edit_admin_menu_path(menu), class: "btn btn-sm btn-outline-secondary" %>
+          <%= link_to "削除", admin_menu_path(menu), method: :delete, 
+                      confirm: "本当に削除しますか？", 
+                      class: "btn btn-sm btn-outline-danger" %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<% if @menus.empty? %>
+  <p>メニューが登録されていません。</p>
+<% end %>

@@ -55,13 +55,13 @@ class Admin::MenusController < Admin::ApplicationController
   end
 
   def menu_params
-    params.require(:menu).permit(:name, :shop_id, :image)
+    params.require(:menu).permit(:name, :shop_id, :image, :genre_id, :soup_id, :noodle_id)
   end
 
   def create_associations
-    create_menu_genre if params[:menu][:genre_id].present?
-    create_menu_soup if params[:menu][:soup_id].present?
-    create_menu_noodle if params[:menu][:noodle_id].present?
+    create_menu_genre
+    create_menu_soup
+    create_menu_noodle
   end
 
   def update_associations
@@ -86,38 +86,26 @@ class Admin::MenusController < Admin::ApplicationController
   end
 
   def update_menu_genre
-    if params[:menu][:genre_id].present?
-      if @menu.menu_genre
-        @menu.menu_genre.update(genre_id: params[:menu][:genre_id])
-      else
-        @menu.create_menu_genre(genre_id: params[:menu][:genre_id])
-      end
+    if @menu.menu_genre
+      @menu.menu_genre.update(genre_id: params[:menu][:genre_id])
     else
-      @menu.menu_genre&.destroy
+      @menu.create_menu_genre(genre_id: params[:menu][:genre_id])
     end
   end
 
   def update_menu_soup
-    if params[:menu][:soup_id].present?
-      if @menu.menu_soup
-        @menu.menu_soup.update(soup_id: params[:menu][:soup_id])
-      else
-        @menu.create_menu_soup(soup_id: params[:menu][:soup_id])
-      end
+    if @menu.menu_soup
+      @menu.menu_soup.update(soup_id: params[:menu][:soup_id])
     else
-      @menu.menu_soup&.destroy
+      @menu.create_menu_soup(soup_id: params[:menu][:soup_id])
     end
   end
 
   def update_menu_noodle
-    if params[:menu][:noodle_id].present?
-      if @menu.menu_noodle
-        @menu.menu_noodle.update(noodle_id: params[:menu][:noodle_id])
-      else
-        @menu.create_menu_noodle(noodle_id: params[:menu][:noodle_id])
-      end
+    if @menu.menu_noodle
+      @menu.menu_noodle.update(noodle_id: params[:menu][:noodle_id])
     else
-      @menu.menu_noodle&.destroy
+      @menu.create_menu_noodle(noodle_id: params[:menu][:noodle_id])
     end
   end
 end

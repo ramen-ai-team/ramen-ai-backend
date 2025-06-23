@@ -1,0 +1,63 @@
+<h1>メニュー新規作成</h1>
+
+<%= form_with model: [:admin, @menu], local: true, multipart: true do |form| %>
+  <% if @menu.errors.any? %>
+    <div class="alert alert-danger">
+      <ul class="mb-0">
+        <% @menu.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="row">
+    <div class="col-md-6">
+      <div class="mb-3">
+        <%= form.label :name, "メニュー名", class: "form-label" %>
+        <%= form.text_field :name, class: "form-control" %>
+      </div>
+
+      <div class="mb-3">
+        <%= form.label :shop_id, "ショップ", class: "form-label" %>
+        <%= form.select :shop_id, options_from_collection_for_select(@shops, :id, :name, @menu.shop_id), 
+                        { prompt: "ショップを選択してください" }, 
+                        { class: "form-select" } %>
+      </div>
+
+      <div class="mb-3">
+        <%= form.label :genre_id, "ジャンル", class: "form-label" %>
+        <%= form.select :genre_id, options_from_collection_for_select(@genres, :id, :name), 
+                        { prompt: "ジャンルを選択してください" }, 
+                        { class: "form-select", required: true } %>
+      </div>
+
+      <div class="mb-3">
+        <%= form.label :soup_id, "スープ", class: "form-label" %>
+        <%= form.select :soup_id, options_from_collection_for_select(@soups, :id, :name), 
+                        { prompt: "スープを選択してください" }, 
+                        { class: "form-select", required: true } %>
+      </div>
+
+      <div class="mb-3">
+        <%= form.label :noodle_id, "麺", class: "form-label" %>
+        <%= form.select :noodle_id, options_from_collection_for_select(@noodles, :id, :name), 
+                        { prompt: "麺を選択してください" }, 
+                        { class: "form-select", required: true } %>
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      <div class="mb-3">
+        <%= form.label :image, "メニュー画像", class: "form-label" %>
+        <%= form.file_field :image, class: "form-control", accept: "image/*" %>
+        <div class="form-text">JPEGまたはPNG形式の画像をアップロードしてください</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="mb-3">
+    <%= form.submit "作成", class: "btn btn-primary" %>
+    <%= link_to "キャンセル", admin_menus_path, class: "btn btn-secondary" %>
+  </div>
+<% end %>
