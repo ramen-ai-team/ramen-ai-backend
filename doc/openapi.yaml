@@ -42,6 +42,10 @@ paths:
                               type: integer
                             name:
                               type: string
+                            address:
+                              type: string
+                            google_map_url:
+                              type: string
                           required:
                           - id
                           - name
@@ -57,15 +61,17 @@ paths:
                 - menus
               example:
                 menus:
-                - id: 153
+                - id: 30
                   name: 博多ラーメン
                   genre_name: ラーメン
                   noodle_name: 細麺
                   soup_name: 豚骨スープ
                   image_url:
                   shop:
-                    id: 448
+                    id: 40
                     name: 博多ラーメン店
+                    address: 福岡県博多区
+                    google_map_url: https://maps.app.goo.gl/BvuQTxGsmKLJ68yL9
   "/api/v1/recommended_menus":
     post:
       summary: create
@@ -124,6 +130,10 @@ paths:
                             type: integer
                           name:
                             type: string
+                          address:
+                            type: string
+                          google_map_url:
+                            type: string
                         required:
                         - id
                         - name
@@ -142,15 +152,17 @@ paths:
                 - reason
               example:
                 recommended_menu:
-                  id: 155
+                  id: 32
                   name: Ramen 5
                   genre_name: ラーメン
                   noodle_name: 太麺
                   soup_name: 豚骨
                   image_url:
                   shop:
-                    id: 450
+                    id: 42
                     name: ラーメン屋
+                    address: 東京都新宿区
+                    google_map_url: https://maps.app.goo.gl/BvuQTxGsmKLJ68yL9
                 reason: 魚介つけ麺や二郎系ラーメンなど、濃厚でインパクトのある味をお好みのようですので、同じく濃厚な「豚骨」スープのラーメンをおすすめします。特に食べ応えのある太麺との相性は抜群で、鶏ガラとはまた違ったクリーミーで深みのある味わいをお楽しみいただけます。
         '400':
           description: returns an error if select_menu_ids is missing
@@ -187,6 +199,10 @@ paths:
                           type: integer
                         name:
                           type: string
+                        address:
+                          type: string
+                        google_map_url:
+                          type: string
                       required:
                       - id
                       - name
@@ -194,92 +210,11 @@ paths:
                 - shops
               example:
                 shops:
-                - id: 452
-                  name: Shop Name
-    post:
-      summary: create
-      tags:
-      - Api::V1::Shop
-      requestBody:
-        content:
-          application/x-www-form-urlencoded:
-            schema:
-              type: object
-              properties:
-                shop:
-                  type: object
-                  properties:
-                    name:
-                      type: string
-                  required:
-                  - name
-              required:
-              - shop
-            example:
-              shop:
-                name: New Shop
-      responses:
-        '201':
-          description: creates a new shop
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  id:
-                    type: integer
-                  name:
-                    type: string
-                required:
-                - id
-                - name
-              example:
-                id: 455
-                name: New Shop
-        '422':
-          description: returns an error when name is missing
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  name:
-                    type: array
-                    items:
-                      type: string
-                required:
-                - name
-              example:
-                name:
-                - can't be blank
+                - id: 44
+                  name: 九州 筑豊ラーメン山小屋
+                  address: 佐賀県嬉野市嬉野町大字下宿甲４００２−４
+                  google_map_url: https://maps.app.goo.gl/BvuQTxGsmKLJ68yL9
   "/api/v1/shops/{id}":
-    delete:
-      summary: destroy
-      tags:
-      - Api::V1::Shop
-      parameters:
-      - name: id
-        in: path
-        required: true
-        schema:
-          type: integer
-        example: 9999
-      responses:
-        '204':
-          description: deletes a shop
-        '404':
-          description: returns 404 if shop does not exist
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                required:
-                - error
-              example:
-                error: Couldn't find Shop with 'id'=9999
     get:
       summary: show
       tags:
@@ -290,7 +225,7 @@ paths:
         required: true
         schema:
           type: integer
-        example: 453
+        example: 45
       responses:
         '200':
           description: returns a specific shop
@@ -303,72 +238,15 @@ paths:
                     type: integer
                   name:
                     type: string
-                required:
-                - id
-                - name
-              example:
-                id: 453
-                name: Shop Name
-    patch:
-      summary: update
-      tags:
-      - Api::V1::Shop
-      parameters:
-      - name: id
-        in: path
-        required: true
-        schema:
-          type: integer
-        example: 458
-      requestBody:
-        content:
-          application/x-www-form-urlencoded:
-            schema:
-              type: object
-              properties:
-                shop:
-                  type: object
-                  properties:
-                    name:
-                      type: string
-                  required:
-                  - name
-              required:
-              - shop
-            example:
-              shop:
-                name: Updated Shop Name
-      responses:
-        '200':
-          description: updates an existing shop
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  id:
-                    type: integer
-                  name:
+                  address:
+                    type: string
+                  google_map_url:
                     type: string
                 required:
                 - id
                 - name
               example:
-                id: 457
-                name: Updated Shop Name
-        '422':
-          description: returns an error when name is missing
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  name:
-                    type: array
-                    items:
-                      type: string
-                required:
-                - name
-              example:
-                name:
-                - can't be blank
+                id: 45
+                name: 九州 筑豊ラーメン山小屋
+                address: 佐賀県嬉野市嬉野町大字下宿甲４００２−４
+                google_map_url: https://maps.app.goo.gl/BvuQTxGsmKLJ68yL9
