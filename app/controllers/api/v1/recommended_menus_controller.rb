@@ -9,8 +9,8 @@ module Api
           return
         end
 
-        select_menus = Menu.where(id: select_menu_ids)
-        unselect_menus = Menu.where.not(id: not_select_menu_ids)
+        select_menus = Menu.includes(:soup, :genre, :noodle).where(id: select_menu_ids)
+        unselect_menus = Menu.includes(:soup, :genre, :noodle).where.not(id: not_select_menu_ids)
         begin
           request_text = GeminiApi.generate_request_text(select_menus, unselect_menus)
           response = GeminiApi.generate_content(request_text)
