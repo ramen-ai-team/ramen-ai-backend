@@ -8,17 +8,24 @@ Rails.application.routes.draw do
 
   root "application#top"
 
-  namespace :admin do
-    root "shops#index"
-    resources :shops
-    resources :menus
-  end
-
   namespace :api do
     namespace :v1 do
       resources :shops
       resources :random_menus, only: [:index]
       resource :recommended_menus, only: [:create]
+
+      namespace :admin do
+        resource :auth, only: [:create, :destroy], controller: "authentication"
+        resources :shops
+        resources :menus do
+          member do
+            patch :attach_image
+          end
+        end
+        resources :genres, only: [:index]
+        resources :soups, only: [:index]
+        resources :noodles, only: [:index]
+      end
     end
   end
 end

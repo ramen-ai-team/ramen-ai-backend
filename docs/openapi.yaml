@@ -1,0 +1,663 @@
+openapi: 3.0.3
+info:
+  title: ラーメンAI 管理画面API
+  description: ラーメンAI管理画面用のREST API仕様
+  version: 1.0.0
+  contact:
+    name: Ramen AI Team
+    email: contact@ramen-ai.com
+
+servers:
+  - url: http://localhost:3000/api/v1/admin
+    description: Development server
+  - url: https://api.ramen-ai.com/api/v1/admin
+    description: Production server
+
+security:
+  - BearerAuth: []
+
+paths:
+  /auth:
+    post:
+      tags:
+        - Authentication
+      summary: 管理者ログイン
+      description: メールアドレスとパスワードでログインし、JWTトークンを取得
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - password
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: admin@example.com
+                password:
+                  type: string
+                  example: password123
+      responses:
+        '200':
+          description: ログイン成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                    example: eyJhbGciOiJIUzI1NiJ9...
+                  admin_user:
+                    $ref: '#/components/schemas/AdminUser'
+        '401':
+          description: 認証失敗
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    delete:
+      tags:
+        - Authentication
+      summary: 管理者ログアウト
+      description: ログアウト処理
+      responses:
+        '200':
+          description: ログアウト成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Logged out successfully
+
+  /shops:
+    get:
+      tags:
+        - Shops
+      summary: ショップ一覧取得
+      description: 管理画面用ショップ一覧を取得
+      responses:
+        '200':
+          description: ショップ一覧
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ShopWithMenus'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+    post:
+      tags:
+        - Shops
+      summary: ショップ作成
+      description: 新しいショップを作成
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - shop
+              properties:
+                shop:
+                  $ref: '#/components/schemas/ShopInput'
+      responses:
+        '201':
+          description: ショップ作成成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Shop'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /shops/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          example: 1
+    
+    get:
+      tags:
+        - Shops
+      summary: ショップ詳細取得
+      description: 指定されたIDのショップ詳細を取得
+      responses:
+        '200':
+          description: ショップ詳細
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ShopWithMenus'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+    put:
+      tags:
+        - Shops
+      summary: ショップ更新
+      description: 指定されたIDのショップを更新
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - shop
+              properties:
+                shop:
+                  $ref: '#/components/schemas/ShopInput'
+      responses:
+        '200':
+          description: ショップ更新成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Shop'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+    delete:
+      tags:
+        - Shops
+      summary: ショップ削除
+      description: 指定されたIDのショップを削除
+      responses:
+        '200':
+          description: ショップ削除成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Shop deleted successfully
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /menus:
+    get:
+      tags:
+        - Menus
+      summary: メニュー一覧取得
+      description: 管理画面用メニュー一覧を取得
+      responses:
+        '200':
+          description: メニュー一覧
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MenuWithRelations'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+    post:
+      tags:
+        - Menus
+      summary: メニュー作成
+      description: 新しいメニューを作成
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - menu
+              properties:
+                menu:
+                  $ref: '#/components/schemas/MenuInput'
+      responses:
+        '201':
+          description: メニュー作成成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MenuWithRelations'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /menus/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          example: 1
+    
+    get:
+      tags:
+        - Menus
+      summary: メニュー詳細取得
+      description: 指定されたIDのメニュー詳細を取得
+      responses:
+        '200':
+          description: メニュー詳細
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MenuWithRelations'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+    put:
+      tags:
+        - Menus
+      summary: メニュー更新
+      description: 指定されたIDのメニューを更新
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - menu
+              properties:
+                menu:
+                  $ref: '#/components/schemas/MenuInput'
+      responses:
+        '200':
+          description: メニュー更新成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MenuWithRelations'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+    delete:
+      tags:
+        - Menus
+      summary: メニュー削除
+      description: 指定されたIDのメニューを削除
+      responses:
+        '200':
+          description: メニュー削除成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Menu deleted successfully
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /menus/{id}/attach_image:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          example: 1
+    
+    patch:
+      tags:
+        - Menus
+      summary: メニュー画像アップロード
+      description: 指定されたIDのメニューに画像をアップロード
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - image
+              properties:
+                image:
+                  type: string
+                  format: binary
+                  description: アップロードする画像ファイル
+      responses:
+        '200':
+          description: 画像アップロード成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Image attached successfully
+                  image_url:
+                    type: string
+                    format: uri
+                    example: https://example.com/image.jpg
+        '400':
+          description: 画像が提供されていない
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: No image provided
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /genres:
+    get:
+      tags:
+        - Master Data
+      summary: ジャンル一覧取得
+      description: メニューのジャンル一覧を取得
+      responses:
+        '200':
+          description: ジャンル一覧
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Genre'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /soups:
+    get:
+      tags:
+        - Master Data
+      summary: スープ一覧取得
+      description: メニューのスープ一覧を取得
+      responses:
+        '200':
+          description: スープ一覧
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Soup'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /noodles:
+    get:
+      tags:
+        - Master Data
+      summary: 麺一覧取得
+      description: メニューの麺一覧を取得
+      responses:
+        '200':
+          description: 麺一覧
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Noodle'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    AdminUser:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        email:
+          type: string
+          format: email
+          example: admin@example.com
+
+    Shop:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: ラーメン太郎
+        address:
+          type: string
+          example: 東京都渋谷区神南1-1-1
+        google_map_url:
+          type: string
+          format: uri
+          example: https://maps.google.com/maps?q=...
+        created_at:
+          type: string
+          format: date-time
+          example: 2025-01-01T00:00:00.000Z
+        updated_at:
+          type: string
+          format: date-time
+          example: 2025-01-01T00:00:00.000Z
+
+    ShopInput:
+      type: object
+      required:
+        - name
+        - address
+        - google_map_url
+      properties:
+        name:
+          type: string
+          example: ラーメン太郎
+          maxLength: 100
+        address:
+          type: string
+          example: 東京都渋谷区神南1-1-1
+          maxLength: 255
+        google_map_url:
+          type: string
+          format: uri
+          example: https://maps.google.com/maps?q=...
+          maxLength: 255
+
+    ShopWithMenus:
+      allOf:
+        - $ref: '#/components/schemas/Shop'
+        - type: object
+          properties:
+            menus:
+              type: array
+              items:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 1
+                  name:
+                    type: string
+                    example: 醤油ラーメン
+                  image_url:
+                    type: string
+                    format: uri
+                    nullable: true
+                    example: https://example.com/image.jpg
+
+    Menu:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: 醤油ラーメン
+        image_url:
+          type: string
+          format: uri
+          nullable: true
+          example: https://example.com/image.jpg
+        created_at:
+          type: string
+          format: date-time
+          example: 2025-01-01T00:00:00.000Z
+        updated_at:
+          type: string
+          format: date-time
+          example: 2025-01-01T00:00:00.000Z
+
+    MenuInput:
+      type: object
+      required:
+        - name
+        - shop_id
+        - genre_id
+        - soup_id
+        - noodle_id
+      properties:
+        name:
+          type: string
+          example: 醤油ラーメン
+        shop_id:
+          type: integer
+          example: 1
+        genre_id:
+          type: integer
+          example: 1
+        soup_id:
+          type: integer
+          example: 1
+        noodle_id:
+          type: integer
+          example: 1
+        image:
+          type: string
+          format: binary
+          description: メニュー画像ファイル
+
+    MenuWithRelations:
+      allOf:
+        - $ref: '#/components/schemas/Menu'
+        - type: object
+          properties:
+            shop:
+              $ref: '#/components/schemas/Shop'
+            genre:
+              $ref: '#/components/schemas/Genre'
+            soup:
+              $ref: '#/components/schemas/Soup'
+            noodle:
+              $ref: '#/components/schemas/Noodle'
+
+    Genre:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: 醤油
+
+    Soup:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: 鶏白湯
+
+    Noodle:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: 細麺
+
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          example: Invalid credentials
+
+    ValidationErrors:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            type: string
+          example:
+            - "Name can't be blank"
+            - "Email is invalid"
+
+  responses:
+    Unauthorized:
+      description: 認証が必要
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: Unauthorized
+
+    NotFound:
+      description: リソースが見つからない
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: Record not found
+
+    ValidationError:
+      description: バリデーションエラー
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ValidationErrors'

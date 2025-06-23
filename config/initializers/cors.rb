@@ -9,13 +9,14 @@ Rails.application.config.middleware.insert_before 0, Rack::Cors do
   allow do
     allowed_origins = case Rails.env
     when "production"
-        ["https://ramen-ai-frontend.vercel.app"]
+        ["https://ramen-ai-frontend.vercel.app", "https://ramen-ai-admin.vercel.app"]
     when "development"
-        ["http://localhost:8081"]
+        ["http://localhost:8081", "http://localhost:3001"]
     end
     origins allowed_origins
     resource "*",
       headers: :any,
-      methods: [:get, :post, :put, :patch, :delete, :options, :head]
+      methods: [:get, :post, :put, :patch, :delete, :options, :head],
+      credentials: true
   end
 end
