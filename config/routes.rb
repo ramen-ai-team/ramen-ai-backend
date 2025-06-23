@@ -7,6 +7,11 @@ Rails.application.routes.draw do
 
   root "application#top"
 
+  namespace :admin do
+    resources :shops
+    resources :menus
+  end
+
   namespace :api do
     namespace :v1 do
       resources :shops
