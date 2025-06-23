@@ -23,6 +23,8 @@ gem "dotenv"
 
 gem "pagy"
 
+gem "devise"
+
 # Use Rack CORS for handling Cross-Origin Resource Sharing (CORS), making cross-origin Ajax possible
 gem "rack-cors"
 
