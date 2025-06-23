@@ -20,13 +20,18 @@ namespace :data do
       genre_name = row["ジャンル"]
       noodle_name = row["麺"]
       soup_name = row["スープ"]
-      image_url = row["image"]
+      image_url = row["画像"]
+      address = row["住所"]
+      google_map_url = row["Google Map URL"]
 
-      next if shop_name.blank? || menu_name.blank? || genre_name.blank? || noodle_name.blank? || soup_name.blank?
-      puts "Processing: #{shop_name} - #{menu_name} - #{genre_name} - #{noodle_name} - #{soup_name}"
+      next if shop_name.blank? || menu_name.blank? || genre_name.blank? || noodle_name.blank? || soup_name.blank? || image_url.blank? || address.blank? || google_map_url.blank?
+      puts "Processing: #{shop_name} - #{menu_name} - #{genre_name} - #{noodle_name} - #{soup_name} - #{image_url} - #{address} - #{google_map_url}"
 
       # 店舗の作成または検索
-      shop = Shop.find_or_create_by(name: shop_name)
+      shop = Shop.find_or_create_by(google_map_url: google_map_url) do |s|
+        s.address = address
+        s.name = shop_name
+      end
 
       # ジャンルの作成または検索
       genre = Genre.find_or_create_by(name: genre_name)
