@@ -18,13 +18,13 @@ class GeminiApi
     text = <<~TEXT
       以下はある人が選択したラーメンの嗜好です。これを踏まえて、最もおすすめのラーメンを教えて下さい
       ## 選択されたラーメン
-      #{select_menus.map { |menu| "- ジャンル：#{menu.genre.name}、麺：#{menu.noodle.name}、味：#{menu.soup.name}" }.join("\n")}
+      #{select_menus.map { |menu| "- 名前：#{menu.name} ジャンル：#{menu.genre.name}、麺：#{menu.noodle.name}、味：#{menu.soup.name}" }.join("\n")}
     TEXT
     return text if not_select_menus.empty?
 
     text + <<~TEXT
       ## 選択されなかったラーメン
-      #{not_select_menus.map { |menu| "- ジャンル：#{menu.genre.name}、麺：#{menu.noodle.name}、味：#{menu.soup.name}" }.join("\n")}
+      #{not_select_menus.map { |menu| "- 名前：#{menu.name} ジャンル：#{menu.genre.name}、麺：#{menu.noodle.name}、味：#{menu.soup.name}" }.join("\n")}
     TEXT
   end
 
