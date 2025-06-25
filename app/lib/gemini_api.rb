@@ -77,9 +77,9 @@ class GeminiApi
             "recommended_ramen": {
               "type": "OBJECT",
               "properties": {
-                "genre": { "type": "STRING", "enum": Genre.pluck(:name) },
-                "noodles": { "type": "STRING", "enum": Noodle.pluck(:name) },
-                "soups": { "type": "STRING", "enum": Soup.pluck(:name) }
+                "genre": { "type": "STRING", "enum": Genre.pluck(:name), description: "ジャンル" },
+                "noodles": { "type": "STRING", "enum": Noodle.pluck(:name), description: "麺" },
+                "soups": { "type": "STRING", "enum": Soup.pluck(:name), description: "スープ（味）" }
               },
               "required": ["genre", "noodles", "soups"]
             },
