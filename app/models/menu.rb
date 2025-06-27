@@ -10,6 +10,7 @@ class Menu < ApplicationRecord
   has_one_attached :image
 
   validates :name, presence: true
+  validates :image, attached: true
 
   def image_url
     image.attached? ? Rails.application.routes.url_helpers.url_for(image) : nil
