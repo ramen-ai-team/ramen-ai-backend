@@ -11,7 +11,8 @@ RSpec.describe Api::V1::RecommendedMenusController, type: :request do
     let!(:noodle) { create(:noodle, name: '太麺') }
     let!(:soup) { create(:soup, name: '豚骨') }
     let!(:shop) { create(:shop, name: 'ラーメン屋', address: '東京都新宿区', google_map_url: 'https://maps.app.goo.gl/BvuQTxGsmKLJ68yL9') }
-    let!(:menu) { create(:menu, :with_category, genre:, noodle:, soup:, shop:) }
+    let!(:image_file) { fixture_file_upload('images/ramen.png', 'image/png') }
+    let!(:menu) { create(:menu, :with_category, genre:, noodle:, soup:, shop:, image: image_file) }
 
     it 'returns a recommended menu based on select_menu_ids' do
       # 例としてselect_menu_idsを1と2とする
@@ -25,7 +26,7 @@ RSpec.describe Api::V1::RecommendedMenusController, type: :request do
           genre_name: "ラーメン",
           noodle_name: "太麺",
           soup_name: "豚骨",
-          image_url: nil,
+          image_url: menu.image_url,
           shop: {
             id: shop.id,
             name: 'ラーメン屋',
@@ -50,7 +51,7 @@ RSpec.describe Api::V1::RecommendedMenusController, type: :request do
           genre_name: "ラーメン",
           noodle_name: "太麺",
           soup_name: "豚骨",
-          image_url: nil,
+          image_url: menu.image_url,
           shop: {
             id: shop.id,
             name: 'ラーメン屋',

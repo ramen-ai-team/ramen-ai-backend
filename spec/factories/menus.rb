@@ -1,8 +1,8 @@
 FactoryBot.define do
   factory :menu do
     association :shop
-
     sequence(:name) { |n| "Ramen #{n}" }
+    image { Rack::Test::UploadedFile.new(Rails.root.join('spec/fixtures/files/images/ramen.png'), 'image/png') }
 
     trait :with_category do
       transient do

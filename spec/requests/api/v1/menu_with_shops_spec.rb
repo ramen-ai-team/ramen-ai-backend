@@ -19,7 +19,7 @@ RSpec.describe Api::V1::MenuWithShopsController, type: :request do
         genre_name: "ラーメン",
         noodle_name: "太麺",
         soup_name: "豚骨",
-        image_url: nil,
+        image_url: menu.image_url,
         shop: {
           id: shop.id,
           name: 'ラーメン屋',

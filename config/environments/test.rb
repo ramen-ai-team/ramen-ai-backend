@@ -41,4 +41,5 @@ Rails.application.configure do
   config.action_controller.raise_on_missing_callback_actions = true
 
   config.active_storage.service = :test
+  Rails.application.routes.default_url_options = { host: "http://example.com" }
 end

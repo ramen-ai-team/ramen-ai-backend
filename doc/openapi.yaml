@@ -5,6 +5,238 @@ info:
   version: 1.0.0
 servers: []
 paths:
+  "/api/v1/menu_with_shops/{id}":
+    get:
+      summary: show
+      tags:
+      - Api::V1::MenuWithShop
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+        example: 78
+      responses:
+        '200':
+          description: returns a specific menu
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  name:
+                    type: string
+                  genre_name:
+                    type: string
+                  noodle_name:
+                    type: string
+                  soup_name:
+                    type: string
+                  image_url:
+                    type: string
+                  shop:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                      name:
+                        type: string
+                      address:
+                        type: string
+                      google_map_url:
+                        type: string
+                    required:
+                    - id
+                    - name
+                    - address
+                    - google_map_url
+                required:
+                - id
+                - name
+                - genre_name
+                - noodle_name
+                - soup_name
+                - image_url
+                - shop
+              example:
+                id: 78
+                name: 特製ラーメン
+                genre_name: ラーメン
+                noodle_name: 太麺
+                soup_name: 豚骨
+                image_url: http://example.com/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsiZGF0YSI6MjAsInB1ciI6ImJsb2JfaWQifX0=--d2e0690caab7ed6e2b30f83f720fc5395c946d1b/ramen.png
+                shop:
+                  id: 126
+                  name: ラーメン屋
+                  address: 東京都新宿区
+                  google_map_url: https://maps.app.goo.gl/BvuQTxGsmKLJ68yL9
+  "/api/v1/random_menus":
+    get:
+      summary: index
+      tags:
+      - Api::V1::RandomMenu
+      responses:
+        '200':
+          description: returns all menus
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  menus:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        name:
+                          type: string
+                        genre_name:
+                          type: string
+                        noodle_name:
+                          type: string
+                        soup_name:
+                          type: string
+                        image_url:
+                          type: string
+                      required:
+                      - id
+                      - name
+                      - genre_name
+                      - noodle_name
+                      - soup_name
+                      - image_url
+                required:
+                - menus
+              example:
+                menus:
+                - id: 79
+                  name: 博多ラーメン
+                  genre_name: ラーメン
+                  noodle_name: 細麺
+                  soup_name: 豚骨スープ
+                  image_url: http://example.com/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsiZGF0YSI6MjEsInB1ciI6ImJsb2JfaWQifX0=--ffa5da13a191b49705a7899af2132f4a52ba35c8/ramen.png
+  "/api/v1/recommended_menus":
+    post:
+      summary: create
+      tags:
+      - Api::V1::RecommendedMenu
+      responses:
+        '200':
+          description: returns a recommended menu based on select_menu_ids & not_select_menu_ids
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  recommended_menu:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                      name:
+                        type: string
+                      genre_name:
+                        type: string
+                      noodle_name:
+                        type: string
+                      soup_name:
+                        type: string
+                      image_url:
+                        type: string
+                      shop:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                          name:
+                            type: string
+                          address:
+                            type: string
+                          google_map_url:
+                            type: string
+                        required:
+                        - id
+                        - name
+                        - address
+                        - google_map_url
+                    required:
+                    - id
+                    - name
+                    - genre_name
+                    - noodle_name
+                    - soup_name
+                    - image_url
+                    - shop
+                  reason:
+                    type: string
+                required:
+                - recommended_menu
+                - reason
+              example:
+                recommended_menu:
+                  id: 81
+                  name: Ramen 5
+                  genre_name: ラーメン
+                  noodle_name: 太麺
+                  soup_name: 豚骨
+                  image_url: http://example.com/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsiZGF0YSI6MjMsInB1ciI6ImJsb2JfaWQifX0=--ce259018f2c3a2152ecac6404721a038636e6d45/ramen.png
+                  shop:
+                    id: 129
+                    name: ラーメン屋
+                    address: 東京都新宿区
+                    google_map_url: https://maps.app.goo.gl/BvuQTxGsmKLJ68yL9
+                reason: 魚介つけ麺や二郎系ラーメンなど、濃厚でインパクトのある味をお好みのようですので、同じく濃厚な「豚骨」スープのラーメンをおすすめします。特に食べ応えのある太麺との相性は抜群で、鶏ガラとはまた違ったクリーミーで深みのある味わいをお楽しみいただけます。
+        '400':
+          description: returns an error if select_menu_ids is missing
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+              example:
+                error: select_menu_idsが必要です
+        '500':
+          description: returns a recommended menu based on select_menu_ids & not_select_menu_ids
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+                required:
+                - error
+              example: {}
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                select_menu_ids:
+                  type: array
+                  items:
+                    type: string
+                not_select_menu_ids:
+                  type: array
+                  items:
+                    type: string
+              required:
+              - select_menu_ids
+            example:
+              select_menu_ids:
+              - '1'
+              - '2'
+              not_select_menu_ids:
+              - '3'
+              - '4'
   "/api/v1/shops":
     get:
       summary: index
@@ -38,7 +270,7 @@ paths:
                 - shops
               example:
                 shops:
-                - id: 81
+                - id: 131
                   name: 九州 筑豊ラーメン山小屋
                   address: 佐賀県嬉野市嬉野町大字下宿甲４００２−４
                   google_map_url: https://maps.app.goo.gl/BvuQTxGsmKLJ68yL9
@@ -53,7 +285,7 @@ paths:
         required: true
         schema:
           type: integer
-        example: 82
+        example: 132
       responses:
         '200':
           description: returns a specific shop
@@ -74,7 +306,7 @@ paths:
                 - id
                 - name
               example:
-                id: 82
+                id: 132
                 name: 九州 筑豊ラーメン山小屋
                 address: 佐賀県嬉野市嬉野町大字下宿甲４００２−４
                 google_map_url: https://maps.app.goo.gl/BvuQTxGsmKLJ68yL9
