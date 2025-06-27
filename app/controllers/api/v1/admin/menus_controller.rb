@@ -1,5 +1,5 @@
 class Api::V1::Admin::MenusController < Api::V1::Admin::ApplicationController
-  before_action :set_menu, only: [:show, :update, :destroy, :attach_image]
+  before_action :set_menu, only: [:show, :update, :destroy]
 
   def index
     @menus = Menu.includes(:genre, :noodle, :soup, :shop).with_attached_image.all
@@ -17,7 +17,7 @@ class Api::V1::Admin::MenusController < Api::V1::Admin::ApplicationController
   end
 
   def create
-    @menu = Menu.new(menu_params)
+    @menu = Menu.new(menu_params.slice(:name, :shop_id, :image))
 
     if @menu.save
       create_associations
@@ -31,7 +31,7 @@ class Api::V1::Admin::MenusController < Api::V1::Admin::ApplicationController
   end
 
   def update
-    if @menu.update(menu_params)
+    if @menu.update(menu_params.slice(:name, :shop_id, :image))
       update_associations
       render json: @menu.as_json(
         include: [:shop, :genre, :soup, :noodle],
@@ -45,18 +45,6 @@ class Api::V1::Admin::MenusController < Api::V1::Admin::ApplicationController
   def destroy
     @menu.destroy
     render json: { message: "Menu deleted successfully" }
-  end
-
-  def attach_image
-    if params[:image].present?
-      @menu.image.attach(params[:image])
-      render json: {
-        message: "Image attached successfully",
-        image_url: @menu.image_url
-      }
-    else
-      render json: { error: "No image provided" }, status: :bad_request
-    end
   end
 
   private

@@ -33,6 +33,7 @@ gem "googleauth"
 
 gem "google-cloud-storage"
 gem "image_processing", ">= 1.2"
+gem 'active_storage_validations'
 
 group :development, :test do
   gem "debug", platforms: %i[ mri windows ], require: "debug/prelude"

@@ -18,11 +18,7 @@ Rails.application.routes.draw do
       namespace :admin do
         resource :auth, only: [:create, :destroy], controller: "authentication"
         resources :shops
-        resources :menus do
-          member do
-            patch :attach_image
-          end
-        end
+        resources :menus
         resources :genres, only: [:index]
         resources :soups, only: [:index]
         resources :noodles, only: [:index]
