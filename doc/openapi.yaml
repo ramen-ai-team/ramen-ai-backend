@@ -5,6 +5,74 @@ info:
   version: 1.0.0
 servers: []
 paths:
+  "/api/v1/menu_with_shops/{id}":
+    get:
+      summary: show
+      tags:
+      - Api::V1::MenuWithShop
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+        example: 54
+      responses:
+        '200':
+          description: returns a specific menu
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  name:
+                    type: string
+                  genre_name:
+                    type: string
+                  noodle_name:
+                    type: string
+                  soup_name:
+                    type: string
+                  image_url:
+                    nullable: true
+                  shop:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                      name:
+                        type: string
+                      address:
+                        type: string
+                      google_map_url:
+                        type: string
+                    required:
+                    - id
+                    - name
+                    - address
+                    - google_map_url
+                required:
+                - id
+                - name
+                - genre_name
+                - noodle_name
+                - soup_name
+                - image_url
+                - shop
+              example:
+                id: 54
+                name: 特製ラーメン
+                genre_name: ラーメン
+                noodle_name: 太麺
+                soup_name: 豚骨
+                image_url:
+                shop:
+                  id: 66
+                  name: ラーメン屋
+                  address: 東京都新宿区
+                  google_map_url: https://maps.app.goo.gl/BvuQTxGsmKLJ68yL9
   "/api/v1/random_menus":
     get:
       summary: index
@@ -56,22 +124,16 @@ paths:
                       - noodle_name
                       - soup_name
                       - image_url
-                      - shop
                 required:
                 - menus
               example:
                 menus:
-                - id: 30
+                - id: 55
                   name: 博多ラーメン
                   genre_name: ラーメン
                   noodle_name: 細麺
                   soup_name: 豚骨スープ
                   image_url:
-                  shop:
-                    id: 40
-                    name: 博多ラーメン店
-                    address: 福岡県博多区
-                    google_map_url: https://maps.app.goo.gl/BvuQTxGsmKLJ68yL9
   "/api/v1/recommended_menus":
     post:
       summary: create
@@ -144,7 +206,6 @@ paths:
                     - noodle_name
                     - soup_name
                     - image_url
-                    - shop
                   reason:
                     type: string
                 required:
@@ -152,14 +213,14 @@ paths:
                 - reason
               example:
                 recommended_menu:
-                  id: 32
+                  id: 57
                   name: Ramen 5
                   genre_name: ラーメン
                   noodle_name: 太麺
                   soup_name: 豚骨
                   image_url:
                   shop:
-                    id: 42
+                    id: 69
                     name: ラーメン屋
                     address: 東京都新宿区
                     google_map_url: https://maps.app.goo.gl/BvuQTxGsmKLJ68yL9
@@ -210,7 +271,7 @@ paths:
                 - shops
               example:
                 shops:
-                - id: 44
+                - id: 71
                   name: 九州 筑豊ラーメン山小屋
                   address: 佐賀県嬉野市嬉野町大字下宿甲４００２−４
                   google_map_url: https://maps.app.goo.gl/BvuQTxGsmKLJ68yL9
@@ -225,7 +286,7 @@ paths:
         required: true
         schema:
           type: integer
-        example: 45
+        example: 72
       responses:
         '200':
           description: returns a specific shop
@@ -246,7 +307,7 @@ paths:
                 - id
                 - name
               example:
-                id: 45
+                id: 72
                 name: 九州 筑豊ラーメン山小屋
                 address: 佐賀県嬉野市嬉野町大字下宿甲４００２−４
                 google_map_url: https://maps.app.goo.gl/BvuQTxGsmKLJ68yL9
