@@ -53,7 +53,7 @@ namespace :data do
       begin
         if image_url.present?
           uri = URI.parse(image_url)
-          id = Hash[URI::decode_www_form(uri.query)]["id"]
+          id = Hash[URI.decode_www_form(uri.query)]["id"]
           url = "https://drive.google.com/uc?id=#{id}"
 
           downloaded_image = URI.open(url)

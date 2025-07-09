@@ -1,6 +1,8 @@
 module Api
   module V1
     class RecommendedMenusController < BaseController
+      skip_before_action :authenticate_user, only: [:create]
+
       def create
         select_menu_ids = params[:select_menu_ids]
         not_select_menu_ids = params[:not_select_menu_ids] || []

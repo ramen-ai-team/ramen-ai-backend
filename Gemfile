@@ -30,10 +30,13 @@ gem "jwt"
 gem "rack-cors"
 
 gem "googleauth"
+gem "omniauth"
+gem "omniauth-google-oauth2"
+gem "omniauth-rails_csrf_protection"
 
 gem "google-cloud-storage"
 gem "image_processing", ">= 1.2"
-gem 'active_storage_validations'
+gem "active_storage_validations"
 
 group :development, :test do
   gem "debug", platforms: %i[ mri windows ], require: "debug/prelude"

@@ -2,6 +2,7 @@ module Api
   module V1
     class ShopsController < BaseController
       before_action :set_shop, only: [:show]
+      skip_before_action :authenticate_user, only: [:index, :show]
 
       def index
         pagy, shops = pagy(Shop.all)

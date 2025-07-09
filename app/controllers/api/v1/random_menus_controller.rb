@@ -1,6 +1,8 @@
 module Api
   module V1
     class RandomMenusController < BaseController
+      skip_before_action :authenticate_user, only: [:index]
+
       def index
         menus = Menu.includes(:genre, :noodle, :soup).with_attached_image.order("RAND()").limit(params[:limit] || 10)
         menu_list = ApiEntity::MenuList.new(menus:)

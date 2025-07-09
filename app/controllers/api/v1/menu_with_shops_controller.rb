@@ -2,6 +2,7 @@ module Api
   module V1
     class MenuWithShopsController < BaseController
       before_action :set_menu, only: [:show]
+      skip_before_action :authenticate_user, only: [:show]
 
       def show
         render json: ApiEntity::MenuWithShop.new(menu: @menu), status: :ok

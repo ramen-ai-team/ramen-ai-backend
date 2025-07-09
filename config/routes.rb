@@ -15,6 +15,9 @@ Rails.application.routes.draw do
       resources :random_menus, only: [:index]
       resource :recommended_menus, only: [:create]
 
+      # Google OAuth
+      post "/auth/google", to: "sessions#google_auth"
+
       namespace :admin do
         resource :auth, only: [:create, :destroy], controller: "authentication"
         resources :shops
