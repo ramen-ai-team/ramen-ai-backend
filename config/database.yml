@@ -10,12 +10,11 @@
 #   https://dev.mysql.com/doc/refman/5.7/en/password-hashing.html
 #
 default: &default
-  adapter: mysql2
-  encoding: utf8mb4
+  adapter: postgresql
+  encoding: unicode
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
   username: root
   password:
-  host: mysql
 
 development:
   <<: *default
@@ -49,15 +48,8 @@ test:
 # for a full overview on how database connection configuration can be specified.
 #
 production:
-  primary: &primary_production
-    <<: *default
-production:
   <<: *default
-  database: <%= Rails.application.credentials.dig(:gcp, :db_name) %>
-  username: <%= Rails.application.credentials.dig(:gcp, :db_username) %>
-  password: <%= Rails.application.credentials.dig(:gcp, :db_password) %>
-  socket: "<%= ENV.fetch('DB_SOCKET_DIR') { '/cloudsql' } %>/<%= ENV['CLOUD_SQL_CONNECTION_NAME'] %>"
-  host: localhost
+  url: <%= Rails.application.credentials.dig(:neon, :db_url) %>
   # cache:
   #   <<: *primary_production
   #   database: ramen_ai_backend_production_cache

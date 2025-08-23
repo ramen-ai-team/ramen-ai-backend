@@ -1,7 +1,7 @@
 source "https://rubygems.org"
 
 gem "rails", "~> 8.0.2"
-gem "mysql2", "~> 0.5"
+gem "pg", "~> 1.1"
 gem "puma", ">= 5.0"
 
 # Use Active Model has_secure_password [https://guides.rubyonrails.org/active_model_basics.html#securepassword]
