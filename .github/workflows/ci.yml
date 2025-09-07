@@ -12,13 +12,14 @@ jobs:
     env:
       RAILS_ENV: test
     services:
-      mysql:
-        image: mysql:8.0
+      postgres:
+        image: postgres:15
         env:
-          MYSQL_ROOT_PASSWORD: password1234
+          POSTGRES_PASSWORD: password
+          POSTGRES_DB: ramen_ai_backend_test
         ports:
-          - 3306:3306
-        options: --health-cmd "mysqladmin ping" --health-interval 10s --health-timeout 5s --health-retries 10
+          - 5432:5432
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
 
     steps:
       - name: Checkout code
