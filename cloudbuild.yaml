@@ -18,20 +18,25 @@ steps:
       - >-
         $_AR_HOSTNAME/$_AR_PROJECT_ID/$_AR_REPOSITORY/$REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA
 
-  - id: Debug Master Key
+  - id: Debug Database Config
     name: gcr.io/google-appengine/exec-wrapper
     entrypoint: "bash"
     secretEnv: ["RAILS_MASTER_KEY"]
     args:
       - -c
       - |
-        echo "Debug: Checking RAILS_MASTER_KEY availability"
-        if [ -z "$$RAILS_MASTER_KEY" ]; then
-          echo "ERROR: RAILS_MASTER_KEY is empty or not set"
-        else
-          echo "SUCCESS: RAILS_MASTER_KEY is set (length: $${#RAILS_MASTER_KEY})"
-          echo "First 8 chars: $${RAILS_MASTER_KEY:0:8}..."
-        fi
+        echo "Debug: Checking database configuration"
+        /buildstep/execute.sh \
+          -i $_AR_HOSTNAME/$_AR_PROJECT_ID/$_AR_REPOSITORY/$REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA\
+          -s ${_AR_PROJECT_ID}:${_DEPLOY_REGION}:${_INSTANCE_NAME} \
+          -e RAILS_ENV=production \
+          -e RAILS_MASTER_KEY=$$RAILS_MASTER_KEY \
+          -- bash -c "
+            echo 'Checking credentials...'
+            bundle exec rails runner 'puts Rails.application.credentials.dig(:neon, :db_url) ? \"DB URL found\" : \"DB URL NOT found\"'
+            echo 'Checking DATABASE_URL env var...'
+            echo \$DATABASE_URL | sed 's/postgresql:\/\/[^@]*@/postgresql:\/\/***:***@/'
+          "
 
   - id: Apply Migrations
     name: gcr.io/google-appengine/exec-wrapper
