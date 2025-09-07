@@ -34,8 +34,6 @@ steps:
           -- bash -c "
             echo 'Checking credentials...'
             bundle exec rails runner 'puts Rails.application.credentials.dig(:neon, :db_url) ? \"DB URL found\" : \"DB URL NOT found\"'
-            echo 'Checking DATABASE_URL env var...'
-            echo \$DATABASE_URL | sed 's/postgresql:\/\/[^@]*@/postgresql:\/\/***:***@/'
           "
 
   - id: Apply Migrations
