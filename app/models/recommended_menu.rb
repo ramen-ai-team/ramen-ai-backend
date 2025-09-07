@@ -6,7 +6,7 @@ class RecommendedMenu
   end
 
   def find_best_match
-    menus.order("RAND()").first
+    menus.order("RANDOM()").first
   end
 
   private
