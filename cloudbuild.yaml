@@ -18,6 +18,21 @@ steps:
       - >-
         $_AR_HOSTNAME/$_AR_PROJECT_ID/$_AR_REPOSITORY/$REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA
 
+  - id: Debug Master Key
+    name: gcr.io/google-appengine/exec-wrapper
+    entrypoint: "bash"
+    secretEnv: ["RAILS_MASTER_KEY"]
+    args:
+      - -c
+      - |
+        echo "Debug: Checking RAILS_MASTER_KEY availability"
+        if [ -z "$$RAILS_MASTER_KEY" ]; then
+          echo "ERROR: RAILS_MASTER_KEY is empty or not set"
+        else
+          echo "SUCCESS: RAILS_MASTER_KEY is set (length: $${#RAILS_MASTER_KEY})"
+          echo "First 8 chars: $${RAILS_MASTER_KEY:0:8}..."
+        fi
+
   - id: Apply Migrations
     name: gcr.io/google-appengine/exec-wrapper
     entrypoint: "bash"
