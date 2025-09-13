@@ -5,6 +5,72 @@ info:
   version: 1.0.0
 servers: []
 paths:
+  "/api/v1/auth/google":
+    post:
+      summary: google_auth
+      tags:
+      - Api::V1::Session
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                token:
+                  type: string
+              required:
+              - token
+            example:
+              token: valid_token
+      responses:
+        '200':
+          description: returns existing user if already exists
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                  user:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                      email:
+                        type: string
+                      name:
+                        type: string
+                      image:
+                        type: string
+                    required:
+                    - id
+                    - email
+                    - name
+                    - image
+                required:
+                - token
+                - user
+              example:
+                token: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjo4LCJleHAiOjE3NTc4MTgzNTF9.Zd7WeANw-uiT2rOjdXpgeonwEkJz29p17xfjFoElyrU
+                user:
+                  id: 8
+                  email: user@example.com
+                  name: User 1
+                  image: https://example.com/user_image.png
+        '401':
+          description: returns unauthorized error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+              example:
+                error: Invalid token
   "/api/v1/menu_with_shops/{id}":
     get:
       summary: show
@@ -16,7 +82,7 @@ paths:
         required: true
         schema:
           type: integer
-        example: 78
+        example: 4
       responses:
         '200':
           description: returns a specific menu
@@ -62,14 +128,14 @@ paths:
                 - image_url
                 - shop
               example:
-                id: 78
+                id: 4
                 name: 特製ラーメン
                 genre_name: ラーメン
                 noodle_name: 太麺
                 soup_name: 豚骨
-                image_url: http://example.com/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsiZGF0YSI6MjAsInB1ciI6ImJsb2JfaWQifX0=--d2e0690caab7ed6e2b30f83f720fc5395c946d1b/ramen.png
+                image_url: http://example.com/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsiZGF0YSI6NCwicHVyIjoiYmxvYl9pZCJ9fQ==--83a855877ac63974e22537dbc3c93bd9ed88cc06/ramen.png
                 shop:
-                  id: 126
+                  id: 4
                   name: ラーメン屋
                   address: 東京都新宿区
                   google_map_url: https://maps.app.goo.gl/BvuQTxGsmKLJ68yL9
@@ -114,17 +180,40 @@ paths:
                 - menus
               example:
                 menus:
-                - id: 79
+                - id: 5
                   name: 博多ラーメン
                   genre_name: ラーメン
                   noodle_name: 細麺
                   soup_name: 豚骨スープ
-                  image_url: http://example.com/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsiZGF0YSI6MjEsInB1ciI6ImJsb2JfaWQifX0=--ffa5da13a191b49705a7899af2132f4a52ba35c8/ramen.png
+                  image_url: http://example.com/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsiZGF0YSI6NSwicHVyIjoiYmxvYl9pZCJ9fQ==--5e71d675486112121c7d516bdee1a6e6f4fa8c7e/ramen.png
   "/api/v1/recommended_menus":
     post:
       summary: create
       tags:
       - Api::V1::RecommendedMenu
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                select_menu_ids:
+                  type: array
+                  items:
+                    type: string
+                not_select_menu_ids:
+                  type: array
+                  items:
+                    type: string
+              required:
+              - select_menu_ids
+            example:
+              select_menu_ids:
+              - '1'
+              - '2'
+              not_select_menu_ids:
+              - '3'
+              - '4'
       responses:
         '200':
           description: returns a recommended menu based on select_menu_ids & not_select_menu_ids
@@ -179,14 +268,14 @@ paths:
                 - reason
               example:
                 recommended_menu:
-                  id: 81
+                  id: 7
                   name: Ramen 5
                   genre_name: ラーメン
                   noodle_name: 太麺
                   soup_name: 豚骨
-                  image_url: http://example.com/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsiZGF0YSI6MjMsInB1ciI6ImJsb2JfaWQifX0=--ce259018f2c3a2152ecac6404721a038636e6d45/ramen.png
+                  image_url: http://example.com/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsiZGF0YSI6NywicHVyIjoiYmxvYl9pZCJ9fQ==--774468f5466901d03ec584c32fdb0a99c76c7d25/ramen.png
                   shop:
-                    id: 129
+                    id: 7
                     name: ラーメン屋
                     address: 東京都新宿区
                     google_map_url: https://maps.app.goo.gl/BvuQTxGsmKLJ68yL9
@@ -204,39 +293,6 @@ paths:
                 - error
               example:
                 error: select_menu_idsが必要です
-        '500':
-          description: returns a recommended menu based on select_menu_ids & not_select_menu_ids
-          content:
-            application/json:
-              schema:
-                type: object
-                properties: {}
-                required:
-                - error
-              example: {}
-      requestBody:
-        content:
-          application/x-www-form-urlencoded:
-            schema:
-              type: object
-              properties:
-                select_menu_ids:
-                  type: array
-                  items:
-                    type: string
-                not_select_menu_ids:
-                  type: array
-                  items:
-                    type: string
-              required:
-              - select_menu_ids
-            example:
-              select_menu_ids:
-              - '1'
-              - '2'
-              not_select_menu_ids:
-              - '3'
-              - '4'
   "/api/v1/shops":
     get:
       summary: index
@@ -266,11 +322,13 @@ paths:
                       required:
                       - id
                       - name
+                      - address
+                      - google_map_url
                 required:
                 - shops
               example:
                 shops:
-                - id: 131
+                - id: 9
                   name: 九州 筑豊ラーメン山小屋
                   address: 佐賀県嬉野市嬉野町大字下宿甲４００２−４
                   google_map_url: https://maps.app.goo.gl/BvuQTxGsmKLJ68yL9
@@ -285,7 +343,7 @@ paths:
         required: true
         schema:
           type: integer
-        example: 132
+        example: 10
       responses:
         '200':
           description: returns a specific shop
@@ -305,8 +363,10 @@ paths:
                 required:
                 - id
                 - name
+                - address
+                - google_map_url
               example:
-                id: 132
+                id: 10
                 name: 九州 筑豊ラーメン山小屋
                 address: 佐賀県嬉野市嬉野町大字下宿甲４００２−４
                 google_map_url: https://maps.app.goo.gl/BvuQTxGsmKLJ68yL9
