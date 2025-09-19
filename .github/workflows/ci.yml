@@ -43,3 +43,5 @@ jobs:
       - name: Run RSpec
         run: |
           bundle exec rspec --format progress --color
+        env:
+          GOOGLE_PRIVATE_KEY: ${{ secrets.TEST_PRIVATE_KEY }}
