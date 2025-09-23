@@ -34,7 +34,7 @@ sequenceDiagram
     Backend->>Frontend: JWTトークン＋ユーザー情報
     Frontend->>User: ログイン完了
 ```
-  å
+
 ## APIエンドポイント
 
 ### 1. POST /api/v1/auth/google
@@ -64,49 +64,22 @@ sequenceDiagram
 ### 1. JWT トークンの管理
 
 **設計方針**:
-- **アクセストークン**: 短い有効期限（15-30分）
-- **リフレッシュトークン**: 長い有効期限（30日）、DB保存でブラックリスト管理
-- **ログアウト**: リフレッシュトークンをブラックリスト化
+- **アクセストークン**: 長い有効期限（7日）でシンプル実装
+- **ログアウト**: フロントエンドでトークン削除
 
 **実装**:
 ```ruby
 # app/models/user.rb
 class User < ApplicationRecord
-  has_many :refresh_tokens, dependent: :destroy
-
   def generate_jwt_token
     payload = {
       user_id: id,
-      exp: 30.minutes.from_now.to_i,
+      exp: 7.days.from_now.to_i,
       iat: Time.current.to_i
     }
     JWT.encode(payload, Rails.application.secret_key_base)
   end
 end
-
-# app/models/refresh_token.rb
-class RefreshToken < ApplicationRecord
-  belongs_to :user
-
-  scope :active, -> { where(revoked: false, expires_at: Time.current..) }
-
-  def revoke!
-    update!(revoked: true)
-  end
-end
-```
-
-**APIエンドポイント**:
-```ruby
-# POST /api/v1/auth/refresh
-{
-  "refresh_token": "abc123..."
-}
-# Response: 新しいアクセストークン
-
-# POST /api/v1/auth/logout
-# Authorization: Bearer <access_token>
-# リフレッシュトークンを無効化
 ```
 
 ### 2. Google トークンの検証
@@ -155,7 +128,6 @@ end
 **設計方針**:
 - メールアドレスでの重複防止
 - Google IDとの紐付け管理
-- アカウント削除時の論理削除
 
 **実装**:
 ```ruby
@@ -163,8 +135,6 @@ end
 class User < ApplicationRecord
   validates :email, presence: true, uniqueness: true
   validates :google_id, presence: true, uniqueness: true
-
-  scope :active, -> { where(deleted_at: nil) }
 
   def self.find_or_create_from_google(google_data)
     # Google IDで検索
@@ -196,11 +166,6 @@ class User < ApplicationRecord
       email_verified: google_data[:email_verified]
     )
   end
-
-  def soft_delete!
-    update!(deleted_at: Time.current)
-    refresh_tokens.update_all(revoked: true)
-  end
 end
 ```
 
@@ -224,14 +189,9 @@ class Api::V1::AuthController < ApplicationController
     end
 
     user = User.find_or_create_from_google(google_data)
-    refresh_token = user.refresh_tokens.create!(
-      token: SecureRandom.hex(32),
-      expires_at: 30.days.from_now
-    )
 
     render json: {
       token: user.generate_jwt_token,
-      refresh_token: refresh_token.token,
       user: {
         id: user.id,
         email: user.email,
@@ -256,8 +216,6 @@ end
 **エラーケース別レスポンス**:
 - `400 Bad Request`: 必須パラメータ不足
 - `401 Unauthorized`: 無効/期限切れトークン
-- `409 Conflict`: メールアドレス重複（別の認証方法で既存）
-- `429 Too Many Requests`: レート制限
 - `500 Internal Server Error`: サーバーエラー
 
 ### 5. CORS 設定
@@ -290,21 +248,6 @@ Rails.application.config.middleware.insert_before 0, Rack::Cors do
 end
 ```
 
-### 6. レート制限
-
-```ruby
-# Gemfile
-gem 'rack-attack'
-
-# config/initializers/rack_attack.rb
-Rack::Attack.throttle('auth/google', limit: 5, period: 1.minute) do |req|
-  req.ip if req.path == '/api/v1/auth/google' && req.post?
-end
-
-Rack::Attack.throttle('auth/refresh', limit: 10, period: 1.minute) do |req|
-  req.ip if req.path == '/api/v1/auth/refresh' && req.post?
-end
-```
 
 ## 必要なマイグレーション
 
@@ -315,27 +258,8 @@ class AddGoogleAuthToUsers < ActiveRecord::Migration[7.0]
     add_column :users, :google_id, :string
     add_column :users, :image, :string
     add_column :users, :email_verified, :boolean, default: false
-    add_column :users, :deleted_at, :datetime
 
     add_index :users, :google_id, unique: true
-    add_index :users, :deleted_at
-  end
-end
-
-# db/migrate/xxx_create_refresh_tokens.rb
-class CreateRefreshTokens < ActiveRecord::Migration[7.0]
-  def change
-    create_table :refresh_tokens do |t|
-      t.references :user, null: false, foreign_key: true
-      t.string :token, null: false
-      t.datetime :expires_at, null: false
-      t.boolean :revoked, default: false
-
-      t.timestamps
-    end
-
-    add_index :refresh_tokens, :token, unique: true
-    add_index :refresh_tokens, [:user_id, :revoked, :expires_at]
   end
 end
 ```
@@ -364,7 +288,7 @@ module JwtAuthenticable
 
     begin
       decoded_token = JWT.decode(token, Rails.application.secret_key_base, true, { algorithm: 'HS256' })
-      @current_user = User.active.find(decoded_token[0]['user_id'])
+      @current_user = User.find(decoded_token[0]['user_id'])
     rescue JWT::ExpiredSignature
       render json: { error: 'expired_token', message: 'Token has expired' },
              status: :unauthorized
@@ -506,7 +430,7 @@ class AuthAPI {
 
       if (response.ok) {
         // トークンを安全に保存
-        await this.storeTokens(data.token, data.refresh_token);
+        await AsyncStorage.setItem('access_token', data.token);
         await this.storeUser(data.user);
         return { success: true, user: data.user };
       } else {
@@ -518,76 +442,24 @@ class AuthAPI {
     }
   }
 
-  async refreshToken() {
-    try {
-      const refreshToken = await AsyncStorage.getItem('refresh_token');
-
-      if (!refreshToken) {
-        throw new Error('No refresh token available');
-      }
-
-      const response = await fetch(`${API_BASE_URL}/auth/refresh`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          refresh_token: refreshToken
-        }),
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        await AsyncStorage.setItem('access_token', data.token);
-        return data.token;
-      } else {
-        await this.logout();
-        throw new Error('Token refresh failed');
-      }
-    } catch (error) {
-      console.error('Token refresh error:', error);
-      throw error;
-    }
-  }
 
   async logout() {
     try {
-      const accessToken = await AsyncStorage.getItem('access_token');
-
-      if (accessToken) {
-        await fetch(`${API_BASE_URL}/auth/logout`, {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${accessToken}`,
-          },
-        });
-      }
-    } catch (error) {
-      console.error('Logout API error:', error);
-    } finally {
       // ローカルデータを削除
       await this.clearTokens();
+    } catch (error) {
+      console.error('Logout error:', error);
     }
   }
 
   async makeAuthenticatedRequest(url, options = {}) {
-    let accessToken = await AsyncStorage.getItem('access_token');
+    const accessToken = await AsyncStorage.getItem('access_token');
 
-    // 初回リクエスト
-    let response = await this.makeRequest(url, accessToken, options);
-
-    // トークンが期限切れの場合、リフレッシュして再試行
-    if (response.status === 401) {
-      try {
-        accessToken = await this.refreshToken();
-        response = await this.makeRequest(url, accessToken, options);
-      } catch (refreshError) {
-        throw new Error('Authentication required');
-      }
+    if (!accessToken) {
+      throw new Error('Authentication required');
     }
 
-    return response;
+    return this.makeRequest(url, accessToken, options);
   }
 
   async makeRequest(url, token, options) {
@@ -601,12 +473,6 @@ class AuthAPI {
     });
   }
 
-  async storeTokens(accessToken, refreshToken) {
-    await AsyncStorage.multiSet([
-      ['access_token', accessToken],
-      ['refresh_token', refreshToken],
-    ]);
-  }
 
   async storeUser(user) {
     await AsyncStorage.setItem('user', JSON.stringify(user));
@@ -615,7 +481,6 @@ class AuthAPI {
   async clearTokens() {
     await AsyncStorage.multiRemove([
       'access_token',
-      'refresh_token',
       'user'
     ]);
   }
@@ -831,3 +696,54 @@ const styles = StyleSheet.create({
 
 export default LoginScreen;
 ```
+
+## 後で対応するリスト
+
+### セキュリティ強化
+
+- **リフレッシュトークン機能**
+  - アクセストークンの有効期限を短縮（15-30分）
+  - リフレッシュトークンをDBで管理
+  - ブラックリスト機能でトークン無効化
+  - `/api/v1/auth/refresh` エンドポイント追加
+  - `/api/v1/auth/logout` でサーバーサイドトークン無効化
+
+- **レート制限**
+  - rack-attackによる認証エンドポイントの制限
+  - IP別リクエスト数制限
+  - 429 Too Many Requestsレスポンス
+
+### データ管理強化
+
+- **論理削除機能**
+  - ユーザーの`deleted_at`カラム追加
+  - `scope :active`でアクティブユーザーのみ取得
+  - ユーザー削除時の関連データ処理
+
+- **アカウント連携強化**
+  - 複数のOAuth Provider対応（Apple、Facebook等）
+  - アカウント統合機能
+  - メールアドレス変更時の重複チェック強化
+
+### 監視・ログ強化
+
+- **認証ログ**
+  - ログイン/ログアウトの詳細ログ
+  - 不正アクセス試行の検知
+  - セキュリティイベントの通知
+
+- **メトリクス収集**
+  - 認証成功率の監視
+  - レスポンス時間の計測
+  - エラー率の監視
+
+### ユーザビリティ向上
+
+- **トークン自動更新**
+  - フロントエンドでのトークン自動リフレッシュ
+  - バックグラウンドでの無音更新
+  - ネットワーク復旧時の自動再認証
+
+- **オフライン対応**
+  - ネットワーク切断時の適切な処理
+  - トークン期限切れ時のユーザー体験向上
