@@ -190,6 +190,10 @@ GEM
       signet (>= 0.16, < 2.a)
     hashdiff (1.2.0)
     hashie (5.0.0)
+    httparty (0.23.1)
+      csv
+      mini_mime (>= 1.0.0)
+      multi_xml (>= 0.5.2)
     httpclient (2.9.0)
       mutex_m
     i18n (1.14.7)
@@ -525,6 +529,7 @@ DEPENDENCIES
   factory_bot_rails
   google-cloud-storage
   googleauth
+  httparty
   image_processing (>= 1.2)
   jwt
   kamal
