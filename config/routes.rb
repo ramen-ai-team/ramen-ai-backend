@@ -16,7 +16,7 @@ Rails.application.routes.draw do
       resource :recommended_menus, only: [:create]
 
       # Google OAuth
-      post "/auth/google", to: "sessions#google_auth"
+      post "/auth/google", to: "auth#google"
 
       namespace :admin do
         resource :auth, only: [:create, :destroy], controller: "authentication"
