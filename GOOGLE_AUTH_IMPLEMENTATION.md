@@ -105,7 +105,7 @@ class GoogleTokenVerifier
     token_data = response.parsed_response
 
     # 検証
-    return nil unless token_data['aud'] == Rails.application.credentials.google[:client_id]
+    return nil unless token_data['aud'] == Rails.application.credentials.gcp[:client_id]
     return nil unless token_data['iss'] == 'https://accounts.google.com'
     return nil unless token_data['exp'].to_i > Time.current.to_i
 

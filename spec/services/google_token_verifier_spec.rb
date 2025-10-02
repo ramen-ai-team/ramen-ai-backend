@@ -20,7 +20,7 @@ RSpec.describe GoogleTokenVerifier do
     end
 
     before do
-      allow(Rails.application.credentials).to receive(:google).and_return({ client_id: client_id })
+      allow(Rails.application.credentials).to receive(:gcp).and_return({ client_id: client_id })
     end
 
     context 'with valid token' do
