@@ -10,132 +10,120 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_07_09_144318) do
+ActiveRecord::Schema[8.0].define(version: 2025_10_02_122934) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
-  create_table "active_storage_attachments", force: :cascade do |t|
-    t.string "name", null: false
-    t.string "record_type", null: false
+  create_table "active_storage_attachments", id: :serial, force: :cascade do |t|
+    t.string "name", limit: 255, null: false
+    t.string "record_type", limit: 255, null: false
     t.bigint "record_id", null: false
     t.bigint "blob_id", null: false
-    t.datetime "created_at", null: false
-    t.index ["blob_id"], name: "index_active_storage_attachments_on_blob_id"
-    t.index ["record_type", "record_id", "name", "blob_id"], name: "index_active_storage_attachments_uniqueness", unique: true
+    t.datetime "created_at", precision: nil, null: false
   end
 
-  create_table "active_storage_blobs", force: :cascade do |t|
-    t.string "key", null: false
-    t.string "filename", null: false
-    t.string "content_type"
+  create_table "active_storage_blobs", id: :serial, force: :cascade do |t|
+    t.string "key", limit: 255, null: false
+    t.string "filename", limit: 255, null: false
+    t.string "content_type", limit: 255
     t.text "metadata"
-    t.string "service_name", null: false
+    t.string "service_name", limit: 255, null: false
     t.bigint "byte_size", null: false
-    t.string "checksum"
-    t.datetime "created_at", null: false
-    t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
+    t.string "checksum", limit: 255
+    t.datetime "created_at", precision: nil, null: false
   end
 
-  create_table "active_storage_variant_records", force: :cascade do |t|
+  create_table "active_storage_variant_records", id: :serial, force: :cascade do |t|
     t.bigint "blob_id", null: false
-    t.string "variation_digest", null: false
-    t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
+    t.string "variation_digest", limit: 255, null: false
+
+    t.unique_constraint ["blob_id", "variation_digest"], name: "active_storage_variant_records_blob_id_variation_digest_key"
   end
 
-  create_table "admin_users", force: :cascade do |t|
-    t.string "email", default: "", null: false
-    t.string "encrypted_password", default: "", null: false
-    t.string "reset_password_token"
-    t.datetime "reset_password_sent_at"
-    t.datetime "remember_created_at"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["email"], name: "index_admin_users_on_email", unique: true
-    t.index ["reset_password_token"], name: "index_admin_users_on_reset_password_token", unique: true
+  create_table "admin_users", id: :serial, force: :cascade do |t|
+    t.string "email", limit: 255, default: "", null: false
+    t.string "encrypted_password", limit: 255, default: "", null: false
+    t.string "reset_password_token", limit: 255
+    t.datetime "reset_password_sent_at", precision: nil
+    t.datetime "remember_created_at", precision: nil
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
+
+    t.unique_constraint ["email"], name: "admin_users_email_key"
+    t.unique_constraint ["reset_password_token"], name: "admin_users_reset_password_token_key"
   end
 
-  create_table "genres", force: :cascade do |t|
-    t.string "name", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["name"], name: "index_genres_on_name", unique: true
+  create_table "genres", id: :serial, force: :cascade do |t|
+    t.string "name", limit: 255, null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
   end
 
-  create_table "menu_genres", force: :cascade do |t|
+  create_table "menu_genres", id: :serial, force: :cascade do |t|
     t.bigint "menu_id", null: false
     t.bigint "genre_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["genre_id"], name: "index_menu_genres_on_genre_id"
-    t.index ["menu_id"], name: "index_menu_genres_on_menu_id"
   end
 
-  create_table "menu_noodles", force: :cascade do |t|
+  create_table "menu_noodles", id: :serial, force: :cascade do |t|
     t.bigint "menu_id", null: false
     t.bigint "noodle_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["menu_id"], name: "index_menu_noodles_on_menu_id"
-    t.index ["noodle_id"], name: "index_menu_noodles_on_noodle_id"
   end
 
-  create_table "menu_soups", force: :cascade do |t|
+  create_table "menu_soups", id: :serial, force: :cascade do |t|
     t.bigint "menu_id", null: false
     t.bigint "soup_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["menu_id"], name: "index_menu_soups_on_menu_id"
-    t.index ["soup_id"], name: "index_menu_soups_on_soup_id"
   end
 
-  create_table "menus", force: :cascade do |t|
-    t.string "name", null: false
+  create_table "menus", id: :serial, force: :cascade do |t|
+    t.string "name", limit: 255, null: false
     t.bigint "shop_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["shop_id"], name: "index_menus_on_shop_id"
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
   end
 
-  create_table "noodles", force: :cascade do |t|
-    t.string "name", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["name"], name: "index_noodles_on_name", unique: true
+  create_table "noodles", id: :serial, force: :cascade do |t|
+    t.string "name", limit: 255, null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
   end
 
-  create_table "shops", force: :cascade do |t|
-    t.string "name", null: false
-    t.string "address", default: "", null: false
-    t.string "google_map_url"
+  create_table "shops", id: :serial, force: :cascade do |t|
+    t.string "name", limit: 255, null: false
+    t.string "address", limit: 255, default: "", null: false
+    t.string "google_map_url", limit: 255
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["google_map_url"], name: "index_shops_on_google_map_url", unique: true
+
+    t.unique_constraint ["google_map_url"], name: "shops_google_map_url_key"
   end
 
-  create_table "soups", force: :cascade do |t|
-    t.string "name", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["name"], name: "index_soups_on_name", unique: true
+  create_table "soups", id: :serial, force: :cascade do |t|
+    t.string "name", limit: 255, null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
   end
 
-  create_table "users", force: :cascade do |t|
-    t.string "email"
-    t.string "name"
-    t.string "provider"
-    t.string "uid"
+  create_table "users", id: :serial, force: :cascade do |t|
+    t.string "email", limit: 255
+    t.string "name", limit: 255
+    t.string "provider", limit: 255
+    t.string "uid", limit: 255
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
+    t.string "google_id"
     t.string "image"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.boolean "email_verified", default: false
+    t.index ["google_id"], name: "index_users_on_google_id", unique: true
   end
 
-  add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
-  add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id", name: "active_storage_variant_records_blob_id_fkey"
   add_foreign_key "menu_genres", "genres"
-  add_foreign_key "menu_genres", "menus"
   add_foreign_key "menu_noodles", "menus"
-  add_foreign_key "menu_noodles", "noodles"
   add_foreign_key "menu_soups", "menus"
-  add_foreign_key "menu_soups", "soups"
-  add_foreign_key "menus", "shops"
 end
