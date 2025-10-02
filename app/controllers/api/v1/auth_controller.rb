@@ -1,4 +1,4 @@
-class Api::V1::AuthController < ApplicationController
+class Api::V1::AuthController < Api::V1::ApplicationController
   rescue_from StandardError, with: :handle_auth_error
 
   def google
