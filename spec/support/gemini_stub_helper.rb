@@ -10,7 +10,7 @@ module GeminiStubHelper
   def stub_gemini_recommended_ramen
     stub_gemini_api(
       method: :post,
-      url: 'https://aiplatform.googleapis.com/v1/projects/ramen-ai/locations/global/publishers/google/models/gemini-2.5-flash-lite-preview-06-17:streamGenerateContent',
+      url: 'https://aiplatform.googleapis.com/v1/projects/ramen-ai/locations/global/publishers/google/models/gemini-2.5-flash:streamGenerateContent',
       file: 'recommended_ramen.json',
     )
   end
