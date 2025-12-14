@@ -52,7 +52,7 @@ class GeminiApi
   def self.call(text)
     access_token = credential["access_token"]
     project_id = "ramen-ai"
-    model_id = "gemini-2.5-flash-lite-preview-06-17"
+    model_id = "gemini-2.5-flash"  # 最新の安定版
     uri = URI.parse("https://#{API_ENDPOINT}/v1/projects/#{project_id}/locations/#{LOCATION}/publishers/google/models/#{model_id}:#{GENERATE_CONTENT_API}")
     http = Net::HTTP.new(uri.host, uri.port)
     http.use_ssl = true
