@@ -53,7 +53,7 @@ class User < ApplicationRecord
       name: google_data[:name],
       image: google_data[:picture],
       email_verified: google_data[:email_verified],
-      provider: 'google',
+      provider: "google",
       uid: google_data[:google_id]
     )
   end
