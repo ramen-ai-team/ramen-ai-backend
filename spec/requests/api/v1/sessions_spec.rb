@@ -2,6 +2,12 @@ require 'rails_helper'
 
 RSpec.describe Api::V1::SessionsController, type: :request do
   describe 'POST /api/v1/auth/google' do
+    before do
+      stub_google_token_verifier(id_token: 'valid_token', success: true)
+      stub_google_token_verifier(id_token: '', success: false)
+      stub_google_token_verifier(id_token: 'invalid_token', success: false)
+    end
+
     context 'with valid token' do
       it 'creates a new user and returns JWT token' do
         expect {
@@ -40,13 +46,14 @@ RSpec.describe Api::V1::SessionsController, type: :request do
       end
     end
 
-    context 'with invalid token', skip: 'まだ実装されていない' do
+    context 'with invalid token' do
       it 'returns unauthorized error' do
         post '/api/v1/auth/google', params: { token: 'invalid_token' }
 
         expect(response).to have_http_status(:unauthorized)
         expect(json).to eq({
-          error: 'Invalid token'
+          error: 'invalid_token',
+          message: "Invalid or expired Google token"
         })
       end
     end
@@ -57,7 +64,8 @@ RSpec.describe Api::V1::SessionsController, type: :request do
 
         expect(response).to have_http_status(:unauthorized)
         expect(json).to eq({
-          error: 'Invalid token'
+          error: 'invalid_token',
+          message: "Invalid or expired Google token"
         })
       end
     end
