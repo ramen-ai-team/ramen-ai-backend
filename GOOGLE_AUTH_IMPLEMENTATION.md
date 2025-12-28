@@ -43,7 +43,7 @@ sequenceDiagram
 - **リクエスト**:
   ```json
   {
-    "token": "eyJhbGciOiJSUzI1NiIsImtpZCI6IjdkYzAifQ..."
+    "token": "xxxxx"
   }
   ```
 - **レスポンス**:

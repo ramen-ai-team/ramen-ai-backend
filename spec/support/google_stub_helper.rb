@@ -15,14 +15,14 @@ module GoogleStubHelper
     )
   end
 
-  def stub_google_token_verifier(id_token: 'valid_token', success: true)
+  def stub_google_token_verifier(id_token: 'valid_token', success: true, response_body: nil)
     url = "https://www.googleapis.com/oauth2/v3/tokeninfo?id_token=#{id_token}"
 
     if success
       stub_request(:get, url)
         .to_return(
           status: 200,
-          body: {
+          body: response_body || {
             sub: '123456789',
             email: 'user@example.com',
             name: 'John Doe',

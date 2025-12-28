@@ -26,12 +26,14 @@ RSpec.describe Api::V1::SessionsController, type: :request do
         })
       end
 
-      it 'returns existing user if already exists' do
+      it 'returns existing user & updates if already exists' do
         user = create(:user, email: 'user@example.com')
 
         expect {
           post '/api/v1/auth/google', params: { token: 'valid_token' }
         }.not_to change(User, :count)
+
+        user.reload
 
         expect(response).to have_http_status(:ok)
         expect(json).to match({

@@ -4,7 +4,7 @@ class Api::V1::AuthController < Api::V1::ApplicationController
   def google
     google_data = GoogleTokenVerifier.verify(params[:token])
 
-    if google_data.nil?
+    unless google_data
       render json: {
         error: "invalid_token",
         message: "Invalid or expired Google token"

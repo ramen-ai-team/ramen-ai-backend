@@ -42,7 +42,12 @@ class User < ApplicationRecord
     existing_user = find_by(email: google_data[:email])
     if existing_user
       # 既存のメールアドレスにGoogle IDを紐付け
-      existing_user.update!(google_id: google_data[:google_id])
+      existing_user.update!(
+        google_id: google_data[:google_id],
+        name: google_data[:name],
+        image: google_data[:picture],
+        uid: google_data[:google_id]
+      )
       return existing_user
     end
 

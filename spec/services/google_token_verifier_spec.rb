@@ -25,12 +25,7 @@ RSpec.describe GoogleTokenVerifier do
 
     context 'with valid token' do
       before do
-        stub_request(:get, "https://www.googleapis.com/oauth2/v3/tokeninfo?id_token=#{valid_token}")
-          .to_return(
-            status: 200,
-            body: valid_token_response.to_json,
-            headers: { 'Content-Type' => 'application/json' }
-          )
+        stub_google_token_verifier(id_token: valid_token, success: true, response_body: valid_token_response.to_json)
       end
 
       it 'returns normalized user data' do
@@ -49,51 +44,47 @@ RSpec.describe GoogleTokenVerifier do
     context 'with token having wrong audience' do
       before do
         invalid_response = valid_token_response.merge('aud' => 'wrong_client_id')
-        stub_request(:get, "https://www.googleapis.com/oauth2/v3/tokeninfo?id_token=#{valid_token}")
-          .to_return(
-            status: 200,
-            body: invalid_response.to_json,
-            headers: { 'Content-Type' => 'application/json' }
-          )
+        stub_google_token_verifier(id_token: valid_token, success: true, response_body: invalid_response.to_json)
       end
 
-      it 'returns nil' do
+      it 'returns false' do
         result = described_class.verify(valid_token)
-        expect(result).to be_nil
+        expect(result).to eq false
       end
     end
 
     context 'with token having wrong issuer' do
       before do
         invalid_response = valid_token_response.merge('iss' => 'https://wrong-issuer.com')
-        stub_request(:get, "https://www.googleapis.com/oauth2/v3/tokeninfo?id_token=#{valid_token}")
-          .to_return(
-            status: 200,
-            body: invalid_response.to_json,
-            headers: { 'Content-Type' => 'application/json' }
-          )
+        stub_google_token_verifier(id_token: valid_token, success: true, response_body: invalid_response.to_json)
       end
 
-      it 'returns nil' do
+      it 'returns false' do
         result = described_class.verify(valid_token)
-        expect(result).to be_nil
+        expect(result).to eq false
       end
     end
 
     context 'with expired token' do
       before do
         expired_response = valid_token_response.merge('exp' => (Time.current - 1.hour).to_i.to_s)
-        stub_request(:get, "https://www.googleapis.com/oauth2/v3/tokeninfo?id_token=#{valid_token}")
-          .to_return(
-            status: 200,
-            body: expired_response.to_json,
-            headers: { 'Content-Type' => 'application/json' }
-          )
+        stub_google_token_verifier(id_token: valid_token, success: true, response_body: expired_response.to_json)
       end
 
-      it 'returns nil' do
+      it 'returns false' do
         result = described_class.verify(valid_token)
-        expect(result).to be_nil
+        expect(result).to eq false
+      end
+    end
+
+    context 'with HTTP error response' do
+      before do
+        stub_google_token_verifier(id_token: valid_token, success: false)
+      end
+
+      it 'returns false' do
+        result = described_class.verify(valid_token)
+        expect(result).to eq false
       end
     end
 
@@ -103,9 +94,9 @@ RSpec.describe GoogleTokenVerifier do
           .to_return(status: 400, body: { error: 'invalid_token' }.to_json)
       end
 
-      it 'returns nil' do
+      it 'returns false' do
         result = described_class.verify(invalid_token)
-        expect(result).to be_nil
+        expect(result).to eq false
       end
     end
 
@@ -115,11 +106,11 @@ RSpec.describe GoogleTokenVerifier do
           .to_raise(StandardError.new('Network error'))
       end
 
-      it 'logs error and returns nil' do
+      it 'logs error and returns false' do
         expect(Rails.logger).to receive(:error).with(/Google token verification failed: Network error/)
 
         result = described_class.verify(valid_token)
-        expect(result).to be_nil
+        expect(result).to eq false
       end
     end
   end
