@@ -2,7 +2,10 @@ require 'rails_helper'
 
 RSpec.describe Api::V1::SessionsController, type: :request do
   describe 'POST /api/v1/auth/google' do
+    let(:client_id) { 'test_client_id' }
+
     before do
+      allow(Rails.application.credentials).to receive(:gcp).and_return({ client_id: client_id })
       stub_google_token_verifier(id_token: 'valid_token')
       stub_google_token_verifier(id_token: '', status: 401)
       stub_google_token_verifier(id_token: 'invalid_token', status: 401)
