@@ -59,6 +59,29 @@ RSpec.describe ShopForm, type: :model do
       end
     end
 
+    context 'when shop with same URL already exists' do
+      let!(:existing_shop) { create(:shop, google_map_url: google_map_url, name: '既存の店', address: '既存の住所') }
+
+      it 'does not create a new shop' do
+        form = ShopForm.new(google_map_url: google_map_url)
+        expect { form.save }.not_to change(Shop, :count)
+      end
+
+      it 'returns the existing shop' do
+        form = ShopForm.new(google_map_url: google_map_url)
+        shop = form.save
+        expect(shop).to eq(existing_shop)
+        expect(shop.id).to eq(existing_shop.id)
+      end
+
+      it 'does not call Places API' do
+        form = ShopForm.new(google_map_url: google_map_url)
+        expect(GoogleMaps::PlaceIdExtractor).not_to receive(:extract)
+        expect(GoogleMaps::PlacesClient).not_to receive(:fetch_place_details)
+        form.save
+      end
+    end
+
     context 'when Place ID cannot be extracted' do
       it 'does not create a shop and returns false' do
         form = ShopForm.new(google_map_url: 'https://maps.app.goo.gl/invalid')
