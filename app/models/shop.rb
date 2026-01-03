@@ -7,8 +7,5 @@ class Shop < ApplicationRecord
     presence: true,
     length: { maximum: 255 },
     uniqueness: true,
-    format: {
-      with: /\Ahttps?:\/\/maps\.app\.goo\.gl\//,
-      message: "は「https://maps.app.goo.gl/」から始まるGoogle Map URLにしてください"
-    }
+    google_maps_url: true
 end

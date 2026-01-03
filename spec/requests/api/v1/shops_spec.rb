@@ -88,7 +88,7 @@ RSpec.describe Api::V1::ShopsController, type: :request do
 
         expect(response).to have_http_status(:bad_request)
         expect(json).to eq({
-          error: 'Invalid Google Maps URL'
+          errors: ['Google map url は「https://maps.app.goo.gl/」から始まるGoogle Map URLにしてください']
         })
       end
     end
@@ -116,7 +116,7 @@ RSpec.describe Api::V1::ShopsController, type: :request do
 
         expect(response).to have_http_status(:service_unavailable)
         expect(json).to eq({
-          error: 'Failed to fetch place details from Google Maps'
+          errors: ['Google map url から店舗情報を取得できませんでした']
         })
       end
     end
