@@ -74,4 +74,5 @@ RSpec.configure do |config|
   config.include FactoryBot::Syntax::Methods
   config.include JsonAPIHelper, type: :request
   config.include GoogleStubHelper
+  config.include AuthHelper, type: :request
 end
