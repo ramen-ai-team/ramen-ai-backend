@@ -2,27 +2,29 @@ require 'rails_helper'
 
 RSpec.describe Api::V1::AuthController, type: :request do
   describe 'POST /api/v1/auth/google' do
-    let(:valid_google_data) do
+    let(:client_id) { 'test_client_id' }
+    let(:valid_token) { 'valid_google_id_token' }
+    let(:invalid_token) { 'invalid_google_id_token' }
+    let(:valid_token_response) do
       {
-        google_id: 'google_123',
-        email: 'user@example.com',
-        name: 'Test User',
-        picture: 'https://example.com/avatar.jpg',
-        email_verified: true
+        'aud' => client_id,
+        'iss' => 'https://accounts.google.com',
+        'sub' => 'google_123',
+        'email' => 'user@example.com',
+        'name' => 'Test User',
+        'picture' => 'https://example.com/avatar.jpg',
+        'email_verified' => 'true',
+        'exp' => (Time.current + 1.hour).to_i.to_s
       }
     end
 
-    let(:valid_token) { 'valid_google_id_token' }
-    let(:invalid_token) { 'invalid_google_id_token' }
-
     before do
-      # GoogleTokenVerifierをモック
-      allow(GoogleTokenVerifier).to receive(:verify)
+      allow(Rails.application.credentials).to receive(:gcp).and_return({ client_id: client_id })
     end
 
     context 'with valid Google token' do
       before do
-        allow(GoogleTokenVerifier).to receive(:verify).with(valid_token).and_return(valid_google_data)
+        stub_google_token_verifier(id_token: valid_token, response_body: valid_token_response.to_json)
       end
 
       context 'when user does not exist' do
@@ -92,7 +94,7 @@ RSpec.describe Api::V1::AuthController, type: :request do
 
     context 'with invalid Google token' do
       before do
-        allow(GoogleTokenVerifier).to receive(:verify).with(invalid_token).and_return(nil)
+        stub_google_token_verifier(id_token: invalid_token, status: 401)
       end
 
       it 'returns unauthorized error' do
@@ -108,7 +110,9 @@ RSpec.describe Api::V1::AuthController, type: :request do
 
     context 'when GoogleTokenVerifier raises an exception' do
       before do
-        allow(GoogleTokenVerifier).to receive(:verify).and_raise(StandardError.new('Network error'))
+        # NOTE: StandardErrorをraiseするために、response_bodyで不適な値を渡す
+        invalid_response = valid_token_response.merge('email' => '')
+        stub_google_token_verifier(id_token: valid_token, response_body: invalid_response.to_json)
       end
 
       it 'returns internal server error' do
@@ -123,6 +127,10 @@ RSpec.describe Api::V1::AuthController, type: :request do
     end
 
     context 'with missing token parameter' do
+      before do
+        stub_google_token_verifier(id_token: '', status: 400)
+      end
+
       it 'returns unauthorized error' do
         post '/api/v1/auth/google'
 

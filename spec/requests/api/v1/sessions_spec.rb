@@ -3,9 +3,9 @@ require 'rails_helper'
 RSpec.describe Api::V1::SessionsController, type: :request do
   describe 'POST /api/v1/auth/google' do
     before do
-      stub_google_token_verifier(id_token: 'valid_token', success: true)
-      stub_google_token_verifier(id_token: '', success: false)
-      stub_google_token_verifier(id_token: 'invalid_token', success: false)
+      stub_google_token_verifier(id_token: 'valid_token')
+      stub_google_token_verifier(id_token: '', status: 401)
+      stub_google_token_verifier(id_token: 'invalid_token', status: 401)
     end
 
     context 'with valid token' do

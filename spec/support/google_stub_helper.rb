@@ -15,29 +15,24 @@ module GoogleStubHelper
     )
   end
 
-  def stub_google_token_verifier(id_token: 'valid_token', success: true, response_body: nil)
+  def stub_google_token_verifier(id_token: 'valid_token', status: 200, response_body: nil)
     url = "https://www.googleapis.com/oauth2/v3/tokeninfo?id_token=#{id_token}"
 
-    if success
-      stub_request(:get, url)
-        .to_return(
-          status: 200,
-          body: response_body || {
-            sub: '123456789',
-            email: 'user@example.com',
-            name: 'John Doe',
-            picture: 'https://lh3.googleusercontent.com/a/default-user',
-            email_verified: 'true',
-            aud: Rails.application.credentials.gcp[:client_id],
-            iss: 'https://accounts.google.com',
-            exp: (Time.current + 1.hour).to_i
-          }.to_json,
-          headers: { 'Content-Type': 'application/json' }
-        )
-    else
-      stub_request(:get, url)
-        .to_return(status: 401, body: {}.to_json)
-    end
+    stub_request(:get, url)
+      .to_return(
+        status:,
+        body: response_body || {
+          sub: '123456789',
+          email: 'user@example.com',
+          name: 'John Doe',
+          picture: 'https://lh3.googleusercontent.com/a/default-user',
+          email_verified: 'true',
+          aud: Rails.application.credentials.gcp[:client_id],
+          iss: 'https://accounts.google.com',
+          exp: (Time.current + 1.hour).to_i
+        }.to_json,
+        headers: { 'Content-Type': 'application/json' }
+      )
   end
 
   private
