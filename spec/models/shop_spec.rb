@@ -63,15 +63,16 @@ RSpec.describe Shop, type: :model do
         expect(shop).to be_valid
       end
 
-      it 'is valid with full Google Maps URL' do
+      it 'is invalid with full Google Maps URL' do
         shop = build(:shop, google_map_url: 'https://www.google.com/maps/place/Shop/@35.6812,139.7671')
-        expect(shop).to be_valid
+        expect(shop).not_to be_valid
+        expect(shop.errors[:google_map_url]).to include('は「https://maps.app.goo.gl/」から始まるGoogle Map URLにしてください')
       end
 
       it 'is invalid with non-Google Maps URL' do
         shop = build(:shop, google_map_url: 'https://example.com')
         expect(shop).not_to be_valid
-        expect(shop.errors[:google_map_url]).to include('must be a valid Google Maps URL')
+        expect(shop.errors[:google_map_url]).to include('は「https://maps.app.goo.gl/」から始まるGoogle Map URLにしてください')
       end
 
       it 'is invalid with empty string' do
