@@ -1,9 +1,29 @@
 require "csv"
 require "open-uri"
+require "digest"
+require "fileutils"
 
 namespace :data do
   desc "Import data from CSV"
   task import: :environment do
+    csv_file_path = Rails.root.join("csv.csv")
+    hash_file_path = Rails.root.join("tmp", "last_import_hash.txt")
+
+    # CSVファイルのハッシュ値を計算
+    csv_text = File.read(csv_file_path)
+    current_hash = Digest::MD5.hexdigest(csv_text)
+
+    # 前回のハッシュ値を読み込み
+    last_hash = File.exist?(hash_file_path) ? File.read(hash_file_path).strip : nil
+
+    # ハッシュ値が同じ場合はスキップ
+    if current_hash == last_hash
+      puts "CSV file has not changed. Skipping data import."
+      next
+    end
+
+    puts "CSV file has changed. Starting data import..."
+
     # データ削除
     Shop.destroy_all
     Genre.destroy_all
@@ -11,7 +31,6 @@ namespace :data do
     Soup.destroy_all
 
     # インポート
-    csv_text = File.read(Rails.root.join("csv.csv"))
     csv = CSV.parse(csv_text, headers: true, encoding: "UTF-8")
 
     csv.each do |row|
@@ -68,6 +87,10 @@ namespace :data do
     rescue StandardError => e
       puts "Error processing row: #{row.inspect} - #{e.message}"
     end
+
+    # ハッシュ値を保存
+    FileUtils.mkdir_p(File.dirname(hash_file_path))
+    File.write(hash_file_path, current_hash)
 
     puts "Data import completed!"
   end
