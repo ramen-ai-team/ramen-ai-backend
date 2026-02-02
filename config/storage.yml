@@ -9,5 +9,4 @@ test:
 google:
   service: GCS
   project: ramen-ai
-  credentials: <%= ENV['GCS_CREDENTIALS'] %>
   bucket: ramen-ai-bucket

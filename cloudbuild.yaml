@@ -21,7 +21,7 @@ steps:
   - id: Apply Migrations
     name: gcr.io/google-appengine/exec-wrapper
     entrypoint: "bash"
-    secretEnv: ["RAILS_MASTER_KEY", "GCS_CREDENTIALS"]
+    secretEnv: ["RAILS_MASTER_KEY"]
     args:
       - -c
       - |
@@ -29,13 +29,12 @@ steps:
           -i $_AR_HOSTNAME/$_AR_PROJECT_ID/$_AR_REPOSITORY/$REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA \
           -e RAILS_ENV=production \
           -e RAILS_MASTER_KEY=$$RAILS_MASTER_KEY \
-          -e GCS_CREDENTIALS=$$GCS_CREDENTIALS \
           -- bundle exec rails db:migrate
 
   - id: Import Data
     name: gcr.io/google-appengine/exec-wrapper
     entrypoint: "bash"
-    secretEnv: ["RAILS_MASTER_KEY", "GCS_CREDENTIALS"]
+    secretEnv: ["RAILS_MASTER_KEY"]
     args:
       - -c
       - |
@@ -43,7 +42,6 @@ steps:
           -i $_AR_HOSTNAME/$_AR_PROJECT_ID/$_AR_REPOSITORY/$REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA \
           -e RAILS_ENV=production \
           -e RAILS_MASTER_KEY=$$RAILS_MASTER_KEY \
-          -e GCS_CREDENTIALS=$$GCS_CREDENTIALS \
           -- bundle exec rake data:import
 
   - id: Deploy
@@ -78,8 +76,6 @@ availableSecrets:
   secretManager:
     - versionName: projects/943228427206/secrets/RAILS_MASTER_KEY/versions/2
       env: "RAILS_MASTER_KEY"
-    - versionName: projects/943228427206/secrets/GCS_CREDENTIALS/versions/latest
-      env: "GCS_CREDENTIALS"
 tags:
   - gcp-cloud-build-deploy-cloud-run
   - gcp-cloud-build-deploy-cloud-run-managed
