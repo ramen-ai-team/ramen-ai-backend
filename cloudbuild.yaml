@@ -74,7 +74,7 @@ substitutions:
   _SERVICE_NAME: ramen-ai-backend-service
 availableSecrets:
   secretManager:
-    - versionName: projects/943228427206/secrets/RAILS_MASTER_KEY/versions/1
+    - versionName: projects/943228427206/secrets/RAILS_MASTER_KEY/versions/2
       env: "RAILS_MASTER_KEY"
 tags:
   - gcp-cloud-build-deploy-cloud-run
