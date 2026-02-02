@@ -26,13 +26,20 @@ steps:
       - -c
       - |
         /buildstep/execute.sh \
-          -i $_AR_HOSTNAME/$_AR_PROJECT_ID/$_AR_REPOSITORY/$REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA\
+          -i $_AR_HOSTNAME/$_AR_PROJECT_ID/$_AR_REPOSITORY/$REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA \
           -e RAILS_ENV=production \
           -e RAILS_MASTER_KEY=$$RAILS_MASTER_KEY \
           -- bundle exec rails db:migrate
+
+  - id: Import Data
+    name: gcr.io/google-appengine/exec-wrapper
+    entrypoint: "bash"
+    secretEnv: ["RAILS_MASTER_KEY"]
+    args:
+      - -c
       - |
         /buildstep/execute.sh \
-          -i $_AR_HOSTNAME/$_AR_PROJECT_ID/$_AR_REPOSITORY/$REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA\
+          -i $_AR_HOSTNAME/$_AR_PROJECT_ID/$_AR_REPOSITORY/$REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA \
           -e RAILS_ENV=production \
           -e RAILS_MASTER_KEY=$$RAILS_MASTER_KEY \
           -- bundle exec rake data:import
