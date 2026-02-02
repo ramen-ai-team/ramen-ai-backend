@@ -42,8 +42,8 @@ namespace :data do
       # スープの作成または検索
       soup = Soup.find_or_create_by(name: soup_name)
 
-      # メニューの作成
-      menu = Menu.create!(name: menu_name, shop_id: shop.id)
+      # メニューの作成（まだ保存しない）
+      menu = Menu.new(name: menu_name, shop_id: shop.id)
 
       menu.genre = genre
       menu.noodle = noodle
@@ -62,6 +62,9 @@ namespace :data do
       rescue OpenURI::HTTPError => e
         puts "Error downloading image: #{image_url} - #{e.message}"
       end
+
+      # 画像添付後に保存
+      menu.save!
     rescue StandardError => e
       puts "Error processing row: #{row.inspect} - #{e.message}"
     end
