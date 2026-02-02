@@ -370,3 +370,95 @@ paths:
                 name: 九州 筑豊ラーメン山小屋
                 address: 佐賀県嬉野市嬉野町大字下宿甲４００２−４
                 google_map_url: https://maps.app.goo.gl/BvuQTxGsmKLJ68yL9
+  "/api/v1/admin/users":
+    get:
+      summary: index
+      tags:
+      - Api::V1::Admin::User
+      security:
+      - bearerAuth: []
+      responses:
+        '200':
+          description: returns all users
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    email:
+                      type: string
+                    name:
+                      type: string
+                    provider:
+                      type: string
+                    uid:
+                      type: string
+                    image:
+                      type: string
+                      nullable: true
+                    google_id:
+                      type: string
+                      nullable: true
+                    email_verified:
+                      type: boolean
+                    created_at:
+                      type: string
+                      format: date-time
+                    updated_at:
+                      type: string
+                      format: date-time
+                  required:
+                  - id
+                  - email
+                  - name
+                  - provider
+                  - uid
+                  - image
+                  - google_id
+                  - email_verified
+                  - created_at
+                  - updated_at
+              example:
+              - id: 1
+                email: user1@example.com
+                name: User One
+                provider: google
+                uid: abc123xyz
+                image: https://example.com/image1.png
+                google_id: null
+                email_verified: false
+                created_at: '2026-02-02T22:18:19.575+09:00'
+                updated_at: '2026-02-02T22:18:19.575+09:00'
+              - id: 2
+                email: user2@example.com
+                name: User Two
+                provider: google
+                uid: def456uvw
+                image: https://example.com/image2.png
+                google_id: null
+                email_verified: false
+                created_at: '2026-02-02T22:20:30.123+09:00'
+                updated_at: '2026-02-02T22:20:30.123+09:00'
+        '401':
+          description: returns unauthorized error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+              example:
+                error: Unauthorized
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

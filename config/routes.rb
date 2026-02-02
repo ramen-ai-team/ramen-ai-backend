@@ -25,6 +25,7 @@ Rails.application.routes.draw do
         resources :genres, only: [:index]
         resources :soups, only: [:index]
         resources :noodles, only: [:index]
+        resources :users, only: [:index]
       end
     end
   end
