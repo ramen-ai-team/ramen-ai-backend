@@ -1,4 +1,30 @@
 steps:
+  - id: Cancel Previous Builds
+    name: gcr.io/google.com/cloudsdktool/cloud-sdk:slim
+    entrypoint: bash
+    args:
+      - -c
+      - |
+        # 現在のビルドID
+        CURRENT_BUILD_ID="${BUILD_ID}"
+
+        # 同じトリガーからの実行中のビルドを取得（自分以外）
+        RUNNING_BUILDS=$(gcloud builds list \
+          --ongoing \
+          --filter="buildTriggerId=$_TRIGGER_ID AND id!=$CURRENT_BUILD_ID" \
+          --format="value(id)" \
+          --project=$_AR_PROJECT_ID)
+
+        # 実行中のビルドがあればキャンセル
+        if [ -n "$RUNNING_BUILDS" ]; then
+          echo "Cancelling previous builds: $RUNNING_BUILDS"
+          for BUILD in $RUNNING_BUILDS; do
+            gcloud builds cancel "$BUILD" --project=$_AR_PROJECT_ID || true
+          done
+        else
+          echo "No previous builds to cancel"
+        fi
+
   - id: Build
     name: gcr.io/cloud-builders/docker
     args:
