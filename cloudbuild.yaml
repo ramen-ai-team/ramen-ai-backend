@@ -5,13 +5,10 @@ steps:
     args:
       - -c
       - |
-        # 現在のビルドID
-        CURRENT_BUILD_ID="${BUILD_ID}"
-
         # 同じトリガーからの実行中のビルドを取得（自分以外）
-        RUNNING_BUILDS=$(gcloud builds list \
+        RUNNING_BUILDS=$$(gcloud builds list \
           --ongoing \
-          --filter="buildTriggerId=$_TRIGGER_ID AND id!=$CURRENT_BUILD_ID" \
+          --filter="buildTriggerId=$_TRIGGER_ID AND id!=$BUILD_ID" \
           --format="value(id)" \
           --project=$_AR_PROJECT_ID)
 
