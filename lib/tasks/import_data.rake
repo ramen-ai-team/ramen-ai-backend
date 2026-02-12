@@ -1,20 +1,31 @@
 require "csv"
 require "open-uri"
 require "digest"
-require "fileutils"
+require "stringio"
+require "google/cloud/storage"
 
 namespace :data do
   desc "Import data from CSV"
   task import: :environment do
     csv_file_path = Rails.root.join("csv.csv")
-    hash_file_path = Rails.root.join("tmp", "last_import_hash.txt")
+    gcs_hash_file_path = "data_import/last_import_hash.txt"
+
+    # GCSクライアントの初期化
+    storage = Google::Cloud::Storage.new(project: "ramen-ai")
+    bucket = storage.bucket("ramen-ai-bucket")
 
     # CSVファイルのハッシュ値を計算
     csv_text = File.read(csv_file_path)
     current_hash = Digest::MD5.hexdigest(csv_text)
 
-    # 前回のハッシュ値を読み込み
-    last_hash = File.exist?(hash_file_path) ? File.read(hash_file_path).strip : nil
+    # 前回のハッシュ値をGCSから読み込み
+    last_hash = begin
+      file = bucket.file(gcs_hash_file_path)
+      file ? file.download.read.strip : nil
+    rescue => e
+      puts "No previous hash found in GCS: #{e.message}"
+      nil
+    end
 
     # ハッシュ値が同じ場合はスキップ
     if current_hash == last_hash
@@ -88,9 +99,17 @@ namespace :data do
       puts "Error processing row: #{row.inspect} - #{e.message}"
     end
 
-    # ハッシュ値を保存
-    FileUtils.mkdir_p(File.dirname(hash_file_path))
-    File.write(hash_file_path, current_hash)
+    # ハッシュ値をGCSに保存
+    begin
+      file = bucket.file(gcs_hash_file_path)
+      if file
+        file.delete
+      end
+      bucket.create_file(StringIO.new(current_hash), gcs_hash_file_path)
+      puts "Hash saved to GCS: #{current_hash}"
+    rescue => e
+      puts "Failed to save hash to GCS: #{e.message}"
+    end
 
     puts "Data import completed!"
   end
