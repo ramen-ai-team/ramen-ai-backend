@@ -66,5 +66,7 @@ Rails.application.configure do
   ]
 
   config.active_storage.service = :google
+  # Rails Proxy を使用して署名なしでファイルを配信（ADC対応）
+  config.active_storage.resolve_model_to_route = :rails_storage_proxy
   Rails.application.routes.default_url_options = { host: "https://ramen-ai-backend-service-943228427206.asia-northeast1.run.app" }
 end
