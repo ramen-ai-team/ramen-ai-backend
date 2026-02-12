@@ -57,7 +57,7 @@ steps:
       - >-
         --labels=managed-by=gcp-cloud-build-deploy-cloud-run,commit-sha=$COMMIT_SHA,gcb-build-id=$BUILD_ID,gcb-trigger-id=$_TRIGGER_ID
       - "--region=$_DEPLOY_REGION"
-      - "--remove-env-vars=GOOGLE_PRIVATE_KEY,GOOGLE_PRIVATE_KEY_ID"
+      - "--remove-env-vars=GOOGLE_PRIVATE_KEY,GOOGLE_PRIVATE_KEY_ID,GOOGLE_APPLICATION_CREDENTIALS"
       - "--quiet"
     entrypoint: gcloud
 
