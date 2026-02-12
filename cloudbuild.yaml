@@ -13,10 +13,10 @@ steps:
           --project=$_AR_PROJECT_ID)
 
         # 実行中のビルドがあればキャンセル
-        if [ -n "$RUNNING_BUILDS" ]; then
-          echo "Cancelling previous builds: $RUNNING_BUILDS"
-          for BUILD in $RUNNING_BUILDS; do
-            gcloud builds cancel "$BUILD" --project=$_AR_PROJECT_ID || true
+        if [ -n "$$RUNNING_BUILDS" ]; then
+          echo "Cancelling previous builds: $$RUNNING_BUILDS"
+          for BUILD in $$RUNNING_BUILDS; do
+            gcloud builds cancel "$$BUILD" --project=$_AR_PROJECT_ID || true
           done
         else
           echo "No previous builds to cancel"
