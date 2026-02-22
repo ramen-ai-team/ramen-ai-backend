@@ -5,6 +5,7 @@ module Api
 
       def index
         menus = Menu.includes(:genre, :noodle, :soup).with_attached_image.order("RANDOM()").limit(params[:limit] || 10)
+        puts ">>>>>> Fetched #{menus.size} random menus"
         menu_list = ApiEntity::MenuList.new(menus:)
         render json: menu_list, status: :ok
       end
