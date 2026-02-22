@@ -25,20 +25,20 @@ module ApiEntity
     end
 
     def image_url
-      puts "=" * 80
-      puts "[DEBUG] ApiEntity::Menu#image_url called for menu_id=#{@menu.id}"
-      puts "=" * 80
+      $stderr.puts "=" * 80
+      $stderr.puts "[DEBUG] ApiEntity::Menu#image_url called for menu_id=#{@menu.id}"
+      $stderr.puts "=" * 80
       url = @menu.image_url
-      puts "[DEBUG] ApiEntity::Menu#image_url returned: #{url}"
-      puts "=" * 80
+      $stderr.puts "[DEBUG] ApiEntity::Menu#image_url returned: #{url}"
+      $stderr.puts "=" * 80
       url
     end
 
     # デバッグ用: as_json をオーバーライド
     def as_json(options = nil)
-      puts "!!!! ApiEntity::Menu#as_json called for menu_id=#{@menu.id}"
+      $stderr.puts "!!!! ApiEntity::Menu#as_json called for menu_id=#{@menu.id}"
       result = super(options)
-      puts "!!!! as_json result: #{result.inspect}"
+      $stderr.puts "!!!! as_json result: #{result.inspect}"
       result
     end
   end
