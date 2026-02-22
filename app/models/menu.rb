@@ -13,6 +13,8 @@ class Menu < ApplicationRecord
   validates :image, attached: true
 
   def image_url
-    image.attached? ? Rails.application.routes.url_helpers.url_for(image) : nil
+    return nil unless image.attached?
+    # ADC対応: 署名付きURLではなくRails Proxyを使用
+    Rails.application.routes.url_helpers.rails_storage_proxy_url(image)
   end
 end
