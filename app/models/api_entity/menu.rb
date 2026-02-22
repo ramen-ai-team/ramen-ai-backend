@@ -25,7 +25,10 @@ module ApiEntity
     end
 
     def image_url
-      @menu.image_url
+      Rails.logger.info "[DEBUG] ApiEntity::Menu#image_url called for menu_id=#{@menu.id}"
+      url = @menu.image_url
+      Rails.logger.info "[DEBUG] ApiEntity::Menu#image_url returned: #{url}"
+      url
     end
   end
 end
