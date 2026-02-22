@@ -25,20 +25,7 @@ module ApiEntity
     end
 
     def image_url
-      $stderr.puts "=" * 80
-      $stderr.puts "[DEBUG] ApiEntity::Menu#image_url called for menu_id=#{@menu.id}"
-      $stderr.puts "=" * 80
-      url = @menu.image_url
-      $stderr.puts "[DEBUG] ApiEntity::Menu#image_url returned: #{url}"
-      $stderr.puts "=" * 80
-      url
-    end
-
-    # デバッグ用: as_json をオーバーライド
-    def as_json(options = nil)
-      raise "DEBUG: ApiEntity::Menu#as_json called! menu_id=#{@menu.id}"
-      result = super(options)
-      result
+      @menu.image_url
     end
   end
 end
