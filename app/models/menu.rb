@@ -13,14 +13,14 @@ class Menu < ApplicationRecord
   validates :image, attached: true
 
   def image_url
-    Rails.logger.info "[DEBUG] Menu#image_url called for menu_id=#{id}"
+    puts ">>>>>> Menu#image_url called for menu_id=#{id}"
     return nil unless image.attached?
 
     # ADC対応: proxy URL を直接構築（署名不要）
     host = Rails.application.routes.default_url_options[:host]
     proxy_url = "#{host}/rails/active_storage/blobs/proxy/#{image.signed_id}/#{image.filename}"
 
-    Rails.logger.info "[DEBUG] Generated proxy URL: #{proxy_url}"
+    puts ">>>>>> Generated proxy URL: #{proxy_url}"
     proxy_url
   end
 end
