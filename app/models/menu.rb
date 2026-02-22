@@ -14,10 +14,8 @@ class Menu < ApplicationRecord
 
   def image_url
     return nil unless image.attached?
-    # ADC対応: 署名付きURLではなくRails Proxyを使用
-    Rails.application.routes.url_helpers.rails_service_blob_proxy_url(
-      image.signed_id,
-      image.filename
-    )
+    # ADC対応: proxy URL を直接構築（署名不要）
+    host = Rails.application.routes.default_url_options[:host]
+    "#{host}/rails/active_storage/blobs/proxy/#{image.signed_id}/#{image.filename}"
   end
 end
