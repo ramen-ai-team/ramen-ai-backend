@@ -36,9 +36,8 @@ module ApiEntity
 
     # デバッグ用: as_json をオーバーライド
     def as_json(options = nil)
-      $stderr.puts "!!!! ApiEntity::Menu#as_json called for menu_id=#{@menu.id}"
+      raise "DEBUG: ApiEntity::Menu#as_json called! menu_id=#{@menu.id}"
       result = super(options)
-      $stderr.puts "!!!! as_json result: #{result.inspect}"
       result
     end
   end
