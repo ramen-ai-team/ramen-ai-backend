@@ -33,5 +33,13 @@ module ApiEntity
       puts "=" * 80
       url
     end
+
+    # デバッグ用: as_json をオーバーライド
+    def as_json(options = nil)
+      puts "!!!! ApiEntity::Menu#as_json called for menu_id=#{@menu.id}"
+      result = super(options)
+      puts "!!!! as_json result: #{result.inspect}"
+      result
+    end
   end
 end
