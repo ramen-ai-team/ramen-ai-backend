@@ -30,7 +30,7 @@ RSpec.describe Api::V1::AuthController, type: :request do
       context 'when user does not exist' do
         it 'creates a new user and returns JWT token' do
           expect {
-            post '/api/v1/auth/google', params: { token: valid_token }
+            post '/api/v1/auth/google', params: { code: valid_token }
           }.to change(User, :count).by(1)
 
           expect(response).to have_http_status(:ok)
@@ -56,7 +56,7 @@ RSpec.describe Api::V1::AuthController, type: :request do
 
         it 'updates existing user and returns JWT token' do
           expect {
-            post '/api/v1/auth/google', params: { token: valid_token }
+            post '/api/v1/auth/google', params: { code: valid_token }
           }.not_to change(User, :count)
 
           expect(response).to have_http_status(:ok)
@@ -81,7 +81,7 @@ RSpec.describe Api::V1::AuthController, type: :request do
 
         it 'links Google ID to existing user' do
           expect {
-            post '/api/v1/auth/google', params: { token: valid_token }
+            post '/api/v1/auth/google', params: { code: valid_token }
           }.not_to change(User, :count)
 
           expect(response).to have_http_status(:ok)
@@ -98,7 +98,7 @@ RSpec.describe Api::V1::AuthController, type: :request do
       end
 
       it 'returns unauthorized error' do
-        post '/api/v1/auth/google', params: { token: invalid_token }
+        post '/api/v1/auth/google', params: { code: invalid_token }
 
         expect(response).to have_http_status(:unauthorized)
 
@@ -116,7 +116,7 @@ RSpec.describe Api::V1::AuthController, type: :request do
       end
 
       it 'returns internal server error' do
-        post '/api/v1/auth/google', params: { token: valid_token }
+        post '/api/v1/auth/google', params: { code: valid_token }
 
         expect(response).to have_http_status(:internal_server_error)
 
