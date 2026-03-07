@@ -3,7 +3,7 @@ class Api::V1::AuthController < Api::V1::BaseController
   rescue_from StandardError, with: :handle_auth_error
 
   def google
-    google_data = GoogleTokenVerifier.verify(params[:code])
+    google_data = GoogleTokenVerifier.verify(params[:code], params[:redirect_uri])
 
     unless google_data
       render json: {

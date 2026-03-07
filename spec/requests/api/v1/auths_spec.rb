@@ -3,9 +3,10 @@ require 'rails_helper'
 RSpec.describe Api::V1::AuthController, type: :request do
   describe 'POST /api/v1/auth/google' do
     let(:client_id) { 'test_client_id' }
-    let(:valid_token) { 'valid_google_id_token' }
-    let(:invalid_token) { 'invalid_google_id_token' }
-    let(:valid_token_response) do
+    let(:valid_code) { 'valid_auth_code' }
+    let(:redirect_uri) { 'https://ramen-ni-ai-wo.vercel.app/auth/callback' }
+    let(:id_token) { 'valid_id_token' }
+    let(:valid_tokeninfo_response) do
       {
         'aud' => client_id,
         'iss' => 'https://accounts.google.com',
@@ -19,18 +20,22 @@ RSpec.describe Api::V1::AuthController, type: :request do
     end
 
     before do
-      allow(Rails.application.credentials).to receive(:gcp).and_return({ client_id: client_id })
+      allow(Rails.application.credentials).to receive(:gcp).and_return({
+        client_id: client_id,
+        client_secret: 'test_client_secret'
+      })
     end
 
-    context 'with valid Google token' do
+    context 'with valid Google code' do
       before do
-        stub_google_token_verifier(id_token: valid_token, response_body: valid_token_response.to_json)
+        stub_google_code_exchange(code: valid_code, redirect_uri:, id_token:)
+        stub_google_token_verifier(id_token:, response_body: valid_tokeninfo_response.to_json)
       end
 
       context 'when user does not exist' do
         it 'creates a new user and returns JWT token' do
           expect {
-            post '/api/v1/auth/google', params: { code: valid_token }
+            post '/api/v1/auth/google', params: { code: valid_code, redirect_uri: }
           }.to change(User, :count).by(1)
 
           expect(response).to have_http_status(:ok)
@@ -56,13 +61,13 @@ RSpec.describe Api::V1::AuthController, type: :request do
 
         it 'updates existing user and returns JWT token' do
           expect {
-            post '/api/v1/auth/google', params: { code: valid_token }
+            post '/api/v1/auth/google', params: { code: valid_code, redirect_uri: }
           }.not_to change(User, :count)
 
           expect(response).to have_http_status(:ok)
 
           json_response = JSON.parse(response.body)
-          expect(json_response['user']['name']).to eq('Test User') # Updated name
+          expect(json_response['user']['name']).to eq('Test User')
 
           existing_user.reload
           expect(existing_user.name).to eq('Test User')
@@ -81,7 +86,7 @@ RSpec.describe Api::V1::AuthController, type: :request do
 
         it 'links Google ID to existing user' do
           expect {
-            post '/api/v1/auth/google', params: { code: valid_token }
+            post '/api/v1/auth/google', params: { code: valid_code, redirect_uri: }
           }.not_to change(User, :count)
 
           expect(response).to have_http_status(:ok)
@@ -92,13 +97,13 @@ RSpec.describe Api::V1::AuthController, type: :request do
       end
     end
 
-    context 'with invalid Google token' do
+    context 'when code exchange fails' do
       before do
-        stub_google_token_verifier(id_token: invalid_token, status: 401)
+        stub_google_code_exchange(code: valid_code, redirect_uri:, status: 400)
       end
 
       it 'returns unauthorized error' do
-        post '/api/v1/auth/google', params: { code: invalid_token }
+        post '/api/v1/auth/google', params: { code: valid_code, redirect_uri: }
 
         expect(response).to have_http_status(:unauthorized)
 
@@ -108,15 +113,15 @@ RSpec.describe Api::V1::AuthController, type: :request do
       end
     end
 
-    context 'when GoogleTokenVerifier raises an exception' do
+    context 'when user creation fails with invalid data' do
       before do
-        # NOTE: StandardErrorをraiseするために、response_bodyで不適な値を渡す
-        invalid_response = valid_token_response.merge('email' => '')
-        stub_google_token_verifier(id_token: valid_token, response_body: invalid_response.to_json)
+        invalid_response = valid_tokeninfo_response.merge('email' => '')
+        stub_google_code_exchange(code: valid_code, redirect_uri:, id_token:)
+        stub_google_token_verifier(id_token:, response_body: invalid_response.to_json)
       end
 
       it 'returns internal server error' do
-        post '/api/v1/auth/google', params: { code: valid_token }
+        post '/api/v1/auth/google', params: { code: valid_code, redirect_uri: }
 
         expect(response).to have_http_status(:internal_server_error)
 
@@ -126,9 +131,13 @@ RSpec.describe Api::V1::AuthController, type: :request do
       end
     end
 
-    context 'with missing token parameter' do
+    context 'with missing code parameter' do
       before do
-        stub_google_token_verifier(id_token: '', status: 400)
+        stub_request(:post, "https://oauth2.googleapis.com/token").to_return(
+          status: 400,
+          body: { error: 'invalid_grant' }.to_json,
+          headers: { 'Content-Type': 'application/json' }
+        )
       end
 
       it 'returns unauthorized error' do

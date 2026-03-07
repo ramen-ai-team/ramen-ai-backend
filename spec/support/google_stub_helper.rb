@@ -15,7 +15,17 @@ module GoogleStubHelper
     )
   end
 
-  def stub_google_token_verifier(id_token: 'valid_token', status: 200, response_body: nil)
+  def stub_google_code_exchange(code: 'valid_code', redirect_uri: 'https://example.com/callback', id_token: 'valid_id_token', status: 200)
+    stub_request(:post, "https://oauth2.googleapis.com/token")
+      .with(body: hash_including("code" => code, "redirect_uri" => redirect_uri))
+      .to_return(
+        status:,
+        body: status == 200 ? { id_token: id_token, access_token: 'access_token', token_type: 'Bearer' }.to_json : { error: 'invalid_grant' }.to_json,
+        headers: { 'Content-Type': 'application/json' }
+      )
+  end
+
+  def stub_google_token_verifier(id_token: 'valid_id_token', status: 200, response_body: nil)
     url = "https://www.googleapis.com/oauth2/v3/tokeninfo?id_token=#{id_token}"
 
     stub_request(:get, url)
