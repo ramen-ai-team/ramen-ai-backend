@@ -15,8 +15,8 @@ class GoogleTokenVerifier
   def self.exchange_code(code, redirect_uri)
     response = HTTParty.post(TOKEN_ENDPOINT, body: {
       code: code,
-      client_id: Rails.application.credentials.gcp[:client_id],
-      client_secret: Rails.application.credentials.gcp[:client_secret],
+      client_id: ENV["GCP_CLIENT_ID"],
+      client_secret: ENV["GCP_CLIENT_SECRET"],
       redirect_uri: redirect_uri,
       grant_type: "authorization_code"
     })
@@ -36,7 +36,7 @@ class GoogleTokenVerifier
 
     token_data = response.parsed_response
 
-    return false unless token_data["aud"] == Rails.application.credentials.gcp[:client_id]
+    return false unless token_data["aud"] == ENV["GCP_CLIENT_ID"]
     return false unless ["https://accounts.google.com", "accounts.google.com"].include?(token_data["iss"])
     return false unless token_data["exp"].to_i > Time.current.to_i
 

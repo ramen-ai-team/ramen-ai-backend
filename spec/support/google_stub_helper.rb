@@ -37,7 +37,7 @@ module GoogleStubHelper
           name: 'John Doe',
           picture: 'https://lh3.googleusercontent.com/a/default-user',
           email_verified: 'true',
-          aud: Rails.application.credentials.gcp[:client_id],
+          aud: ENV["GCP_CLIENT_ID"],
           iss: 'https://accounts.google.com',
           exp: (Time.current + 1.hour).to_i
         }.to_json,
