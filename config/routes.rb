@@ -18,6 +18,8 @@ Rails.application.routes.draw do
       # Google OAuth
       post "/auth/google", to: "auth#google"
 
+      get "/current_user", to: "users#current"
+
       namespace :admin do
         resource :auth, only: [:create, :destroy], controller: "authentication"
         resources :shops
