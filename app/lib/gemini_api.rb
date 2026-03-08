@@ -8,7 +8,7 @@ class GeminiApi
   GENERATE_CONTENT_API = "streamGenerateContent".freeze
 
   def self.credential
-    authorizer = Google::Auth::ServiceAccountCredentials.make_creds(
+    authorizer = Google::Auth.get_application_default(
       scope: "https://www.googleapis.com/auth/cloud-platform"
     )
     authorizer.fetch_access_token!
