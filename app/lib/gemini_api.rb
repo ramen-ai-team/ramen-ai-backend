@@ -9,7 +9,7 @@ class GeminiApi
 
   def self.credential
     authorizer = Google::Auth.get_application_default(
-      scope: "https://www.googleapis.com/auth/cloud-platform"
+      "https://www.googleapis.com/auth/cloud-platform"
     )
     authorizer.fetch_access_token!
   end
