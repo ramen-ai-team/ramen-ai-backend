@@ -1,0 +1,11 @@
+project_id    = "ramen-ai"
+region        = "asia-northeast1"
+service_name  = "ramen-ai-backend-service"
+ar_repository = "cloud-run-source-deploy"
+
+github_owner = "your-github-owner"
+github_repo  = "ramen-ai-backend"
+
+cloud_run_min_instances = 0
+cloud_run_max_instances = 100
+cloud_run_memory        = "512Mi"
