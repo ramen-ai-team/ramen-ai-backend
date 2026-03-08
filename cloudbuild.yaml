@@ -26,20 +26,27 @@ steps:
     name: gcr.io/cloud-builders/docker
     args:
       - build
-      - "--no-cache"
+      - "--cache-from"
+      - "$_AR_HOSTNAME/$_AR_PROJECT_ID/$_AR_REPOSITORY/$REPO_NAME/$_SERVICE_NAME:latest"
+      - "--build-arg"
+      - "BUILDKIT_INLINE_CACHE=1"
       - "-t"
-      - >-
-        $_AR_HOSTNAME/$_AR_PROJECT_ID/$_AR_REPOSITORY/$REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA
+      - "$_AR_HOSTNAME/$_AR_PROJECT_ID/$_AR_REPOSITORY/$REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA"
+      - "-t"
+      - "$_AR_HOSTNAME/$_AR_PROJECT_ID/$_AR_REPOSITORY/$REPO_NAME/$_SERVICE_NAME:latest"
       - .
       - "-f"
       - Dockerfile
+    env:
+      - "DOCKER_BUILDKIT=1"
 
   - id: Push
     name: gcr.io/cloud-builders/docker
     args:
       - push
+      - "--all-tags"
       - >-
-        $_AR_HOSTNAME/$_AR_PROJECT_ID/$_AR_REPOSITORY/$REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA
+        $_AR_HOSTNAME/$_AR_PROJECT_ID/$_AR_REPOSITORY/$REPO_NAME/$_SERVICE_NAME
 
   - id: Apply Migrations
     name: gcr.io/google-appengine/exec-wrapper
@@ -100,6 +107,8 @@ steps:
 images:
   - >-
     $_AR_HOSTNAME/$_AR_PROJECT_ID/$_AR_REPOSITORY/$REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA
+  - >-
+    $_AR_HOSTNAME/$_AR_PROJECT_ID/$_AR_REPOSITORY/$REPO_NAME/$_SERVICE_NAME:latest
 options:
   substitutionOption: ALLOW_LOOSE
   logging: CLOUD_LOGGING_ONLY
