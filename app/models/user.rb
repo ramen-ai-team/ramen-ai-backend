@@ -46,7 +46,9 @@ class User < ApplicationRecord
         google_id: google_data[:google_id],
         name: google_data[:name],
         image: google_data[:picture],
-        uid: google_data[:google_id]
+        email_verified: google_data[:email_verified],
+        provider: "google",
+        uid: google_data[:google_id],
       )
       return existing_user
     end
