@@ -1,10 +1,6 @@
 module GoogleStubHelper
   def stub_gemini_token
-    stub_gemini_api(
-      method: :post,
-      url: 'https://www.googleapis.com/oauth2/v4/token',
-      file: 'token.json',
-    )
+    allow(GeminiApi).to receive(:credential).and_return({ 'access_token' => 'test_access_token' })
   end
 
   def stub_gemini_recommended_ramen

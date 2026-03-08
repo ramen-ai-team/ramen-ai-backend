@@ -11,7 +11,6 @@ module AuthHelper
 
   def jwt_encode(payload, exp = 24.hours.from_now)
     payload[:exp] = exp.to_i
-    secret_key = Rails.application.credentials.secret_key_base || "your-secret-key"
-    JWT.encode(payload, secret_key)
+    JWT.encode(payload, Rails.application.secret_key_base, "HS256")
   end
 end

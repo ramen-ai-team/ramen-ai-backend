@@ -20,10 +20,9 @@ RSpec.describe Api::V1::AuthController, type: :request do
     end
 
     before do
-      allow(Rails.application.credentials).to receive(:gcp).and_return({
-        client_id: client_id,
-        client_secret: 'test_client_secret'
-      })
+      allow(ENV).to receive(:[]).and_call_original
+      allow(ENV).to receive(:[]).with("GCP_CLIENT_ID").and_return(client_id)
+      allow(ENV).to receive(:[]).with("GCP_CLIENT_SECRET").and_return('test_client_secret')
     end
 
     context 'with valid Google code' do
