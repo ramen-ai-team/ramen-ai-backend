@@ -5,26 +5,90 @@ info:
   version: 1.0.0
 servers: []
 paths:
+  "/api/v1/admin/users":
+    get:
+      summary: index
+      tags:
+      - Api::V1::Admin::User
+      responses:
+        '200':
+          description: returns empty array when no users exist
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    email:
+                      type: string
+                    name:
+                      type: string
+                    provider:
+                      type: string
+                    uid:
+                      type: string
+                    created_at:
+                      type: string
+                    updated_at:
+                      type: string
+                    google_id:
+                      nullable: true
+                    image:
+                      type: string
+                    email_verified:
+                      type: boolean
+                  required:
+                  - id
+                  - email
+                  - name
+                  - provider
+                  - uid
+                  - created_at
+                  - updated_at
+                  - google_id
+                  - image
+                  - email_verified
+              example: []
+        '401':
+          description: returns unauthorized error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+              example:
+                error: Unauthorized
   "/api/v1/auth/google":
     post:
-      summary: google_auth
+      summary: google
       tags:
-      - Api::V1::Session
+      - Api::V1::Auth
       requestBody:
         content:
           application/x-www-form-urlencoded:
             schema:
               type: object
               properties:
-                token:
+                code:
+                  type: string
+                redirect_uri:
                   type: string
               required:
-              - token
+              - code
+              - redirect_uri
             example:
-              token: valid_token
+              code: valid_auth_code
+              redirect_uri: https://ramen-ni-ai-wo.vercel.app/auth/callback
       responses:
         '200':
-          description: returns existing user if already exists
+          description: returns existing user & updates if already exists
           content:
             application/json:
               schema:
@@ -52,12 +116,12 @@ paths:
                 - token
                 - user
               example:
-                token: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjo4LCJleHAiOjE3NTc4MTgzNTF9.Zd7WeANw-uiT2rOjdXpgeonwEkJz29p17xfjFoElyrU
+                token: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjozODksImV4cCI6MTc3MzU1NjEzOCwiaWF0IjoxNzcyOTUxMzM4fQ.A-11gEh6f1l1LxPlrTtX6cXIqfop4mZ1jiNcsgl8h7U
                 user:
-                  id: 8
+                  id: 389
                   email: user@example.com
-                  name: User 1
-                  image: https://example.com/user_image.png
+                  name: John Doe
+                  image: https://lh3.googleusercontent.com/a/default-user
         '401':
           description: returns unauthorized error
           content:
@@ -67,10 +131,79 @@ paths:
                 properties:
                   error:
                     type: string
+                  message:
+                    type: string
                 required:
                 - error
+                - message
               example:
-                error: Invalid token
+                error: invalid_token
+                message: Invalid or expired Google token
+        '500':
+          description: returns internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+                - message
+              example:
+                error: authentication_failed
+                message: Authentication process failed
+  "/api/v1/current_user":
+    get:
+      summary: current
+      tags:
+      - Api::V1::User
+      responses:
+        '200':
+          description: ユーザー情報を返す
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  name:
+                    type: string
+                  email:
+                    type: string
+                  image:
+                    type: string
+                required:
+                - id
+                - name
+                - email
+                - image
+              example:
+                id: 393
+                name: User 5
+                email: user4@example.com
+                image: https://example.com/user_image.png
+        '401':
+          description: 401を返す
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - error
+                - message
+              example:
+                error: invalid_token
+                message: Invalid token
   "/api/v1/menu_with_shops/{id}":
     get:
       summary: show
@@ -82,7 +215,7 @@ paths:
         required: true
         schema:
           type: integer
-        example: 4
+        example: 185
       responses:
         '200':
           description: returns a specific menu
@@ -128,14 +261,14 @@ paths:
                 - image_url
                 - shop
               example:
-                id: 4
+                id: 185
                 name: 特製ラーメン
                 genre_name: ラーメン
                 noodle_name: 太麺
                 soup_name: 豚骨
-                image_url: http://example.com/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsiZGF0YSI6NCwicHVyIjoiYmxvYl9pZCJ9fQ==--83a855877ac63974e22537dbc3c93bd9ed88cc06/ramen.png
+                image_url: http://example.com/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsiZGF0YSI6MTg1LCJwdXIiOiJibG9iX2lkIn19--f3f8bd8750d7884b991799356fbae3b9ed18ddfa/ramen.png
                 shop:
-                  id: 4
+                  id: 330
                   name: ラーメン屋
                   address: 東京都新宿区
                   google_map_url: https://maps.app.goo.gl/BvuQTxGsmKLJ68yL9
@@ -180,12 +313,12 @@ paths:
                 - menus
               example:
                 menus:
-                - id: 5
+                - id: 186
                   name: 博多ラーメン
                   genre_name: ラーメン
                   noodle_name: 細麺
                   soup_name: 豚骨スープ
-                  image_url: http://example.com/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsiZGF0YSI6NSwicHVyIjoiYmxvYl9pZCJ9fQ==--5e71d675486112121c7d516bdee1a6e6f4fa8c7e/ramen.png
+                  image_url: http://example.com/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsiZGF0YSI6MTg2LCJwdXIiOiJibG9iX2lkIn19--6d46e7d9006b5cd849757804bad02b65ace8dc3e/ramen.png
   "/api/v1/recommended_menus":
     post:
       summary: create
@@ -268,14 +401,14 @@ paths:
                 - reason
               example:
                 recommended_menu:
-                  id: 7
-                  name: Ramen 5
+                  id: 188
+                  name: Ramen 8
                   genre_name: ラーメン
                   noodle_name: 太麺
                   soup_name: 豚骨
-                  image_url: http://example.com/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsiZGF0YSI6NywicHVyIjoiYmxvYl9pZCJ9fQ==--774468f5466901d03ec584c32fdb0a99c76c7d25/ramen.png
+                  image_url: http://example.com/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsiZGF0YSI6MTg4LCJwdXIiOiJibG9iX2lkIn19--5ab4eb5277763af664d47fc7a41493d79e69cd20/ramen.png
                   shop:
-                    id: 7
+                    id: 333
                     name: ラーメン屋
                     address: 東京都新宿区
                     google_map_url: https://maps.app.goo.gl/BvuQTxGsmKLJ68yL9
@@ -328,10 +461,97 @@ paths:
                 - shops
               example:
                 shops:
-                - id: 9
+                - id: 335
                   name: 九州 筑豊ラーメン山小屋
                   address: 佐賀県嬉野市嬉野町大字下宿甲４００２−４
                   google_map_url: https://maps.app.goo.gl/BvuQTxGsmKLJ68yL9
+    post:
+      summary: create
+      tags:
+      - Api::V1::Shop
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                google_map_url:
+                  type: string
+              required:
+              - google_map_url
+            example:
+              google_map_url: https://maps.app.goo.gl/dGfTAMwDfw29yLPc7
+      responses:
+        '201':
+          description: creates a new shop from Google Maps data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  name:
+                    type: string
+                  address:
+                    type: string
+                  google_map_url:
+                    type: string
+                required:
+                - id
+                - name
+                - address
+                - google_map_url
+              example:
+                id: 337
+                name: ラーメン太郎
+                address: 東京都渋谷区道玄坂1-2-3
+                google_map_url: https://maps.app.goo.gl/dGfTAMwDfw29yLPc7
+        '400':
+          description: returns bad request error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: string
+                required:
+                - errors
+              example:
+                errors:
+                - Google map url は「https://maps.app.goo.gl/」から始まるGoogle Map URLにしてください
+        '401':
+          description: returns unauthorized error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+              example:
+                error: Authorization header missing
+        '503':
+          description: returns service unavailable error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: string
+                required:
+                - errors
+              example:
+                errors:
+                - Google map url から店舗情報を取得できませんでした
   "/api/v1/shops/{id}":
     get:
       summary: show
@@ -343,7 +563,7 @@ paths:
         required: true
         schema:
           type: integer
-        example: 10
+        example: 336
       responses:
         '200':
           description: returns a specific shop
@@ -366,99 +586,7 @@ paths:
                 - address
                 - google_map_url
               example:
-                id: 10
+                id: 336
                 name: 九州 筑豊ラーメン山小屋
                 address: 佐賀県嬉野市嬉野町大字下宿甲４００２−４
                 google_map_url: https://maps.app.goo.gl/BvuQTxGsmKLJ68yL9
-  "/api/v1/admin/users":
-    get:
-      summary: index
-      tags:
-      - Api::V1::Admin::User
-      security:
-      - bearerAuth: []
-      responses:
-        '200':
-          description: returns all users
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    id:
-                      type: integer
-                    email:
-                      type: string
-                    name:
-                      type: string
-                    provider:
-                      type: string
-                    uid:
-                      type: string
-                    image:
-                      type: string
-                      nullable: true
-                    google_id:
-                      type: string
-                      nullable: true
-                    email_verified:
-                      type: boolean
-                    created_at:
-                      type: string
-                      format: date-time
-                    updated_at:
-                      type: string
-                      format: date-time
-                  required:
-                  - id
-                  - email
-                  - name
-                  - provider
-                  - uid
-                  - image
-                  - google_id
-                  - email_verified
-                  - created_at
-                  - updated_at
-              example:
-              - id: 1
-                email: user1@example.com
-                name: User One
-                provider: google
-                uid: abc123xyz
-                image: https://example.com/image1.png
-                google_id: null
-                email_verified: false
-                created_at: '2026-02-02T22:18:19.575+09:00'
-                updated_at: '2026-02-02T22:18:19.575+09:00'
-              - id: 2
-                email: user2@example.com
-                name: User Two
-                provider: google
-                uid: def456uvw
-                image: https://example.com/image2.png
-                google_id: null
-                email_verified: false
-                created_at: '2026-02-02T22:20:30.123+09:00'
-                updated_at: '2026-02-02T22:20:30.123+09:00'
-        '401':
-          description: returns unauthorized error
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error:
-                    type: string
-                required:
-                - error
-              example:
-                error: Unauthorized
-components:
-  securitySchemes:
-    bearerAuth:
-      type: http
-      scheme: bearer
-      bearerFormat: JWT
