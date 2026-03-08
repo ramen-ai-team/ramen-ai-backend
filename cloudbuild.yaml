@@ -28,11 +28,10 @@ steps:
     args:
       - -c
       - |
-        docker buildx create --use --name builder --driver docker-container --driver-opt image=moby/buildkit:v0.17.0
+        docker buildx create --use --name builder --driver docker-container
         docker buildx build \
-          --cache-from "type=gcs,bucket=ramen-ai_cloudbuild,prefix=buildcache/" \
-          --cache-to "type=gcs,bucket=ramen-ai_cloudbuild,prefix=buildcache/,mode=max" \
-          --cache-from "$_AR_HOSTNAME/$_AR_PROJECT_ID/$_AR_REPOSITORY/$REPO_NAME/$_SERVICE_NAME:latest" \
+          --cache-from "type=registry,ref=$_AR_HOSTNAME/$_AR_PROJECT_ID/$_AR_REPOSITORY/$REPO_NAME/$_SERVICE_NAME:buildcache" \
+          --cache-to "type=registry,ref=$_AR_HOSTNAME/$_AR_PROJECT_ID/$_AR_REPOSITORY/$REPO_NAME/$_SERVICE_NAME:buildcache,mode=max" \
           -t "$_AR_HOSTNAME/$_AR_PROJECT_ID/$_AR_REPOSITORY/$REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA" \
           -t "$_AR_HOSTNAME/$_AR_PROJECT_ID/$_AR_REPOSITORY/$REPO_NAME/$_SERVICE_NAME:latest" \
           --push \
