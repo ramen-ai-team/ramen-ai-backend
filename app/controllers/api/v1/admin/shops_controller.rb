@@ -16,7 +16,7 @@ class Api::V1::Admin::ShopsController < Api::V1::Admin::ApplicationController
     render json: @shop.as_json(
       include: {
         menus: {
-          include: [:genre, :soup, :noodle, :menus]
+          include: [:genre, :soup, :noodle]
         }
       }
     )
