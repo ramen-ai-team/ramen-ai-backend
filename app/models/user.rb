@@ -50,18 +50,17 @@ class User < ApplicationRecord
         provider: "google",
         uid: google_data[:google_id],
       )
-      return existing_user
+      existing_user
+    else
+      create!(
+        google_id: google_data[:google_id],
+        email: google_data[:email],
+        name: google_data[:name],
+        image: google_data[:picture],
+        email_verified: google_data[:email_verified],
+        provider: "google",
+        uid: google_data[:google_id]
+      )
     end
-
-    # 新規ユーザー作成
-    create!(
-      google_id: google_data[:google_id],
-      email: google_data[:email],
-      name: google_data[:name],
-      image: google_data[:picture],
-      email_verified: google_data[:email_verified],
-      provider: "google",
-      uid: google_data[:google_id]
-    )
   end
 end
