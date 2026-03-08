@@ -28,7 +28,7 @@ steps:
     args:
       - -c
       - |
-        docker buildx create --use --name builder --driver docker-container
+        docker buildx create --use --name builder --driver docker-container --driver-opt image=moby/buildkit:v0.17.0
         docker buildx build \
           --cache-from "type=gcs,bucket=ramen-ai_cloudbuild,prefix=buildcache/" \
           --cache-to "type=gcs,bucket=ramen-ai_cloudbuild,prefix=buildcache/,mode=max" \
