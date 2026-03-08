@@ -24,29 +24,22 @@ steps:
 
   - id: Build
     name: gcr.io/cloud-builders/docker
+    entrypoint: bash
     args:
-      - build
-      - "--cache-from"
-      - "$_AR_HOSTNAME/$_AR_PROJECT_ID/$_AR_REPOSITORY/$REPO_NAME/$_SERVICE_NAME:latest"
-      - "--build-arg"
-      - "BUILDKIT_INLINE_CACHE=1"
-      - "-t"
-      - "$_AR_HOSTNAME/$_AR_PROJECT_ID/$_AR_REPOSITORY/$REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA"
-      - "-t"
-      - "$_AR_HOSTNAME/$_AR_PROJECT_ID/$_AR_REPOSITORY/$REPO_NAME/$_SERVICE_NAME:latest"
-      - .
-      - "-f"
-      - Dockerfile
+      - -c
+      - |
+        docker buildx create --use --name builder --driver docker-container
+        docker buildx build \
+          --cache-from "type=gcs,bucket=ramen-ai_cloudbuild,prefix=buildcache/" \
+          --cache-to "type=gcs,bucket=ramen-ai_cloudbuild,prefix=buildcache/,mode=max" \
+          --cache-from "$_AR_HOSTNAME/$_AR_PROJECT_ID/$_AR_REPOSITORY/$REPO_NAME/$_SERVICE_NAME:latest" \
+          -t "$_AR_HOSTNAME/$_AR_PROJECT_ID/$_AR_REPOSITORY/$REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA" \
+          -t "$_AR_HOSTNAME/$_AR_PROJECT_ID/$_AR_REPOSITORY/$REPO_NAME/$_SERVICE_NAME:latest" \
+          --push \
+          -f Dockerfile \
+          .
     env:
       - "DOCKER_BUILDKIT=1"
-
-  - id: Push
-    name: gcr.io/cloud-builders/docker
-    args:
-      - push
-      - "--all-tags"
-      - >-
-        $_AR_HOSTNAME/$_AR_PROJECT_ID/$_AR_REPOSITORY/$REPO_NAME/$_SERVICE_NAME
 
   - id: Apply Migrations
     name: gcr.io/google-appengine/exec-wrapper
