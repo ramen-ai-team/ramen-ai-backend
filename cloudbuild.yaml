@@ -47,11 +47,16 @@ steps:
     args:
       - -c
       - |
-        /buildstep/execute.sh \
-          -i $_AR_HOSTNAME/$_AR_PROJECT_ID/$_AR_REPOSITORY/$REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA \
-          -e RAILS_ENV=production \
-          -e RAILS_MASTER_KEY=$$RAILS_MASTER_KEY \
-          -- bundle exec rails db:migrate
+        if git diff --name-only HEAD~1 HEAD -- db/migrate/ | grep -q .; then
+          echo "Migration files changed, running db:migrate"
+          /buildstep/execute.sh \
+            -i $_AR_HOSTNAME/$_AR_PROJECT_ID/$_AR_REPOSITORY/$REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA \
+            -e RAILS_ENV=production \
+            -e RAILS_MASTER_KEY=$$RAILS_MASTER_KEY \
+            -- bundle exec rails db:migrate
+        else
+          echo "No migration files changed, skipping db:migrate"
+        fi
 
   - id: Import Data
     name: gcr.io/google-appengine/exec-wrapper
