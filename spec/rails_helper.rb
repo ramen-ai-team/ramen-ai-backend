@@ -36,6 +36,8 @@ begin
 rescue ActiveRecord::PendingMigrationError => e
   abort e.to_s.strip
 end
+Rails.application.config.consider_all_requests_local = false if ENV['OPENAPI']
+
 RSpec.configure do |config|
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
   config.fixture_paths = [
@@ -75,4 +77,13 @@ RSpec.configure do |config|
   config.include JsonAPIHelper, type: :request
   config.include GoogleStubHelper
   config.include AuthHelper, type: :request
+
+  config.include(Module.new do
+    %w[get post put patch delete].each do |method|
+      define_method(method) do |path, **args|
+        args[:headers] = { 'Accept' => 'application/json' }.merge(args[:headers] || {})
+        super(path, **args)
+      end
+    end
+  end, type: :request)
 end
