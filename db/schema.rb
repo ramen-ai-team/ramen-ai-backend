@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_10_02_122934) do
+ActiveRecord::Schema[8.0].define(version: 2026_03_21_000002) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -73,6 +73,17 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_02_122934) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "menu_reports", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "menu_id", null: false
+    t.bigint "genre_id", null: false
+    t.bigint "noodle_id", null: false
+    t.bigint "soup_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id", "menu_id"], name: "index_menu_reports_on_user_id_and_menu_id", unique: true
+  end
+
   create_table "menu_soups", id: :serial, force: :cascade do |t|
     t.bigint "menu_id", null: false
     t.bigint "soup_id", null: false
@@ -91,6 +102,16 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_02_122934) do
     t.string "name", limit: 255, null: false
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
+  end
+
+  create_table "reviews", force: :cascade do |t|
+    t.bigint "menu_id", null: false
+    t.bigint "user_id", null: false
+    t.integer "rating", null: false
+    t.text "comment", null: false
+    t.date "visited_at", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "shops", id: :serial, force: :cascade do |t|
@@ -125,5 +146,12 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_02_122934) do
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id", name: "active_storage_variant_records_blob_id_fkey"
   add_foreign_key "menu_genres", "genres"
   add_foreign_key "menu_noodles", "menus"
+  add_foreign_key "menu_reports", "genres"
+  add_foreign_key "menu_reports", "menus"
+  add_foreign_key "menu_reports", "noodles"
+  add_foreign_key "menu_reports", "soups"
+  add_foreign_key "menu_reports", "users"
   add_foreign_key "menu_soups", "menus"
+  add_foreign_key "reviews", "menus"
+  add_foreign_key "reviews", "users"
 end
