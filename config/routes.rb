@@ -10,7 +10,13 @@ Rails.application.routes.draw do
 
   namespace :api do
     namespace :v1 do
-      resources :shops, only: [:index, :show, :create]
+      resources :shops, only: [:index, :show, :create] do
+        resources :menus, only: [:index]
+      end
+      resources :menus, only: [] do
+        resources :reviews, only: [:create, :update]
+      end
+      resources :menu_reports, only: [:create]
       resources :menu_with_shops, only: [:show]
       resources :random_menus, only: [:index]
       resource :recommended_menus, only: [:create]

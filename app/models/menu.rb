@@ -12,7 +12,6 @@ class Menu < ApplicationRecord
   has_many :reviews, dependent: :destroy
 
   validates :name, presence: true
-  validates :image, attached: true
 
   def image_url
     return nil unless image.attached?
