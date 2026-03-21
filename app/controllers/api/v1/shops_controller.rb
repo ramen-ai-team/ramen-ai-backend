@@ -23,10 +23,10 @@ module Api
           if shop
             render json: ApiEntity::Shop.new(shop: shop), status: :created
           else
-            render json: { errors: form.errors.full_messages }, status: :service_unavailable
+            render json: ApiEntity::Errors.new(form.errors.full_messages).to_json, status: :service_unavailable
           end
         else
-          render json: { errors: form.errors.full_messages }, status: :bad_request
+          render json: ApiEntity::Errors.new(form.errors.full_messages).to_json, status: :bad_request
         end
       end
 

@@ -67,7 +67,7 @@ RSpec.describe Api::V1::RecommendedMenusController, type: :request do
       post '/api/v1/recommended_menus', params: {}
       expect(response).to have_http_status(:bad_request)
       expect(json).to eq({
-        error: "select_menu_idsが必要です"
+        errors: ["select_menu_idsが必要です"]
       })
     end
   end

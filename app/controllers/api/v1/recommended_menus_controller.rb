@@ -7,7 +7,7 @@ module Api
         select_menu_ids = params[:select_menu_ids]
         not_select_menu_ids = params[:not_select_menu_ids] || []
         if select_menu_ids.blank?
-          render json: { error: "select_menu_idsが必要です" }, status: :bad_request
+          render json: ApiEntity::Errors.new("select_menu_idsが必要です").to_json, status: :bad_request
           return
         end
 
@@ -20,7 +20,7 @@ module Api
           reason = response["reason"] || "おすすめの理由がありません"
           render json: { recommended_menu: ApiEntity::MenuWithShop.new(menu: recommended_menu), reason: }
         rescue => e
-          render json: { error: e.message }, status: :internal_server_error
+          render json: ApiEntity::Errors.new(e.message).to_json, status: :internal_server_error
         end
       end
     end

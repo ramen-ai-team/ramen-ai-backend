@@ -5,7 +5,7 @@ module Api
       include JsonWebToken
 
       rescue_from ActiveRecord::RecordNotFound do |exception|
-        render json: { error: exception.message }, status: :not_found
+        render json: ApiEntity::Errors.new(exception.message).to_json, status: :not_found
       end
 
       before_action :authenticate_user
@@ -17,17 +17,17 @@ module Api
         header = header.split(" ").last if header
 
         if header.blank?
-          render json: { error: "Authorization header missing" }, status: :unauthorized
+          render json: ApiEntity::Errors.new("missing_token").to_json, status: :unauthorized
           return
         end
 
         begin
           decoded = jwt_decode(header)
           @current_user = User.find(decoded[:user_id])
-        rescue ActiveRecord::RecordNotFound => e
-          render json: { error: "User not found" }, status: :unauthorized
-        rescue JWT::DecodeError => e
-          render json: { error: "Invalid token" }, status: :unauthorized
+        rescue ActiveRecord::RecordNotFound
+          render json: ApiEntity::Errors.new("user_not_found").to_json, status: :unauthorized
+        rescue JWT::DecodeError
+          render json: ApiEntity::Errors.new("invalid_token").to_json, status: :unauthorized
         end
       end
 

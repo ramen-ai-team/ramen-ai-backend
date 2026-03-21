@@ -23,7 +23,7 @@ RSpec.describe Api::V1::UsersController, type: :request do
         get '/api/v1/current_user'
 
         expect(response).to have_http_status(:unauthorized)
-        expect(json[:error]).to eq('missing_token')
+        expect(json[:errors]).to eq(['missing_token'])
       end
     end
 
@@ -32,7 +32,7 @@ RSpec.describe Api::V1::UsersController, type: :request do
         get '/api/v1/current_user', headers: { 'Authorization' => 'Bearer invalid_token' }
 
         expect(response).to have_http_status(:unauthorized)
-        expect(json[:error]).to eq('invalid_token')
+        expect(json[:errors]).to eq(['invalid_token'])
       end
     end
   end

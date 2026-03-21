@@ -99,7 +99,7 @@ RSpec.describe Api::V1::ShopsController, type: :request do
 
         expect(response).to have_http_status(:unauthorized)
         expect(json).to eq({
-          error: 'Authorization header missing'
+          errors: ['missing_token']
         })
       end
     end

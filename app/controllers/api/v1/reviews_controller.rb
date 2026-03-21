@@ -9,7 +9,7 @@ module Api
         if review.save
           render json: ApiEntity::Review.new(review:).to_json, status: :created
         else
-          render json: { errors: review.errors.full_messages }, status: :unprocessable_entity
+          render json: ApiEntity::Errors.new(review.errors.full_messages).to_json, status: :unprocessable_entity
         end
       end
 
@@ -17,7 +17,7 @@ module Api
         if @review.update(review_params)
           render json: ApiEntity::Review.new(review: @review).to_json, status: :ok
         else
-          render json: { errors: @review.errors.full_messages }, status: :unprocessable_entity
+          render json: ApiEntity::Errors.new(@review.errors.full_messages).to_json, status: :unprocessable_entity
         end
       end
 

@@ -11,8 +11,7 @@ module JwtAuthenticable
     token = extract_token_from_header
 
     if token.nil?
-      render json: { error: "missing_token", message: "Authorization token is required" },
-             status: :unauthorized
+      render json: ApiEntity::Errors.new("missing_token").to_json, status: :unauthorized
       return
     end
 
@@ -20,11 +19,9 @@ module JwtAuthenticable
       decoded_token = JWT.decode(token, Rails.application.secret_key_base, true, { algorithm: "HS256" })
       @current_user = User.find(decoded_token[0]["user_id"])
     rescue JWT::ExpiredSignature
-      render json: { error: "expired_token", message: "Token has expired" },
-             status: :unauthorized
+      render json: ApiEntity::Errors.new("expired_token").to_json, status: :unauthorized
     rescue JWT::DecodeError, ActiveRecord::RecordNotFound
-      render json: { error: "invalid_token", message: "Invalid token" },
-             status: :unauthorized
+      render json: ApiEntity::Errors.new("invalid_token").to_json, status: :unauthorized
     end
   end
 
