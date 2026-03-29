@@ -12,10 +12,34 @@ steps:
           --format="value(id)" \
           --project=$_AR_PROJECT_ID)
 
-        # 実行中のビルドがあればキャンセル
         if [ -n "$$RUNNING_BUILDS" ]; then
-          echo "Cancelling previous builds: $$RUNNING_BUILDS"
           for BUILD in $$RUNNING_BUILDS; do
+            # キャンセル対象ビルドのコミットSHAを取得
+            BUILD_COMMIT=$$(gcloud builds describe $$BUILD \
+              --format="value(substitutions.COMMIT_SHA)" \
+              --project=$_AR_PROJECT_ID 2>/dev/null)
+
+            # そのコミットにマイグレーション変更があるか確認
+            HAS_MIGRATION=""
+            if [ -n "$$BUILD_COMMIT" ]; then
+              HAS_MIGRATION=$$(git diff --name-only $${BUILD_COMMIT}~1 $${BUILD_COMMIT} -- db/migrate/ 2>/dev/null | head -1)
+            fi
+
+            # マイグレーションありの場合、Apply Migrationsステップ完了まで待機してからキャンセル
+            if [ -n "$$HAS_MIGRATION" ]; then
+              echo "Build $$BUILD has migration changes, waiting for Apply Migrations step..."
+              while true; do
+                STEP_STATUS=$$(gcloud builds describe $$BUILD \
+                  --format="value(steps[2].status)" \
+                  --project=$_AR_PROJECT_ID 2>/dev/null)
+                if [ "$$STEP_STATUS" = "SUCCESS" ] || [ "$$STEP_STATUS" = "FAILURE" ] || [ -z "$$STEP_STATUS" ]; then
+                  break
+                fi
+                sleep 10
+              done
+            fi
+
+            echo "Cancelling build $$BUILD"
             gcloud builds cancel "$$BUILD" --project=$_AR_PROJECT_ID || true
           done
         else
