@@ -124,4 +124,76 @@ RSpec.describe Api::V1::MenuReportsController, type: :request do
       end
     end
   end
+
+  describe 'GET /api/v1/menu_reports/:id' do
+    let(:user) { create(:user) }
+    let(:menu) { create(:menu) }
+    let(:genre) { create(:genre) }
+    let(:noodle) { create(:noodle) }
+    let(:soup) { create(:soup) }
+    let!(:menu_report) { create(:menu_report, user: user, menu: menu, genre: genre, noodle: noodle, soup: soup) }
+
+    it 'menu_reportの詳細を返す' do
+      get "/api/v1/menu_reports/#{menu_report.id}"
+
+      expect(response).to have_http_status(:ok)
+      expect(json).to match({
+        id: menu_report.id,
+        genre_name: genre.name,
+        noodle_name: noodle.name,
+        soup_name: soup.name,
+        menu: {
+          id: menu.id,
+          name: menu.name,
+          genre_name: anything,
+          noodle_name: anything,
+          soup_name: anything,
+          image_url: a_string_starting_with('http')
+        }
+      })
+    end
+
+    it '存在しないidは404を返す' do
+      get '/api/v1/menu_reports/0'
+
+      expect(response).to have_http_status(:not_found)
+    end
+  end
+
+  describe 'DELETE /api/v1/menu_reports/:id' do
+    let(:user) { create(:user) }
+    let(:menu) { create(:menu) }
+    let(:genre) { create(:genre) }
+    let(:noodle) { create(:noodle) }
+    let(:soup) { create(:soup) }
+    let!(:menu_report) { create(:menu_report, user: user, menu: menu, genre: genre, noodle: noodle, soup: soup) }
+
+    context '自分のmenu_reportの場合' do
+      it '削除できる' do
+        expect {
+          delete "/api/v1/menu_reports/#{menu_report.id}", headers: auth_headers_for(user)
+        }.to change(MenuReport, :count).by(-1)
+
+        expect(response).to have_http_status(:no_content)
+      end
+    end
+
+    context '他人のmenu_reportの場合' do
+      it '404を返す' do
+        other_user = create(:user)
+
+        delete "/api/v1/menu_reports/#{menu_report.id}", headers: auth_headers_for(other_user)
+
+        expect(response).to have_http_status(:not_found)
+      end
+    end
+
+    context '未認証の場合' do
+      it '401を返す' do
+        delete "/api/v1/menu_reports/#{menu_report.id}"
+
+        expect(response).to have_http_status(:unauthorized)
+      end
+    end
+  end
 end

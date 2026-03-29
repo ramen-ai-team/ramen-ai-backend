@@ -16,7 +16,7 @@ Rails.application.routes.draw do
       resources :menus, only: [] do
         resources :reviews, only: [:create, :update]
       end
-      resources :menu_reports, only: [:create]
+      resources :menu_reports, only: [:create, :show, :destroy]
       resources :menu_with_shops, only: [:show]
       resources :random_menus, only: [:index]
       resource :recommended_menus, only: [:create]
