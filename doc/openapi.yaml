@@ -81,9 +81,9 @@ paths:
                 - token
                 - admin_user
               example:
-                token: eyJhbGciOiJIUzI1NiJ9.eyJhZG1pbl91c2VyX2lkIjozODYsImV4cCI6MTc3NDE0Njc5NH0.bu0-WVPLkdoAyUzK60RedLfRrYFxgfARApQ9MjMvEco
+                token: eyJhbGciOiJIUzI1NiJ9.eyJhZG1pbl91c2VyX2lkIjo2MzEsImV4cCI6MTc3NDgzNTg1NH0.GRDfEupm8Po3_YWIq1sN-0bYTdM8yZQpkIjDeTq3a4Y
                 admin_user:
-                  id: 386
+                  id: 631
                   email: admin@example.com
         '401':
           description: returns unauthorized error
@@ -103,41 +103,20 @@ paths:
       summary: index
       tags:
       - Api::V1::Admin::Genre
-      parameters:
-      - name: page
-        in: query
-        description: Page number (default: 1)
-        required: false
-        schema:
-          type: integer
-          example: 1
-      - name: items
-        in: query
-        description: Number of items per page (default: 20)
-        required: false
-        schema:
-          type: integer
-          example: 20
       responses:
         '200':
           description: returns empty array when no genres exist
           headers:
             Current-Page:
-              description: Current page number
-              schema:
-                type: integer
+              $ref: '#/components/headers/CurrentPage'
             Page-Items:
-              description: Number of items per page
-              schema:
-                type: integer
+              $ref: '#/components/headers/PageItems'
             Total-Pages:
-              description: Total number of pages
-              schema:
-                type: integer
+              $ref: '#/components/headers/TotalPages'
             Total-Count:
-              description: Total number of items
-              schema:
-                type: integer
+              $ref: '#/components/headers/TotalCount'
+            Link:
+              $ref: '#/components/headers/Link'
           content:
             application/json:
               schema:
@@ -177,41 +156,20 @@ paths:
       summary: index
       tags:
       - Api::V1::Admin::Menu
-      parameters:
-      - name: page
-        in: query
-        description: Page number (default: 1)
-        required: false
-        schema:
-          type: integer
-          example: 1
-      - name: items
-        in: query
-        description: Number of items per page (default: 20)
-        required: false
-        schema:
-          type: integer
-          example: 20
       responses:
         '200':
           description: returns empty array when no menus exist
           headers:
             Current-Page:
-              description: Current page number
-              schema:
-                type: integer
+              $ref: '#/components/headers/CurrentPage'
             Page-Items:
-              description: Number of items per page
-              schema:
-                type: integer
+              $ref: '#/components/headers/PageItems'
             Total-Pages:
-              description: Total number of pages
-              schema:
-                type: integer
+              $ref: '#/components/headers/TotalPages'
             Total-Count:
-              description: Total number of items
-              schema:
-                type: integer
+              $ref: '#/components/headers/TotalCount'
+            Link:
+              $ref: '#/components/headers/Link'
           content:
             application/json:
               schema:
@@ -361,10 +319,10 @@ paths:
             example:
               menu:
                 name: Simple Ramen
-                shop_id: '677'
-                genre_id: '297'
-                soup_id: '249'
-                noodle_id: '297'
+                shop_id: '1143'
+                genre_id: '517'
+                soup_id: '441'
+                noodle_id: '517'
                 image: ramen.png
       responses:
         '201':
@@ -465,34 +423,34 @@ paths:
                 - image_url
                 - shop
               example:
-                id: 505
+                id: 866
                 name: Simple Ramen
-                shop_id: 677
-                created_at: '2026-03-21T11:33:14.955+09:00'
-                updated_at: '2026-03-21T11:33:14.969+09:00'
-                image_url: http://example.com/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsiZGF0YSI6NDk1LCJwdXIiOiJibG9iX2lkIn19--ba96c798983cce8087321ff399e4f70f4e7fb94c/ramen.png
+                shop_id: 1143
+                created_at: '2026-03-29T10:57:35.099+09:00'
+                updated_at: '2026-03-29T10:57:35.116+09:00'
+                image_url: http://example.com/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsiZGF0YSI6ODQ5LCJwdXIiOiJibG9iX2lkIn19--107b943785c8a596bbdf6cba9e88b5401c6d20d3/ramen.png
                 shop:
-                  id: 677
+                  id: 1143
                   name: Shop 22
-                  address: '東京都新宿区 #<#<Class:0x0000ffff95ed7278>:0x0000ffff954f8180>'
-                  google_map_url: https://maps.app.goo.gl/#<#<Class:0x0000ffff95ed7278>:0x0000ffff954f8180>
-                  created_at: '2026-03-21T11:33:14.880+09:00'
-                  updated_at: '2026-03-21T11:33:14.880+09:00'
+                  address: '東京都新宿区 #<#<Class:0x0000ffff7072a3d8>:0x0000ffff707b1bd0>'
+                  google_map_url: https://maps.app.goo.gl/#<#<Class:0x0000ffff7072a3d8>:0x0000ffff707b1bd0>
+                  created_at: '2026-03-29T10:57:35.053+09:00'
+                  updated_at: '2026-03-29T10:57:35.053+09:00'
                 genre:
-                  id: 297
+                  id: 517
                   name: Genre 5
-                  created_at: '2026-03-21T11:33:14.756+09:00'
-                  updated_at: '2026-03-21T11:33:14.756+09:00'
+                  created_at: '2026-03-29T10:57:34.919+09:00'
+                  updated_at: '2026-03-29T10:57:34.919+09:00'
                 soup:
-                  id: 249
+                  id: 441
                   name: Soup 3
-                  created_at: '2026-03-21T11:33:14.759+09:00'
-                  updated_at: '2026-03-21T11:33:14.759+09:00'
+                  created_at: '2026-03-29T10:57:34.921+09:00'
+                  updated_at: '2026-03-29T10:57:34.921+09:00'
                 noodle:
-                  id: 297
+                  id: 517
                   name: Noodle 7
-                  created_at: '2026-03-21T11:33:14.763+09:00'
-                  updated_at: '2026-03-21T11:33:14.763+09:00'
+                  created_at: '2026-03-29T10:57:34.924+09:00'
+                  updated_at: '2026-03-29T10:57:34.924+09:00'
         '401':
           description: returns unauthorized error
           content:
@@ -534,7 +492,7 @@ paths:
         required: true
         schema:
           type: integer
-        example: 511
+        example: 872
       responses:
         '200':
           description: deletes the menu
@@ -589,7 +547,7 @@ paths:
         required: true
         schema:
           type: integer
-        example: 503
+        example: 864
       responses:
         '200':
           description: returns the menu with associations
@@ -692,34 +650,34 @@ paths:
                 - soup
                 - noodle
               example:
-                id: 502
+                id: 863
                 name: Ramen 8
-                shop_id: 674
-                created_at: '2026-03-21T11:33:14.573+09:00'
-                updated_at: '2026-03-21T11:33:14.583+09:00'
-                image_url: http://example.com/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsiZGF0YSI6NDkyLCJwdXIiOiJibG9iX2lkIn19--f54e2a0e2499c1488bd256caea49aaa2bd2c013a/ramen.png
+                shop_id: 1140
+                created_at: '2026-03-29T10:57:34.763+09:00'
+                updated_at: '2026-03-29T10:57:34.772+09:00'
+                image_url: http://example.com/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsiZGF0YSI6ODQ2LCJwdXIiOiJibG9iX2lkIn19--354b414fe8a3a75def847b9c80ba9ea28335cbcc/ramen.png
                 shop:
-                  id: 674
+                  id: 1140
                   name: Shop 19
-                  address: '東京都新宿区 #<#<Class:0x0000ffff95ed7278>:0x0000ffff94b4dd60>'
-                  google_map_url: https://maps.app.goo.gl/#<#<Class:0x0000ffff95ed7278>:0x0000ffff94b4dd60>
-                  created_at: '2026-03-21T11:33:14.552+09:00'
-                  updated_at: '2026-03-21T11:33:14.552+09:00'
+                  address: '東京都新宿区 #<#<Class:0x0000ffff7072a3d8>:0x0000ffff70563450>'
+                  google_map_url: https://maps.app.goo.gl/#<#<Class:0x0000ffff7072a3d8>:0x0000ffff70563450>
+                  created_at: '2026-03-29T10:57:34.743+09:00'
+                  updated_at: '2026-03-29T10:57:34.743+09:00'
                 genre:
-                  id: 296
+                  id: 516
                   name: Genre 4
-                  created_at: '2026-03-21T11:33:14.608+09:00'
-                  updated_at: '2026-03-21T11:33:14.608+09:00'
+                  created_at: '2026-03-29T10:57:34.795+09:00'
+                  updated_at: '2026-03-29T10:57:34.795+09:00'
                 soup:
-                  id: 248
+                  id: 440
                   name: Soup 2
-                  created_at: '2026-03-21T11:33:14.623+09:00'
-                  updated_at: '2026-03-21T11:33:14.623+09:00'
+                  created_at: '2026-03-29T10:57:34.804+09:00'
+                  updated_at: '2026-03-29T10:57:34.804+09:00'
                 noodle:
-                  id: 296
+                  id: 516
                   name: Noodle 6
-                  created_at: '2026-03-21T11:33:14.615+09:00'
-                  updated_at: '2026-03-21T11:33:14.615+09:00'
+                  created_at: '2026-03-29T10:57:34.798+09:00'
+                  updated_at: '2026-03-29T10:57:34.798+09:00'
         '401':
           description: returns unauthorized error
           content:
@@ -760,7 +718,7 @@ paths:
         required: true
         schema:
           type: integer
-        example: 509
+        example: 870
       requestBody:
         content:
           application/x-www-form-urlencoded:
@@ -779,7 +737,7 @@ paths:
             example:
               menu:
                 name: New Name
-                genre_id: '299'
+                genre_id: '519'
       responses:
         '200':
           description: updates genre association
@@ -880,33 +838,33 @@ paths:
                 - shop
               example:
                 name: Ramen 10
-                shop_id: 679
-                id: 507
-                created_at: '2026-03-21T11:33:15.121+09:00'
-                updated_at: '2026-03-21T11:33:15.127+09:00'
-                image_url: http://example.com/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsiZGF0YSI6NDk3LCJwdXIiOiJibG9iX2lkIn19--c7ef60647933a3833439fd3a1343ce95089806a3/ramen.png
+                shop_id: 1145
+                id: 868
+                created_at: '2026-03-29T10:57:35.267+09:00'
+                updated_at: '2026-03-29T10:57:35.272+09:00'
+                image_url: http://example.com/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsiZGF0YSI6ODUxLCJwdXIiOiJibG9iX2lkIn19--77756b41b773c6aa1d23baccb03ef22bfb3555bc/ramen.png
                 shop:
-                  id: 679
+                  id: 1145
                   name: Shop 24
-                  address: '東京都新宿区 #<#<Class:0x0000ffff95ed7278>:0x0000ffff94435e10>'
-                  google_map_url: https://maps.app.goo.gl/#<#<Class:0x0000ffff95ed7278>:0x0000ffff94435e10>
-                  created_at: '2026-03-21T11:33:15.101+09:00'
-                  updated_at: '2026-03-21T11:33:15.101+09:00'
+                  address: '東京都新宿区 #<#<Class:0x0000ffff7072a3d8>:0x0000ffff703c19f8>'
+                  google_map_url: https://maps.app.goo.gl/#<#<Class:0x0000ffff7072a3d8>:0x0000ffff703c19f8>
+                  created_at: '2026-03-29T10:57:35.246+09:00'
+                  updated_at: '2026-03-29T10:57:35.246+09:00'
                 genre:
-                  id: 299
+                  id: 519
                   name: Tsukemen
-                  created_at: '2026-03-21T11:33:15.195+09:00'
-                  updated_at: '2026-03-21T11:33:15.195+09:00'
+                  created_at: '2026-03-29T10:57:35.314+09:00'
+                  updated_at: '2026-03-29T10:57:35.314+09:00'
                 soup:
-                  id: 250
+                  id: 442
                   name: Soup 4
-                  created_at: '2026-03-21T11:33:15.174+09:00'
-                  updated_at: '2026-03-21T11:33:15.174+09:00'
+                  created_at: '2026-03-29T10:57:35.306+09:00'
+                  updated_at: '2026-03-29T10:57:35.306+09:00'
                 noodle:
-                  id: 298
+                  id: 518
                   name: Noodle 8
-                  created_at: '2026-03-21T11:33:15.165+09:00'
-                  updated_at: '2026-03-21T11:33:15.165+09:00'
+                  created_at: '2026-03-29T10:57:35.301+09:00'
+                  updated_at: '2026-03-29T10:57:35.301+09:00'
         '401':
           description: returns unauthorized error
           content:
@@ -958,41 +916,20 @@ paths:
       summary: index
       tags:
       - Api::V1::Admin::Noodle
-      parameters:
-      - name: page
-        in: query
-        description: Page number (default: 1)
-        required: false
-        schema:
-          type: integer
-          example: 1
-      - name: items
-        in: query
-        description: Number of items per page (default: 20)
-        required: false
-        schema:
-          type: integer
-          example: 20
       responses:
         '200':
           description: returns empty array when no noodles exist
           headers:
             Current-Page:
-              description: Current page number
-              schema:
-                type: integer
+              $ref: '#/components/headers/CurrentPage'
             Page-Items:
-              description: Number of items per page
-              schema:
-                type: integer
+              $ref: '#/components/headers/PageItems'
             Total-Pages:
-              description: Total number of pages
-              schema:
-                type: integer
+              $ref: '#/components/headers/TotalPages'
             Total-Count:
-              description: Total number of items
-              schema:
-                type: integer
+              $ref: '#/components/headers/TotalCount'
+            Link:
+              $ref: '#/components/headers/Link'
           content:
             application/json:
               schema:
@@ -1032,41 +969,20 @@ paths:
       summary: index
       tags:
       - Api::V1::Admin::Shop
-      parameters:
-      - name: page
-        in: query
-        description: Page number (default: 1)
-        required: false
-        schema:
-          type: integer
-          example: 1
-      - name: items
-        in: query
-        description: Number of items per page (default: 20)
-        required: false
-        schema:
-          type: integer
-          example: 20
       responses:
         '200':
           description: returns empty array when no shops exist
           headers:
             Current-Page:
-              description: Current page number
-              schema:
-                type: integer
+              $ref: '#/components/headers/CurrentPage'
             Page-Items:
-              description: Number of items per page
-              schema:
-                type: integer
+              $ref: '#/components/headers/PageItems'
             Total-Pages:
-              description: Total number of pages
-              schema:
-                type: integer
+              $ref: '#/components/headers/TotalPages'
             Total-Count:
-              description: Total number of items
-              schema:
-                type: integer
+              $ref: '#/components/headers/TotalCount'
+            Link:
+              $ref: '#/components/headers/Link'
           content:
             application/json:
               schema:
@@ -1178,12 +1094,12 @@ paths:
                 - created_at
                 - updated_at
               example:
-                id: 687
+                id: 1153
                 name: New Shop
                 address: 東京都新宿区1
                 google_map_url: https://maps.app.goo.gl/xyz
-                created_at: '2026-03-21T11:33:16.311+09:00'
-                updated_at: '2026-03-21T11:33:16.311+09:00'
+                created_at: '2026-03-29T10:57:35.925+09:00'
+                updated_at: '2026-03-29T10:57:35.925+09:00'
         '401':
           description: returns unauthorized error
           content:
@@ -1224,7 +1140,7 @@ paths:
         required: true
         schema:
           type: integer
-        example: 692
+        example: 1158
       responses:
         '200':
           description: deletes the shop
@@ -1279,7 +1195,7 @@ paths:
         required: true
         schema:
           type: integer
-        example: 686
+        example: 1152
       responses:
         '200':
           description: returns the shop with full menu details
@@ -1381,33 +1297,33 @@ paths:
                 - updated_at
                 - menus
               example:
-                id: 685
+                id: 1151
                 name: Shop 29
-                address: '東京都新宿区 #<#<Class:0x0000ffff95ed7278>:0x0000ffff9809a478>'
-                google_map_url: https://maps.app.goo.gl/#<#<Class:0x0000ffff95ed7278>:0x0000ffff9809a478>
-                created_at: '2026-03-21T11:33:16.167+09:00'
-                updated_at: '2026-03-21T11:33:16.167+09:00'
+                address: '東京都新宿区 #<#<Class:0x0000ffff7072a3d8>:0x0000ffff71dde070>'
+                google_map_url: https://maps.app.goo.gl/#<#<Class:0x0000ffff7072a3d8>:0x0000ffff71dde070>
+                created_at: '2026-03-29T10:57:35.801+09:00'
+                updated_at: '2026-03-29T10:57:35.801+09:00'
                 menus:
-                - id: 513
+                - id: 874
                   name: Ramen 15
-                  shop_id: 685
-                  created_at: '2026-03-21T11:33:16.196+09:00'
-                  updated_at: '2026-03-21T11:33:16.200+09:00'
+                  shop_id: 1151
+                  created_at: '2026-03-29T10:57:35.830+09:00'
+                  updated_at: '2026-03-29T10:57:35.833+09:00'
                   genre:
-                    id: 300
+                    id: 520
                     name: Genre 7
-                    created_at: '2026-03-21T11:33:16.230+09:00'
-                    updated_at: '2026-03-21T11:33:16.230+09:00'
+                    created_at: '2026-03-29T10:57:35.857+09:00'
+                    updated_at: '2026-03-29T10:57:35.857+09:00'
                   soup:
-                    id: 251
+                    id: 443
                     name: Soup 5
-                    created_at: '2026-03-21T11:33:16.253+09:00'
-                    updated_at: '2026-03-21T11:33:16.253+09:00'
+                    created_at: '2026-03-29T10:57:35.868+09:00'
+                    updated_at: '2026-03-29T10:57:35.868+09:00'
                   noodle:
-                    id: 301
+                    id: 521
                     name: Noodle 9
-                    created_at: '2026-03-21T11:33:16.241+09:00'
-                    updated_at: '2026-03-21T11:33:16.241+09:00'
+                    created_at: '2026-03-29T10:57:35.861+09:00'
+                    updated_at: '2026-03-29T10:57:35.861+09:00'
         '401':
           description: returns unauthorized error
           content:
@@ -1448,7 +1364,7 @@ paths:
         required: true
         schema:
           type: integer
-        example: 690
+        example: 1156
       requestBody:
         content:
           application/x-www-form-urlencoded:
@@ -1496,11 +1412,11 @@ paths:
                 - updated_at
               example:
                 name: New Name
-                google_map_url: https://maps.app.goo.gl/#<#<Class:0x0000ffff95ed7278>:0x0000ffff94b4ad40>
-                id: 688
-                address: '東京都新宿区 #<#<Class:0x0000ffff95ed7278>:0x0000ffff94b4ad40>'
-                created_at: '2026-03-21T11:33:16.343+09:00'
-                updated_at: '2026-03-21T11:33:16.359+09:00'
+                google_map_url: https://maps.app.goo.gl/#<#<Class:0x0000ffff7072a3d8>:0x0000ffff704c11a0>
+                id: 1154
+                address: '東京都新宿区 #<#<Class:0x0000ffff7072a3d8>:0x0000ffff704c11a0>'
+                created_at: '2026-03-29T10:57:35.953+09:00'
+                updated_at: '2026-03-29T10:57:35.969+09:00'
         '401':
           description: returns unauthorized error
           content:
@@ -1552,41 +1468,20 @@ paths:
       summary: index
       tags:
       - Api::V1::Admin::Soup
-      parameters:
-      - name: page
-        in: query
-        description: Page number (default: 1)
-        required: false
-        schema:
-          type: integer
-          example: 1
-      - name: items
-        in: query
-        description: Number of items per page (default: 20)
-        required: false
-        schema:
-          type: integer
-          example: 20
       responses:
         '200':
           description: returns empty array when no soups exist
           headers:
             Current-Page:
-              description: Current page number
-              schema:
-                type: integer
+              $ref: '#/components/headers/CurrentPage'
             Page-Items:
-              description: Number of items per page
-              schema:
-                type: integer
+              $ref: '#/components/headers/PageItems'
             Total-Pages:
-              description: Total number of pages
-              schema:
-                type: integer
+              $ref: '#/components/headers/TotalPages'
             Total-Count:
-              description: Total number of items
-              schema:
-                type: integer
+              $ref: '#/components/headers/TotalCount'
+            Link:
+              $ref: '#/components/headers/Link'
           content:
             application/json:
               schema:
@@ -1626,41 +1521,20 @@ paths:
       summary: index
       tags:
       - Api::V1::Admin::User
-      parameters:
-      - name: page
-        in: query
-        description: Page number (default: 1)
-        required: false
-        schema:
-          type: integer
-          example: 1
-      - name: items
-        in: query
-        description: Number of items per page (default: 20)
-        required: false
-        schema:
-          type: integer
-          example: 20
       responses:
         '200':
           description: returns empty array when no users exist
           headers:
             Current-Page:
-              description: Current page number
-              schema:
-                type: integer
+              $ref: '#/components/headers/CurrentPage'
             Page-Items:
-              description: Number of items per page
-              schema:
-                type: integer
+              $ref: '#/components/headers/PageItems'
             Total-Pages:
-              description: Total number of pages
-              schema:
-                type: integer
+              $ref: '#/components/headers/TotalPages'
             Total-Count:
-              description: Total number of items
-              schema:
-                type: integer
+              $ref: '#/components/headers/TotalCount'
+            Link:
+              $ref: '#/components/headers/Link'
           content:
             application/json:
               schema:
@@ -1764,9 +1638,9 @@ paths:
                 - token
                 - user
               example:
-                token: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjo0NTksImV4cCI6MTc3NDY2NTE5NiwiaWF0IjoxNzc0MDYwMzk2fQ.y09g73Q7uE4jF3CErjjYlLoK-01K-vQik_NWBllTXcg
+                token: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjo3ODcsImV4cCI6MTc3NTM1NDI1NiwiaWF0IjoxNzc0NzQ5NDU2fQ.riNxna7ltnaI7s3FD-l8p5_K4-D9SLyjO21tusiBGDg
                 user:
-                  id: 459
+                  id: 787
                   email: user@example.com
                   name: Test User
                   image: https://example.com/avatar.jpg
@@ -1831,9 +1705,9 @@ paths:
                 - email
                 - image
               example:
-                id: 480
-                name: User 21
-                email: user21@example.com
+                id: 817
+                name: User 30
+                email: user30@example.com
                 image: https://example.com/user_image.png
         '401':
           description: 401を返す
@@ -1846,17 +1720,14 @@ paths:
                     type: array
                     items:
                       type: string
+                required:
+                - errors
               example:
                 errors:
                 - invalid_token
   "/api/v1/menu_reports":
     post:
       summary: create
-      description: |
-        menu_id または menu のどちらか一方を指定してください。
-        - menu_id: 既存メニューに紐づける場合
-        - menu: メニューを新規作成する場合（shop_id と name が必須）
-        両方指定した場合はエラーになります。
       tags:
       - Api::V1::MenuReport
       requestBody:
@@ -1867,7 +1738,6 @@ paths:
               properties:
                 menu_id:
                   type: string
-                  description: 既存メニューのID。menu と同時に指定不可
                 genre_id:
                   type: string
                 noodle_id:
@@ -1876,7 +1746,6 @@ paths:
                   type: string
                 menu:
                   type: object
-                  description: メニューを新規作成する場合に指定。menu_id と同時に指定不可
                   properties:
                     shop_id:
                       type: string
@@ -1890,12 +1759,12 @@ paths:
               - noodle_id
               - soup_id
             example:
-              menu_id: '516'
-              genre_id: '306'
-              noodle_id: '306'
-              soup_id: '258'
+              menu_id: '877'
+              genre_id: '526'
+              noodle_id: '526'
+              soup_id: '450'
               menu:
-                shop_id: '697'
+                shop_id: '1163'
                 name: 特製醤油ラーメン
       responses:
         '201':
@@ -1938,10 +1807,14 @@ paths:
                     type: string
                 required:
                 - id
+                - menu
+                - genre_name
+                - noodle_name
+                - soup_name
               example:
-                id: 59
+                id: 140
                 menu:
-                  id: 518
+                  id: 879
                   name: 特製醤油ラーメン
                   genre_name: Genre 13
                   noodle_name: Noodle 14
@@ -1961,6 +1834,8 @@ paths:
                     type: array
                     items:
                       type: string
+                required:
+                - errors
               example:
                 errors:
                 - missing_token
@@ -1980,6 +1855,137 @@ paths:
               example:
                 errors:
                 - menu_id と menu は同時に指定できません
+  "/api/v1/menu_reports/{id}":
+    delete:
+      summary: destroy
+      tags:
+      - Api::V1::MenuReport
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+        example: 145
+      responses:
+        '204':
+          description: 削除できる
+        '401':
+          description: 401を返す
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: string
+                required:
+                - errors
+              example:
+                errors:
+                - missing_token
+        '404':
+          description: 404を返す
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: string
+                required:
+                - errors
+              example:
+                errors:
+                - Couldn't find MenuReport with 'id'=144 [WHERE "menu_reports"."user_id"
+                  = $1]
+    get:
+      summary: show
+      tags:
+      - Api::V1::MenuReport
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+        example: 0
+      responses:
+        '200':
+          description: menu_reportの詳細を返す
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  menu:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                      name:
+                        type: string
+                      genre_name:
+                        nullable: true
+                      noodle_name:
+                        nullable: true
+                      soup_name:
+                        nullable: true
+                      image_url:
+                        type: string
+                    required:
+                    - id
+                    - name
+                    - genre_name
+                    - noodle_name
+                    - soup_name
+                    - image_url
+                  genre_name:
+                    type: string
+                  noodle_name:
+                    type: string
+                  soup_name:
+                    type: string
+                required:
+                - id
+                - menu
+                - genre_name
+                - noodle_name
+                - soup_name
+              example:
+                id: 141
+                menu:
+                  id: 882
+                  name: Ramen 22
+                  genre_name:
+                  noodle_name:
+                  soup_name:
+                  image_url: http://example.com/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsiZGF0YSI6ODY0LCJwdXIiOiJibG9iX2lkIn19--5f01b1577c74a56281343d6b5f42d4e3e314b7ba/ramen.png
+                genre_name: Genre 15
+                noodle_name: Noodle 16
+                soup_name: Soup 12
+        '404':
+          description: 存在しないidは404を返す
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: string
+                required:
+                - errors
+              example:
+                errors:
+                - Couldn't find MenuReport with 'id'=0
   "/api/v1/menu_with_shops/{id}":
     get:
       summary: show
@@ -1991,7 +1997,7 @@ paths:
         required: true
         schema:
           type: integer
-        example: 521
+        example: 891
       responses:
         '200':
           description: returns a specific menu
@@ -2037,14 +2043,14 @@ paths:
                 - image_url
                 - shop
               example:
-                id: 521
+                id: 891
                 name: 特製ラーメン
                 genre_name: ラーメン
                 noodle_name: 太麺
                 soup_name: 豚骨
-                image_url: http://example.com/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsiZGF0YSI6NTEwLCJwdXIiOiJibG9iX2lkIn19--55b652e97b9fc768977bc483aaa7c9031553a96f/ramen.png
+                image_url: http://example.com/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsiZGF0YSI6ODczLCJwdXIiOiJibG9iX2lkIn19--19baedd58a49a39365802630efe08db9c35c185e/ramen.png
                 shop:
-                  id: 700
+                  id: 1175
                   name: ラーメン屋
                   address: 東京都新宿区
                   google_map_url: https://maps.app.goo.gl/BvuQTxGsmKLJ68yL9
@@ -2059,7 +2065,7 @@ paths:
         required: true
         schema:
           type: integer
-        example: 532
+        example: 902
       requestBody:
         content:
           application/x-www-form-urlencoded:
@@ -2123,18 +2129,19 @@ paths:
                 - rating
                 - comment
                 - visited_at
+                - menu
               example:
-                id: 81
+                id: 130
                 rating: 4
                 comment: スープが濃厚でうまい
                 visited_at: '2026-03-21'
                 menu:
-                  id: 528
-                  name: Ramen 27
+                  id: 898
+                  name: Ramen 36
                   genre_name:
                   noodle_name:
                   soup_name:
-                  image_url: http://example.com/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsiZGF0YSI6NTE3LCJwdXIiOiJibG9iX2lkIn19--e5ab41c3b3dcb09f7ee528e86e6b1568250797af/ramen.png
+                  image_url: http://example.com/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsiZGF0YSI6ODgwLCJwdXIiOiJibG9iX2lkIn19--a99d21224219bc984e242f2ea6be9c41a43d3b91/ramen.png
         '401':
           description: 401を返す
           content:
@@ -2146,6 +2153,8 @@ paths:
                     type: array
                     items:
                       type: string
+                required:
+                - errors
               example:
                 errors:
                 - missing_token
@@ -2160,6 +2169,8 @@ paths:
                     type: array
                     items:
                       type: string
+                required:
+                - errors
               example:
                 errors:
                 - Couldn't find Menu with 'id'=0
@@ -2190,13 +2201,13 @@ paths:
         required: true
         schema:
           type: integer
-        example: 84
+        example: 133
       - name: menu_id
         in: path
         required: true
         schema:
           type: integer
-        example: 535
+        example: 905
       requestBody:
         content:
           application/x-www-form-urlencoded:
@@ -2260,18 +2271,19 @@ paths:
                 - rating
                 - comment
                 - visited_at
+                - menu
               example:
-                id: 82
+                id: 131
                 rating: 5
                 comment: 最高！
                 visited_at: '2026-03-21'
                 menu:
-                  id: 533
-                  name: Ramen 32
+                  id: 903
+                  name: Ramen 41
                   genre_name:
                   noodle_name:
                   soup_name:
-                  image_url: http://example.com/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsiZGF0YSI6NTIyLCJwdXIiOiJibG9iX2lkIn19--f02d948259207e930b4e95c514906e3366425dbd/ramen.png
+                  image_url: http://example.com/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsiZGF0YSI6ODg1LCJwdXIiOiJibG9iX2lkIn19--4da0ce3a8935a8c8ac83ac186f8a532a07bb1b5c/ramen.png
         '401':
           description: 401を返す
           content:
@@ -2283,19 +2295,11 @@ paths:
                     type: array
                     items:
                       type: string
+                required:
+                - errors
               example:
                 errors:
                 - missing_token
-        '403':
-          description: 403を返す
-          content:
-            application/json:
-              schema:
-                type: object
-                properties: {}
-                required:
-                - error
-              example: {}
         '404':
           description: 404を返す
           content:
@@ -2307,22 +2311,102 @@ paths:
                     type: array
                     items:
                       type: string
+                required:
+                - errors
               example:
                 errors:
-                - Couldn't find Review with 'id'=83 [WHERE "reviews"."user_id" = $1]
+                - Couldn't find Review with 'id'=132 [WHERE "reviews"."user_id" =
+                  $1]
+  "/api/v1/my/menu_reports":
+    get:
+      summary: index
+      tags:
+      - Api::V1::My::MenuReport
+      responses:
+        '200':
+          description: 他人のmenu_reportは含まない
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  menu_reports:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        menu:
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                            name:
+                              type: string
+                            genre_name:
+                              nullable: true
+                            noodle_name:
+                              nullable: true
+                            soup_name:
+                              nullable: true
+                            image_url:
+                              type: string
+                          required:
+                          - id
+                          - name
+                          - genre_name
+                          - noodle_name
+                          - soup_name
+                          - image_url
+                        genre_name:
+                          type: string
+                        noodle_name:
+                          type: string
+                        soup_name:
+                          type: string
+                      required:
+                      - id
+                      - menu
+                      - genre_name
+                      - noodle_name
+                      - soup_name
+                required:
+                - menu_reports
+              example:
+                menu_reports:
+                - id: 149
+                  menu:
+                    id: 890
+                    name: Ramen 30
+                    genre_name:
+                    noodle_name:
+                    soup_name:
+                    image_url: http://example.com/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsiZGF0YSI6ODcyLCJwdXIiOiJibG9iX2lkIn19--117224cf68d74181c5501ae35195f6c4757f29b1/ramen.png
+                  genre_name: Genre 21
+                  noodle_name: Noodle 22
+                  soup_name: Soup 18
+        '401':
+          description: 未認証の場合401を返す
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: string
+                required:
+                - errors
+              example:
+                errors:
+                - missing_token
   "/api/v1/random_menus":
     get:
       summary: index
       tags:
       - Api::V1::RandomMenu
-      parameters:
-      - name: limit
-        in: query
-        description: Number of random menus to return (default: 10)
-        required: false
-        schema:
-          type: integer
-          example: 10
       responses:
         '200':
           description: returns all menus
@@ -2359,12 +2443,12 @@ paths:
                 - menus
               example:
                 menus:
-                - id: 522
+                - id: 892
                   name: 博多ラーメン
                   genre_name: ラーメン
                   noodle_name: 細麺
                   soup_name: 豚骨スープ
-                  image_url: http://example.com/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsiZGF0YSI6NTExLCJwdXIiOiJibG9iX2lkIn19--292fa66643a08490561b54927b784034f0ed737b/ramen.png
+                  image_url: http://example.com/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsiZGF0YSI6ODc0LCJwdXIiOiJibG9iX2lkIn19--cfdbd17f7bb888ae6042d364d21830305e896d95/ramen.png
   "/api/v1/recommended_menus":
     post:
       summary: create
@@ -2447,14 +2531,14 @@ paths:
                 - reason
               example:
                 recommended_menu:
-                  id: 524
-                  name: Ramen 23
+                  id: 894
+                  name: Ramen 32
                   genre_name: ラーメン
                   noodle_name: 太麺
                   soup_name: 豚骨
-                  image_url: http://example.com/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsiZGF0YSI6NTEzLCJwdXIiOiJibG9iX2lkIn19--911879866c75f17973a3bdaa15ec2e282c82ac27/ramen.png
+                  image_url: http://example.com/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsiZGF0YSI6ODc2LCJwdXIiOiJibG9iX2lkIn19--e3d4e37bb1be1726bb64873ab56a50389607b884/ramen.png
                   shop:
-                    id: 703
+                    id: 1178
                     name: ラーメン屋
                     address: 東京都新宿区
                     google_map_url: https://maps.app.goo.gl/BvuQTxGsmKLJ68yL9
@@ -2470,6 +2554,8 @@ paths:
                     type: array
                     items:
                       type: string
+                required:
+                - errors
               example:
                 errors:
                 - select_menu_idsが必要です
@@ -2478,41 +2564,20 @@ paths:
       summary: index
       tags:
       - Api::V1::Shop
-      parameters:
-      - name: page
-        in: query
-        description: Page number (default: 1)
-        required: false
-        schema:
-          type: integer
-          example: 1
-      - name: items
-        in: query
-        description: Number of items per page (default: 20)
-        required: false
-        schema:
-          type: integer
-          example: 20
       responses:
         '200':
           description: returns all shops
           headers:
             Current-Page:
-              description: Current page number
-              schema:
-                type: integer
+              $ref: '#/components/headers/CurrentPage'
             Page-Items:
-              description: Number of items per page
-              schema:
-                type: integer
+              $ref: '#/components/headers/PageItems'
             Total-Pages:
-              description: Total number of pages
-              schema:
-                type: integer
+              $ref: '#/components/headers/TotalPages'
             Total-Count:
-              description: Total number of items
-              schema:
-                type: integer
+              $ref: '#/components/headers/TotalCount'
+            Link:
+              $ref: '#/components/headers/Link'
           content:
             application/json:
               schema:
@@ -2540,7 +2605,7 @@ paths:
                 - shops
               example:
                 shops:
-                - id: 718
+                - id: 1193
                   name: 九州 筑豊ラーメン山小屋
                   address: 佐賀県嬉野市嬉野町大字下宿甲４００２−４
                   google_map_url: https://maps.app.goo.gl/BvuQTxGsmKLJ68yL9
@@ -2582,7 +2647,7 @@ paths:
                 - address
                 - google_map_url
               example:
-                id: 720
+                id: 1195
                 name: ラーメン太郎
                 address: 東京都渋谷区道玄坂1-2-3
                 google_map_url: https://maps.app.goo.gl/dGfTAMwDfw29yLPc7
@@ -2613,6 +2678,8 @@ paths:
                     type: array
                     items:
                       type: string
+                required:
+                - errors
               example:
                 errors:
                 - missing_token
@@ -2643,7 +2710,7 @@ paths:
         required: true
         schema:
           type: integer
-        example: 719
+        example: 1194
       responses:
         '200':
           description: returns a specific shop
@@ -2666,7 +2733,7 @@ paths:
                 - address
                 - google_map_url
               example:
-                id: 719
+                id: 1194
                 name: 九州 筑豊ラーメン山小屋
                 address: 佐賀県嬉野市嬉野町大字下宿甲４００２−４
                 google_map_url: https://maps.app.goo.gl/BvuQTxGsmKLJ68yL9
@@ -2682,40 +2749,20 @@ paths:
         schema:
           type: integer
         example: 0
-      - name: page
-        in: query
-        description: Page number (default: 1)
-        required: false
-        schema:
-          type: integer
-          example: 1
-      - name: items
-        in: query
-        description: Number of items per page (default: 20)
-        required: false
-        schema:
-          type: integer
-          example: 20
       responses:
         '200':
           description: 他の店舗のメニューは含まない
           headers:
             Current-Page:
-              description: Current page number
-              schema:
-                type: integer
+              $ref: '#/components/headers/CurrentPage'
             Page-Items:
-              description: Number of items per page
-              schema:
-                type: integer
+              $ref: '#/components/headers/PageItems'
             Total-Pages:
-              description: Total number of pages
-              schema:
-                type: integer
+              $ref: '#/components/headers/TotalPages'
             Total-Count:
-              description: Total number of items
-              schema:
-                type: integer
+              $ref: '#/components/headers/TotalCount'
+            Link:
+              $ref: '#/components/headers/Link'
           content:
             application/json:
               schema:
@@ -2757,21 +2804,26 @@ paths:
                       required:
                       - id
                       - name
+                      - genre_name
+                      - noodle_name
+                      - soup_name
+                      - image_url
+                      - shop
                 required:
                 - menus
               example:
                 menus:
-                - id: 539
-                  name: Ramen 36
+                - id: 909
+                  name: Ramen 45
                   genre_name:
                   noodle_name:
                   soup_name:
-                  image_url: http://example.com/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsiZGF0YSI6NTI4LCJwdXIiOiJibG9iX2lkIn19--0473b9bc6c1cb9c76642e190c8ccf02a3b9b7a84/ramen.png
+                  image_url: http://example.com/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsiZGF0YSI6ODkxLCJwdXIiOiJibG9iX2lkIn19--e848239cf13dbeec485f57dee3a7ed915ca7c4c5/ramen.png
                   shop:
-                    id: 717
-                    name: Shop 55
-                    address: '東京都新宿区 #<#<Class:0x0000ffff95ed7278>:0x0000ffff948cf200>'
-                    google_map_url: https://maps.app.goo.gl/#<#<Class:0x0000ffff95ed7278>:0x0000ffff948cf200>
+                    id: 1192
+                    name: Shop 64
+                    address: '東京都新宿区 #<#<Class:0x0000ffff7072a3d8>:0x0000ffff706eb2c8>'
+                    google_map_url: https://maps.app.goo.gl/#<#<Class:0x0000ffff7072a3d8>:0x0000ffff706eb2c8>
         '404':
           description: 存在しないshop_idは404を返す
           content:
@@ -2783,6 +2835,26 @@ paths:
                     type: array
                     items:
                       type: string
+                required:
+                - errors
               example:
                 errors:
                 - Couldn't find Shop with 'id'=0
+
+components:
+  headers:
+    CurrentPage:
+      schema:
+        type: integer
+    PageItems:
+      schema:
+        type: integer
+    TotalPages:
+      schema:
+        type: integer
+    TotalCount:
+      schema:
+        type: integer
+    Link:
+      schema:
+        type: string
