@@ -3,7 +3,7 @@ require 'rails_helper'
 require 'rails_helper'
 
 RSpec.describe Api::V1::MenuWithShopsController, type: :request do
-  describe 'GET /api/v1/menu_with_shops/:id' do
+  describe 'GET /api/v1/menu_with_shops/{id}' do
     let!(:genre) { create(:genre, name: 'ラーメン') }
     let!(:noodle) { create(:noodle, name: '太麺') }
     let!(:soup) { create(:soup, name: '豚骨') }

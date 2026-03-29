@@ -20,7 +20,7 @@ RSpec.describe Api::V1::ShopsController, type: :request do
     end
   end
 
-  describe 'GET /api/v1/shops/:id' do
+  describe 'GET /api/v1/shops/{id}' do
     let!(:shop) { create(:shop, name: '九州 筑豊ラーメン山小屋', address: '佐賀県嬉野市嬉野町大字下宿甲４００２−４', google_map_url: 'https://maps.app.goo.gl/BvuQTxGsmKLJ68yL9') }
 
     it 'returns a specific shop' do

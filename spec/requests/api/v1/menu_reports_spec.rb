@@ -125,7 +125,7 @@ RSpec.describe Api::V1::MenuReportsController, type: :request do
     end
   end
 
-  describe 'GET /api/v1/menu_reports/:id' do
+  describe 'GET /api/v1/menu_reports/{id}' do
     let(:user) { create(:user) }
     let(:menu) { create(:menu) }
     let(:genre) { create(:genre) }
@@ -160,7 +160,7 @@ RSpec.describe Api::V1::MenuReportsController, type: :request do
     end
   end
 
-  describe 'DELETE /api/v1/menu_reports/:id' do
+  describe 'DELETE /api/v1/menu_reports/{id}' do
     let(:user) { create(:user) }
     let(:menu) { create(:menu) }
     let(:genre) { create(:genre) }

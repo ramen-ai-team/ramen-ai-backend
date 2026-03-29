@@ -41,7 +41,7 @@ RSpec.describe 'Api::V1::Admin::Shops', type: :request do
     end
   end
 
-  describe 'GET /api/v1/admin/shops/:id' do
+  describe 'GET /api/v1/admin/shops/{id}' do
     context 'when admin is authenticated' do
       it 'returns the shop with full menu details' do
         shop = create(:shop)
@@ -106,7 +106,7 @@ RSpec.describe 'Api::V1::Admin::Shops', type: :request do
     end
   end
 
-  describe 'PATCH /api/v1/admin/shops/:id' do
+  describe 'PATCH /api/v1/admin/shops/{id}' do
     context 'when admin is authenticated' do
       it 'updates the shop with valid params' do
         shop = create(:shop, name: 'Old Name')
@@ -150,7 +150,7 @@ RSpec.describe 'Api::V1::Admin::Shops', type: :request do
     end
   end
 
-  describe 'DELETE /api/v1/admin/shops/:id' do
+  describe 'DELETE /api/v1/admin/shops/{id}' do
     context 'when admin is authenticated' do
       it 'deletes the shop' do
         shop = create(:shop)

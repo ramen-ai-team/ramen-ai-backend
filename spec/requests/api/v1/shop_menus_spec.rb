@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe 'GET /api/v1/shops/:shop_id/menus', type: :request do
+RSpec.describe 'GET /api/v1/shops/{shop_id}/menus', type: :request do
   let(:shop) { create(:shop) }
 
   let(:menu_json) do |menu|

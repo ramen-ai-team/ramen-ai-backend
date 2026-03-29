@@ -15,7 +15,7 @@ RSpec.describe Api::V1::ReviewsController, type: :request do
     }
   end
 
-  describe 'POST /api/v1/menus/:menu_id/reviews' do
+  describe 'POST /api/v1/menus/{menu_id}/reviews' do
     let(:params) do
       {
         rating: 4,
@@ -105,7 +105,7 @@ RSpec.describe Api::V1::ReviewsController, type: :request do
     end
   end
 
-  describe 'PATCH /api/v1/menus/:menu_id/reviews/:id' do
+  describe 'PATCH /api/v1/menus/{menu_id}/reviews/{id}' do
     let!(:review) { create(:review, user: user, menu: menu, rating: 3, comment: '普通', visited_at: '2026-01-01') }
 
     context '自分のレビューの場合' do

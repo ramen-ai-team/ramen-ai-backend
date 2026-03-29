@@ -38,7 +38,7 @@ RSpec.describe 'Api::V1::Admin::Menus', type: :request do
     end
   end
 
-  describe 'GET /api/v1/admin/menus/:id' do
+  describe 'GET /api/v1/admin/menus/{id}' do
     context 'when admin is authenticated' do
       it 'returns the menu with associations' do
         menu = create(:menu, :with_category)
@@ -126,7 +126,7 @@ RSpec.describe 'Api::V1::Admin::Menus', type: :request do
     end
   end
 
-  describe 'PATCH /api/v1/admin/menus/:id' do
+  describe 'PATCH /api/v1/admin/menus/{id}' do
     context 'when admin is authenticated' do
       it 'updates the menu name' do
         menu = create(:menu, name: 'Old Name')
@@ -182,7 +182,7 @@ RSpec.describe 'Api::V1::Admin::Menus', type: :request do
     end
   end
 
-  describe 'DELETE /api/v1/admin/menus/:id' do
+  describe 'DELETE /api/v1/admin/menus/{id}' do
     context 'when admin is authenticated' do
       it 'deletes the menu' do
         menu = create(:menu)
