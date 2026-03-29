@@ -196,4 +196,39 @@ RSpec.describe Api::V1::MenuReportsController, type: :request do
       end
     end
   end
+
+  describe 'GET /api/v1/my/menu_reports' do
+    let(:user) { create(:user) }
+    let(:genre) { create(:genre) }
+    let(:noodle) { create(:noodle) }
+    let(:soup) { create(:soup) }
+
+    it '自分のmenu_report一覧を返す' do
+      menu1 = create(:menu)
+      menu2 = create(:menu)
+      report1 = create(:menu_report, user: user, menu: menu1, genre: genre, noodle: noodle, soup: soup)
+      report2 = create(:menu_report, user: user, menu: menu2, genre: genre, noodle: noodle, soup: soup)
+
+      get '/api/v1/my/menu_reports', headers: auth_headers_for(user)
+
+      expect(response).to have_http_status(:ok)
+      expect(json[:menu_reports].map { |r| r[:id] }).to contain_exactly(report1.id, report2.id)
+    end
+
+    it '他人のmenu_reportは含まない' do
+      other_user = create(:user)
+      create(:menu_report, user: other_user, menu: create(:menu), genre: genre, noodle: noodle, soup: soup)
+      my_report = create(:menu_report, user: user, menu: create(:menu), genre: genre, noodle: noodle, soup: soup)
+
+      get '/api/v1/my/menu_reports', headers: auth_headers_for(user)
+
+      expect(json[:menu_reports].map { |r| r[:id] }).to eq([my_report.id])
+    end
+
+    it '未認証の場合401を返す' do
+      get '/api/v1/my/menu_reports'
+
+      expect(response).to have_http_status(:unauthorized)
+    end
+  end
 end
