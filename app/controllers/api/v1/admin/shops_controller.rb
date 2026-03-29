@@ -2,7 +2,8 @@ class Api::V1::Admin::ShopsController < Api::V1::Admin::ApplicationController
   before_action :set_shop, only: [:show, :update, :destroy]
 
   def index
-    @shops = Shop.includes(:menus).all
+    pagy, @shops = pagy(Shop.includes(:menus).all)
+    pagy_headers_merge(pagy)
     render json: @shops.as_json(
       include: {
         menus: {

@@ -1,4 +1,5 @@
 class Api::V1::Admin::ApplicationController < ApplicationController
+  include Pagy::Backend
   include JsonWebToken
 
   before_action :authenticate_admin_request

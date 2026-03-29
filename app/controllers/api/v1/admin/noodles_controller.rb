@@ -1,6 +1,7 @@
 class Api::V1::Admin::NoodlesController < Api::V1::Admin::ApplicationController
   def index
-    @noodles = Noodle.all
+    pagy, @noodles = pagy(Noodle.all)
+    pagy_headers_merge(pagy)
     render json: @noodles
   end
 end

@@ -5,7 +5,9 @@ module Api
 
       def index
         shop = Shop.find(params[:shop_id])
-        render json: ApiEntity::MenuWithShopList.new(menus: shop.menus).to_json
+        pagy, menus = pagy(shop.menus)
+        pagy_headers_merge(pagy)
+        render json: ApiEntity::MenuWithShopList.new(menus:).to_json
       end
     end
   end

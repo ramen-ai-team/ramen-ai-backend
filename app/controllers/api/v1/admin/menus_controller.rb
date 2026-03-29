@@ -2,7 +2,8 @@ class Api::V1::Admin::MenusController < Api::V1::Admin::ApplicationController
   before_action :set_menu, only: [:show, :update, :destroy]
 
   def index
-    @menus = Menu.includes(:genre, :noodle, :soup, :shop).with_attached_image.all
+    pagy, @menus = pagy(Menu.includes(:genre, :noodle, :soup, :shop).with_attached_image.all)
+    pagy_headers_merge(pagy)
     render json: @menus.as_json(
       include: [:shop, :genre, :soup, :noodle],
       methods: [:image_url]
