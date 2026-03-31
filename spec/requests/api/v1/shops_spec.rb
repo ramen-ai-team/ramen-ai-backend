@@ -22,6 +22,35 @@ RSpec.describe Api::V1::ShopsController, type: :request do
     end
   end
 
+  describe 'GET /api/v1/shops（name検索）' do
+    let!(:shop1) { create(:shop, name: '博多ラーメン一蘭') }
+    let!(:shop2) { create(:shop, name: '札幌味噌ラーメン') }
+    let!(:shop3) { create(:shop, name: '東京醤油らーめん') }
+
+    it 'nameパラメータで部分一致検索できる' do
+      get '/api/v1/shops', params: { name: 'ラーメン' }
+
+      expect(response).to have_http_status(:ok)
+      expect(json[:shops].map { |s| s[:name] }).to contain_exactly('博多ラーメン一蘭', '札幌味噌ラーメン')
+    end
+
+    it '大文字小文字を区別しない' do
+      create(:shop, name: 'Tokyo Ramen')
+
+      get '/api/v1/shops', params: { name: 'ramen' }
+
+      expect(response).to have_http_status(:ok)
+      expect(json[:shops].map { |s| s[:name] }).to include('Tokyo Ramen')
+    end
+
+    it 'nameパラメータなしは全件返す' do
+      get '/api/v1/shops'
+
+      expect(response).to have_http_status(:ok)
+      expect(json[:shops].size).to eq(3)
+    end
+  end
+
   describe 'GET /api/v1/shops/{id}' do
     let!(:shop) { create(:shop, name: '九州 筑豊ラーメン山小屋', address: '佐賀県嬉野市嬉野町大字下宿甲４００２−４', google_map_url: 'https://maps.app.goo.gl/BvuQTxGsmKLJ68yL9', latitude: 33.3586, longitude: 130.0042) }
 

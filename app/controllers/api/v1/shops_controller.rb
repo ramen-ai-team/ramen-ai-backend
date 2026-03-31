@@ -5,7 +5,8 @@ module Api
       skip_before_action :authenticate_user, only: [:index, :show]
 
       def index
-        pagy, shops = pagy(Shop.all)
+        scope = params[:name].present? ? Shop.where("name ILIKE ?", "%#{params[:name]}%") : Shop.all
+        pagy, shops = pagy(scope)
         shop_list = ApiEntity::ShopList.new(shops:)
         pagy_headers_merge(pagy)
         render json: shop_list, status: :ok
