@@ -16,6 +16,7 @@ namespace :shops do
       end
 
       details = GoogleMaps::PlacesClient.fetch_place_details(place_id)
+      puts "  details: #{details.inspect}"
       if details.nil?
         puts "[SKIP] #{shop.name} (id=#{shop.id}): Places API失敗 (place_id=#{place_id})"
         failed += 1
