@@ -74,7 +74,7 @@ steps:
         PREV_REVISION=$$(gcloud run services describe $_SERVICE_NAME \
           --region=$_DEPLOY_REGION \
           --platform=managed \
-          --format="value(status.latestReadyRevisionName)" \
+          --format="value(status.traffic[0].revisionName)" \
           --project=$_AR_PROJECT_ID 2>/dev/null)
         PREV_SHA=$$(gcloud run revisions describe $$PREV_REVISION \
           --region=$_DEPLOY_REGION \
@@ -125,8 +125,7 @@ steps:
       - >-
         --labels=managed-by=gcp-cloud-build-deploy-cloud-run,commit-sha=$COMMIT_SHA,gcb-build-id=$BUILD_ID,gcb-trigger-id=$_TRIGGER_ID
       - "--region=$_DEPLOY_REGION"
-      - "--remove-env-vars=GOOGLE_PRIVATE_KEY,GOOGLE_PRIVATE_KEY_ID,GOOGLE_APPLICATION_CREDENTIALS"
-      - "--set-secrets=RAILS_MASTER_KEY=RAILS_MASTER_KEY:latest,GCP_CLIENT_ID=GCP_CLIENT_ID:latest,GCP_CLIENT_SECRET=GCP_CLIENT_SECRET:latest"
+      - "--set-secrets=RAILS_MASTER_KEY=RAILS_MASTER_KEY:latest,GCP_CLIENT_ID=GCP_CLIENT_ID:latest,GCP_CLIENT_SECRET=GCP_CLIENT_SECRET:latest,GOOGLE_MAPS_API_KEY=GOOGLE_MAPS_API_KEY:latest"
       - "--quiet"
     entrypoint: gcloud
 
@@ -155,6 +154,8 @@ availableSecrets:
   secretManager:
     - versionName: projects/943228427206/secrets/RAILS_MASTER_KEY/versions/2
       env: "RAILS_MASTER_KEY"
+    - versionName: projects/943228427206/secrets/GOOGLE_MAPS_API_KEY/versions/latest
+      env: "GOOGLE_MAPS_API_KEY"
 tags:
   - gcp-cloud-build-deploy-cloud-run
   - gcp-cloud-build-deploy-cloud-run-managed

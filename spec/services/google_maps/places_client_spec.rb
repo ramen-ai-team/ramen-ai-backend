@@ -6,7 +6,7 @@ RSpec.describe GoogleMaps::PlacesClient do
     let(:api_key) { 'test_api_key' }
 
     before do
-      allow(Rails.application.credentials).to receive(:google_maps_api_key).and_return(api_key)
+      allow(ENV).to receive(:[]).with("GOOGLE_MAPS_API_KEY").and_return(api_key)
     end
 
     context 'with valid place_id' do
@@ -77,7 +77,7 @@ RSpec.describe GoogleMaps::PlacesClient do
 
     context 'when API key is not configured' do
       before do
-        allow(Rails.application.credentials).to receive(:google_maps_api_key).and_return(nil)
+        allow(ENV).to receive(:[]).with("GOOGLE_MAPS_API_KEY").and_return(nil)
       end
 
       it 'logs error and returns nil' do

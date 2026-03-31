@@ -76,7 +76,7 @@ RSpec.describe Api::V1::ShopsController, type: :request do
     let(:api_key) { 'test_api_key' }
 
     before do
-      allow(Rails.application.credentials).to receive(:google_maps_api_key).and_return(api_key)
+      allow(ENV).to receive(:[]).with("GOOGLE_MAPS_API_KEY").and_return(api_key)
       stub_request(:get, google_map_url)
         .to_return(status: 301, headers: { 'Location' => full_url })
     end

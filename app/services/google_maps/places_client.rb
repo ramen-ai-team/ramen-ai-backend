@@ -6,7 +6,7 @@ module GoogleMaps
     PLACES_API_URL = "https://maps.googleapis.com/maps/api/place/details/json"
 
     def self.fetch_place_details(place_id)
-      api_key = Rails.application.credentials.google_maps_api_key
+      api_key = ENV["GOOGLE_MAPS_API_KEY"]
 
       if api_key.blank?
         Rails.logger.error("Google Maps API key is not configured")
