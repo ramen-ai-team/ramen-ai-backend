@@ -17,7 +17,7 @@ module GoogleMaps
       params = {
         place_id: place_id,
         key: api_key,
-        fields: "name,formatted_address,formatted_phone_number",
+        fields: "name,formatted_address,formatted_phone_number,geometry",
         language: "ja"
       }
       uri.query = URI.encode_www_form(params)
@@ -32,7 +32,9 @@ module GoogleMaps
       {
         name: result[:name],
         address: result[:formatted_address],
-        phone_number: result[:formatted_phone_number]
+        phone_number: result[:formatted_phone_number],
+        latitude: result.dig(:geometry, :location, :lat),
+        longitude: result.dig(:geometry, :location, :lng)
       }
     rescue StandardError => e
       Rails.logger.error("Failed to fetch place details: #{e.message}")

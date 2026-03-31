@@ -28,7 +28,9 @@ class ShopForm
     shop = Shop.create(
       name: place_details[:name],
       address: place_details[:address],
-      google_map_url: google_map_url
+      google_map_url: google_map_url,
+      latitude: place_details[:latitude],
+      longitude: place_details[:longitude]
     )
 
     shop.persisted? ? shop : false

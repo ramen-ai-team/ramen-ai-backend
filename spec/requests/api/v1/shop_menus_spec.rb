@@ -40,7 +40,9 @@ RSpec.describe 'GET /api/v1/shops/{shop_id}/menus', type: :request do
             id: shop.id,
             name: shop.name,
             address: shop.address,
-            google_map_url: shop.google_map_url
+            google_map_url: shop.google_map_url,
+            latitude: shop.latitude,
+            longitude: shop.longitude
           }
         },
         {
@@ -54,7 +56,9 @@ RSpec.describe 'GET /api/v1/shops/{shop_id}/menus', type: :request do
             id: shop.id,
             name: shop.name,
             address: shop.address,
-            google_map_url: shop.google_map_url
+            google_map_url: shop.google_map_url,
+            latitude: shop.latitude,
+            longitude: shop.longitude
           }
         }
       )

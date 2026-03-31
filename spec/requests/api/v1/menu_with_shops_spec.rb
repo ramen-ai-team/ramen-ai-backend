@@ -7,7 +7,7 @@ RSpec.describe Api::V1::MenuWithShopsController, type: :request do
     let!(:genre) { create(:genre, name: 'ラーメン') }
     let!(:noodle) { create(:noodle, name: '太麺') }
     let!(:soup) { create(:soup, name: '豚骨') }
-    let!(:shop) { create(:shop, name: 'ラーメン屋', address: '東京都新宿区', google_map_url: 'https://maps.app.goo.gl/BvuQTxGsmKLJ68yL9') }
+    let!(:shop) { create(:shop, name: 'ラーメン屋', address: '東京都新宿区', google_map_url: 'https://maps.app.goo.gl/BvuQTxGsmKLJ68yL9', latitude: 35.6812, longitude: 139.7671) }
     let!(:menu) { create(:menu, :with_category, genre:, noodle:, soup:, shop:, name: '特製ラーメン') }
 
     it 'returns a specific menu' do
@@ -24,7 +24,9 @@ RSpec.describe Api::V1::MenuWithShopsController, type: :request do
           id: shop.id,
           name: 'ラーメン屋',
           address: '東京都新宿区',
-          google_map_url: 'https://maps.app.goo.gl/BvuQTxGsmKLJ68yL9'
+          google_map_url: 'https://maps.app.goo.gl/BvuQTxGsmKLJ68yL9',
+          latitude: 35.6812,
+          longitude: 139.7671
         }
       })
     end

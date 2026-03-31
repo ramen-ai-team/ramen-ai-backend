@@ -31,13 +31,14 @@ RSpec.describe ShopForm, type: :model do
       stub_request(:get, google_map_url)
         .to_return(status: 301, headers: { 'Location' => full_url })
       stub_request(:get, "https://maps.googleapis.com/maps/api/place/details/json")
-        .with(query: { place_id: place_id, key: api_key, fields: 'name,formatted_address,formatted_phone_number', language: 'ja' })
+        .with(query: { place_id: place_id, key: api_key, fields: 'name,formatted_address,formatted_phone_number,geometry', language: 'ja' })
         .to_return(status: 200, body: {
           result: {
             name: 'ラーメン太郎',
             formatted_address: '東京都渋谷区道玄坂1-2-3',
             formatted_phone_number: '03-1234-5678',
-            place_id: place_id
+            place_id: place_id,
+            geometry: { location: { lat: 35.6812, lng: 139.7671 } }
           },
           status: 'OK'
         }.to_json, headers: { 'Content-Type' => 'application/json' })
@@ -96,7 +97,7 @@ RSpec.describe ShopForm, type: :model do
     context 'when Places API returns error' do
       before do
         stub_request(:get, "https://maps.googleapis.com/maps/api/place/details/json")
-          .with(query: { place_id: place_id, key: api_key, fields: 'name,formatted_address,formatted_phone_number', language: 'ja' })
+          .with(query: { place_id: place_id, key: api_key, fields: 'name,formatted_address,formatted_phone_number,geometry', language: 'ja' })
           .to_return(status: 500, body: '', headers: {})
       end
 

@@ -4,7 +4,7 @@ require 'rails_helper'
 
 RSpec.describe Api::V1::ShopsController, type: :request do
   describe 'GET /api/v1/shops' do
-    let!(:shop) { create(:shop, name: '九州 筑豊ラーメン山小屋', address: '佐賀県嬉野市嬉野町大字下宿甲４００２−４', google_map_url: 'https://maps.app.goo.gl/BvuQTxGsmKLJ68yL9') }
+    let!(:shop) { create(:shop, name: '九州 筑豊ラーメン山小屋', address: '佐賀県嬉野市嬉野町大字下宿甲４００２−４', google_map_url: 'https://maps.app.goo.gl/BvuQTxGsmKLJ68yL9', latitude: 33.3586, longitude: 130.0042) }
 
     it 'returns all shops' do
       get '/api/v1/shops'
@@ -14,14 +14,16 @@ RSpec.describe Api::V1::ShopsController, type: :request do
           id: shop.id,
           name: '九州 筑豊ラーメン山小屋',
           address: '佐賀県嬉野市嬉野町大字下宿甲４００２−４',
-          google_map_url: 'https://maps.app.goo.gl/BvuQTxGsmKLJ68yL9'
+          google_map_url: 'https://maps.app.goo.gl/BvuQTxGsmKLJ68yL9',
+          latitude: 33.3586,
+          longitude: 130.0042
         }]
       })
     end
   end
 
   describe 'GET /api/v1/shops/{id}' do
-    let!(:shop) { create(:shop, name: '九州 筑豊ラーメン山小屋', address: '佐賀県嬉野市嬉野町大字下宿甲４００２−４', google_map_url: 'https://maps.app.goo.gl/BvuQTxGsmKLJ68yL9') }
+    let!(:shop) { create(:shop, name: '九州 筑豊ラーメン山小屋', address: '佐賀県嬉野市嬉野町大字下宿甲４００２−４', google_map_url: 'https://maps.app.goo.gl/BvuQTxGsmKLJ68yL9', latitude: 33.3586, longitude: 130.0042) }
 
     it 'returns a specific shop' do
       get "/api/v1/shops/#{shop.id}"
@@ -30,7 +32,9 @@ RSpec.describe Api::V1::ShopsController, type: :request do
         id: shop.id,
         name: '九州 筑豊ラーメン山小屋',
         address: '佐賀県嬉野市嬉野町大字下宿甲４００２−４',
-        google_map_url: 'https://maps.app.goo.gl/BvuQTxGsmKLJ68yL9'
+        google_map_url: 'https://maps.app.goo.gl/BvuQTxGsmKLJ68yL9',
+        latitude: 33.3586,
+        longitude: 130.0042
       })
     end
   end
@@ -55,7 +59,10 @@ RSpec.describe Api::V1::ShopsController, type: :request do
             name: 'ラーメン太郎',
             formatted_address: '東京都渋谷区道玄坂1-2-3',
             formatted_phone_number: '03-1234-5678',
-            place_id: place_id
+            place_id: place_id,
+            geometry: {
+              location: { lat: 35.6812, lng: 139.7671 }
+            }
           },
           status: 'OK'
         }.to_json
@@ -63,7 +70,7 @@ RSpec.describe Api::V1::ShopsController, type: :request do
 
       before do
         stub_request(:get, "https://maps.googleapis.com/maps/api/place/details/json")
-          .with(query: { place_id: place_id, key: api_key, fields: 'name,formatted_address,formatted_phone_number', language: 'ja' })
+          .with(query: { place_id: place_id, key: api_key, fields: 'name,formatted_address,formatted_phone_number,geometry', language: 'ja' })
           .to_return(status: 200, body: places_api_response, headers: { 'Content-Type' => 'application/json' })
       end
 
@@ -77,7 +84,9 @@ RSpec.describe Api::V1::ShopsController, type: :request do
           id: Shop.last.id,
           name: 'ラーメン太郎',
           address: '東京都渋谷区道玄坂1-2-3',
-          google_map_url: google_map_url
+          google_map_url: google_map_url,
+          latitude: 35.6812,
+          longitude: 139.7671
         })
       end
     end
@@ -107,7 +116,7 @@ RSpec.describe Api::V1::ShopsController, type: :request do
     context 'when Places API returns error' do
       before do
         stub_request(:get, "https://maps.googleapis.com/maps/api/place/details/json")
-          .with(query: { place_id: place_id, key: api_key, fields: 'name,formatted_address,formatted_phone_number', language: 'ja' })
+          .with(query: { place_id: place_id, key: api_key, fields: 'name,formatted_address,formatted_phone_number,geometry', language: 'ja' })
           .to_return(status: 500, body: '', headers: {})
       end
 

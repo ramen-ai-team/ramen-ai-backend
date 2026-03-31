@@ -10,7 +10,7 @@ RSpec.describe Api::V1::RecommendedMenusController, type: :request do
     let!(:genre) { create(:genre, name: 'ラーメン') }
     let!(:noodle) { create(:noodle, name: '太麺') }
     let!(:soup) { create(:soup, name: '豚骨') }
-    let!(:shop) { create(:shop, name: 'ラーメン屋', address: '東京都新宿区', google_map_url: 'https://maps.app.goo.gl/BvuQTxGsmKLJ68yL9') }
+    let!(:shop) { create(:shop, name: 'ラーメン屋', address: '東京都新宿区', google_map_url: 'https://maps.app.goo.gl/BvuQTxGsmKLJ68yL9', latitude: 35.6812, longitude: 139.7671) }
     let!(:image_file) { fixture_file_upload('images/ramen.png', 'image/png') }
     let!(:menu) { create(:menu, :with_category, genre:, noodle:, soup:, shop:, image: image_file) }
 
@@ -31,7 +31,9 @@ RSpec.describe Api::V1::RecommendedMenusController, type: :request do
             id: shop.id,
             name: 'ラーメン屋',
             address: '東京都新宿区',
-            google_map_url: 'https://maps.app.goo.gl/BvuQTxGsmKLJ68yL9'
+            google_map_url: 'https://maps.app.goo.gl/BvuQTxGsmKLJ68yL9',
+            latitude: 35.6812,
+            longitude: 139.7671
           }
         },
         reason: "魚介つけ麺や二郎系ラーメンなど、濃厚でインパクトのある味をお好みのようですので、同じく濃厚な「豚骨」スープのラーメンをおすすめします。特に食べ応えのある太麺との相性は抜群で、鶏ガラとはまた違ったクリーミーで深みのある味わいをお楽しみいただけます。",
@@ -56,7 +58,9 @@ RSpec.describe Api::V1::RecommendedMenusController, type: :request do
             id: shop.id,
             name: 'ラーメン屋',
             address: '東京都新宿区',
-            google_map_url: 'https://maps.app.goo.gl/BvuQTxGsmKLJ68yL9'
+            google_map_url: 'https://maps.app.goo.gl/BvuQTxGsmKLJ68yL9',
+            latitude: 35.6812,
+            longitude: 139.7671
           }
         },
         reason: "魚介つけ麺や二郎系ラーメンなど、濃厚でインパクトのある味をお好みのようですので、同じく濃厚な「豚骨」スープのラーメンをおすすめします。特に食べ応えのある太麺との相性は抜群で、鶏ガラとはまた違ったクリーミーで深みのある味わいをお楽しみいただけます。",
