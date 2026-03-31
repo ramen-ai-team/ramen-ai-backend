@@ -16,8 +16,13 @@ namespace :shops do
       end
 
       details = GoogleMaps::PlacesClient.fetch_place_details(place_id)
-      if details.nil? || details[:latitude].nil?
-        puts "[SKIP] #{shop.name} (id=#{shop.id}): Places API失敗"
+      if details.nil?
+        puts "[SKIP] #{shop.name} (id=#{shop.id}): Places API失敗 (place_id=#{place_id})"
+        failed += 1
+        next
+      end
+      if details[:latitude].nil?
+        puts "[SKIP] #{shop.name} (id=#{shop.id}): geometryなし (place_id=#{place_id})"
         failed += 1
         next
       end

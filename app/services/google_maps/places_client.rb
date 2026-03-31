@@ -23,10 +23,16 @@ module GoogleMaps
       uri.query = URI.encode_www_form(params)
 
       response = Net::HTTP.get_response(uri)
-      return nil unless response.is_a?(Net::HTTPSuccess)
+      unless response.is_a?(Net::HTTPSuccess)
+        Rails.logger.error("Places API HTTP error: #{response.code} #{response.message}")
+        return nil
+      end
 
       data = JSON.parse(response.body, symbolize_names: true)
-      return nil unless data[:status] == "OK"
+      unless data[:status] == "OK"
+        Rails.logger.error("Places API status error: #{data[:status]} - #{data[:error_message]}")
+        return nil
+      end
 
       result = data[:result]
       {
