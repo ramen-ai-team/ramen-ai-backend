@@ -74,7 +74,7 @@ steps:
         PREV_REVISION=$$(gcloud run services describe $_SERVICE_NAME \
           --region=$_DEPLOY_REGION \
           --platform=managed \
-          --format="value(status.traffic[0].revisionName)" \
+          --format="value(status.latestReadyRevisionName)" \
           --project=$_AR_PROJECT_ID 2>/dev/null)
         PREV_SHA=$$(gcloud run revisions describe $$PREV_REVISION \
           --region=$_DEPLOY_REGION \
