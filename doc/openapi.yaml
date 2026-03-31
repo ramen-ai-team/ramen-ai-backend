@@ -81,9 +81,9 @@ paths:
                 - token
                 - admin_user
               example:
-                token: eyJhbGciOiJIUzI1NiJ9.eyJhZG1pbl91c2VyX2lkIjo2NjYsImV4cCI6MTc3NDgzNjAzNn0.QpmJM9em3ZauYkzeA8DwEk_s7pHnBruE0-F2keH_3A8
+                token: eyJhbGciOiJIUzI1NiJ9.eyJhZG1pbl91c2VyX2lkIjo4NzYsImV4cCI6MTc3NTAwNTExM30.eFsiHEC4gtwAs-DzaXBC9T6QZOk6wCTfb_LVzk4TGpI
                 admin_user:
-                  id: 666
+                  id: 876
                   email: admin@example.com
         '401':
           description: returns unauthorized error
@@ -204,6 +204,12 @@ paths:
                           type: string
                         updated_at:
                           type: string
+                        latitude:
+                          type: number
+                          format: float
+                        longitude:
+                          type: number
+                          format: float
                       required:
                       - id
                       - name
@@ -319,10 +325,10 @@ paths:
             example:
               menu:
                 name: Simple Ramen
-                shop_id: '1212'
-                genre_id: '550'
-                soup_id: '470'
-                noodle_id: '550'
+                shop_id: '1650'
+                genre_id: '748'
+                soup_id: '644'
+                noodle_id: '748'
                 image: ramen.png
       responses:
         '201':
@@ -359,6 +365,12 @@ paths:
                         type: string
                       updated_at:
                         type: string
+                      latitude:
+                        type: number
+                        format: float
+                      longitude:
+                        type: number
+                        format: float
                     required:
                     - id
                     - name
@@ -423,34 +435,36 @@ paths:
                 - image_url
                 - shop
               example:
-                id: 920
+                id: 1244
                 name: Simple Ramen
-                shop_id: 1212
-                created_at: '2026-03-29T11:00:36.850+09:00'
-                updated_at: '2026-03-29T11:00:36.866+09:00'
-                image_url: http://example.com/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsiZGF0YSI6OTAyLCJwdXIiOiJibG9iX2lkIn19--86fb03cf61e8a36608f93206120136a24d7b2399/ramen.png
+                shop_id: 1650
+                created_at: '2026-03-31T09:58:34.391+09:00'
+                updated_at: '2026-03-31T09:58:34.406+09:00'
+                image_url: http://example.com/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsiZGF0YSI6MTIyMCwicHVyIjoiYmxvYl9pZCJ9fQ==--c6b0f2dc8cc7fe4fac3c1226baa3aa39cf898361/ramen.png
                 shop:
-                  id: 1212
+                  id: 1650
                   name: Shop 22
-                  address: '東京都新宿区 #<#<Class:0x0000ffff6a4db7e0>:0x0000ffff6a561048>'
-                  google_map_url: https://maps.app.goo.gl/#<#<Class:0x0000ffff6a4db7e0>:0x0000ffff6a561048>
-                  created_at: '2026-03-29T11:00:36.808+09:00'
-                  updated_at: '2026-03-29T11:00:36.808+09:00'
+                  address: '東京都新宿区 #<#<Class:0x0000ffff8cc0e108>:0x0000ffff8ccc3170>'
+                  google_map_url: https://maps.app.goo.gl/#<#<Class:0x0000ffff8cc0e108>:0x0000ffff8ccc3170>
+                  created_at: '2026-03-31T09:58:34.349+09:00'
+                  updated_at: '2026-03-31T09:58:34.349+09:00'
+                  latitude: 35.6812
+                  longitude: 139.7671
                 genre:
-                  id: 550
+                  id: 748
                   name: Genre 5
-                  created_at: '2026-03-29T11:00:36.670+09:00'
-                  updated_at: '2026-03-29T11:00:36.670+09:00'
+                  created_at: '2026-03-31T09:58:34.207+09:00'
+                  updated_at: '2026-03-31T09:58:34.207+09:00'
                 soup:
-                  id: 470
+                  id: 644
                   name: Soup 3
-                  created_at: '2026-03-29T11:00:36.671+09:00'
-                  updated_at: '2026-03-29T11:00:36.671+09:00'
+                  created_at: '2026-03-31T09:58:34.209+09:00'
+                  updated_at: '2026-03-31T09:58:34.209+09:00'
                 noodle:
-                  id: 550
+                  id: 748
                   name: Noodle 7
-                  created_at: '2026-03-29T11:00:36.674+09:00'
-                  updated_at: '2026-03-29T11:00:36.674+09:00'
+                  created_at: '2026-03-31T09:58:34.212+09:00'
+                  updated_at: '2026-03-31T09:58:34.212+09:00'
         '401':
           description: returns unauthorized error
           content:
@@ -492,7 +506,7 @@ paths:
         required: true
         schema:
           type: integer
-        example: 926
+        example: 1250
       responses:
         '200':
           description: deletes the menu
@@ -547,7 +561,7 @@ paths:
         required: true
         schema:
           type: integer
-        example: 918
+        example: 1242
       responses:
         '200':
           description: returns the menu with associations
@@ -583,6 +597,12 @@ paths:
                         type: string
                       updated_at:
                         type: string
+                      latitude:
+                        type: number
+                        format: float
+                      longitude:
+                        type: number
+                        format: float
                     required:
                     - id
                     - name
@@ -650,34 +670,36 @@ paths:
                 - soup
                 - noodle
               example:
-                id: 917
+                id: 1241
                 name: Ramen 8
-                shop_id: 1209
-                created_at: '2026-03-29T11:00:36.530+09:00'
-                updated_at: '2026-03-29T11:00:36.538+09:00'
-                image_url: http://example.com/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsiZGF0YSI6ODk5LCJwdXIiOiJibG9iX2lkIn19--df170925314328b1273cf7fe47030cd665824ac8/ramen.png
+                shop_id: 1647
+                created_at: '2026-03-31T09:58:34.052+09:00'
+                updated_at: '2026-03-31T09:58:34.065+09:00'
+                image_url: http://example.com/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsiZGF0YSI6MTIxNywicHVyIjoiYmxvYl9pZCJ9fQ==--66de6db205276edfdedd6bafb1917de332664e8d/ramen.png
                 shop:
-                  id: 1209
+                  id: 1647
                   name: Shop 19
-                  address: '東京都新宿区 #<#<Class:0x0000ffff6a4db7e0>:0x0000ffff6a311ea0>'
-                  google_map_url: https://maps.app.goo.gl/#<#<Class:0x0000ffff6a4db7e0>:0x0000ffff6a311ea0>
-                  created_at: '2026-03-29T11:00:36.512+09:00'
-                  updated_at: '2026-03-29T11:00:36.512+09:00'
+                  address: '東京都新宿区 #<#<Class:0x0000ffff8cc0e108>:0x0000ffff8ca3bba0>'
+                  google_map_url: https://maps.app.goo.gl/#<#<Class:0x0000ffff8cc0e108>:0x0000ffff8ca3bba0>
+                  created_at: '2026-03-31T09:58:34.032+09:00'
+                  updated_at: '2026-03-31T09:58:34.032+09:00'
+                  latitude: 35.6812
+                  longitude: 139.7671
                 genre:
-                  id: 549
+                  id: 747
                   name: Genre 4
-                  created_at: '2026-03-29T11:00:36.558+09:00'
-                  updated_at: '2026-03-29T11:00:36.558+09:00'
+                  created_at: '2026-03-31T09:58:34.086+09:00'
+                  updated_at: '2026-03-31T09:58:34.086+09:00'
                 soup:
-                  id: 469
+                  id: 643
                   name: Soup 2
-                  created_at: '2026-03-29T11:00:36.567+09:00'
-                  updated_at: '2026-03-29T11:00:36.567+09:00'
+                  created_at: '2026-03-31T09:58:34.096+09:00'
+                  updated_at: '2026-03-31T09:58:34.096+09:00'
                 noodle:
-                  id: 549
+                  id: 747
                   name: Noodle 6
-                  created_at: '2026-03-29T11:00:36.561+09:00'
-                  updated_at: '2026-03-29T11:00:36.561+09:00'
+                  created_at: '2026-03-31T09:58:34.090+09:00'
+                  updated_at: '2026-03-31T09:58:34.090+09:00'
         '401':
           description: returns unauthorized error
           content:
@@ -718,7 +740,7 @@ paths:
         required: true
         schema:
           type: integer
-        example: 924
+        example: 1248
       requestBody:
         content:
           application/x-www-form-urlencoded:
@@ -737,7 +759,7 @@ paths:
             example:
               menu:
                 name: New Name
-                genre_id: '552'
+                genre_id: '750'
       responses:
         '200':
           description: updates genre association
@@ -773,6 +795,12 @@ paths:
                         type: string
                       updated_at:
                         type: string
+                      latitude:
+                        type: number
+                        format: float
+                      longitude:
+                        type: number
+                        format: float
                     required:
                     - id
                     - name
@@ -838,33 +866,35 @@ paths:
                 - shop
               example:
                 name: Ramen 10
-                shop_id: 1214
-                id: 922
-                created_at: '2026-03-29T11:00:37.009+09:00'
-                updated_at: '2026-03-29T11:00:37.014+09:00'
-                image_url: http://example.com/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsiZGF0YSI6OTA0LCJwdXIiOiJibG9iX2lkIn19--feedb3aa5574b4c2037402f650369db1c543158f/ramen.png
+                shop_id: 1652
+                id: 1246
+                created_at: '2026-03-31T09:58:34.547+09:00'
+                updated_at: '2026-03-31T09:58:34.552+09:00'
+                image_url: http://example.com/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsiZGF0YSI6MTIyMiwicHVyIjoiYmxvYl9pZCJ9fQ==--f672e5c530c849fe291c8aa3064c3481479e1fe3/ramen.png
                 shop:
-                  id: 1214
+                  id: 1652
                   name: Shop 24
-                  address: '東京都新宿区 #<#<Class:0x0000ffff6a4db7e0>:0x0000ffff6a172900>'
-                  google_map_url: https://maps.app.goo.gl/#<#<Class:0x0000ffff6a4db7e0>:0x0000ffff6a172900>
-                  created_at: '2026-03-29T11:00:36.991+09:00'
-                  updated_at: '2026-03-29T11:00:36.991+09:00'
+                  address: '東京都新宿区 #<#<Class:0x0000ffff8cc0e108>:0x0000ffff8c383498>'
+                  google_map_url: https://maps.app.goo.gl/#<#<Class:0x0000ffff8cc0e108>:0x0000ffff8c383498>
+                  created_at: '2026-03-31T09:58:34.527+09:00'
+                  updated_at: '2026-03-31T09:58:34.527+09:00'
+                  latitude: 35.6812
+                  longitude: 139.7671
                 genre:
-                  id: 552
+                  id: 750
                   name: Tsukemen
-                  created_at: '2026-03-29T11:00:37.053+09:00'
-                  updated_at: '2026-03-29T11:00:37.053+09:00'
+                  created_at: '2026-03-31T09:58:34.591+09:00'
+                  updated_at: '2026-03-31T09:58:34.591+09:00'
                 soup:
-                  id: 471
+                  id: 645
                   name: Soup 4
-                  created_at: '2026-03-29T11:00:37.045+09:00'
-                  updated_at: '2026-03-29T11:00:37.045+09:00'
+                  created_at: '2026-03-31T09:58:34.583+09:00'
+                  updated_at: '2026-03-31T09:58:34.583+09:00'
                 noodle:
-                  id: 551
+                  id: 749
                   name: Noodle 8
-                  created_at: '2026-03-29T11:00:37.041+09:00'
-                  updated_at: '2026-03-29T11:00:37.041+09:00'
+                  created_at: '2026-03-31T09:58:34.578+09:00'
+                  updated_at: '2026-03-31T09:58:34.578+09:00'
         '401':
           description: returns unauthorized error
           content:
@@ -1014,6 +1044,12 @@ paths:
                         required:
                         - id
                         - name
+                    latitude:
+                      type: number
+                      format: float
+                    longitude:
+                      type: number
+                      format: float
                   required:
                   - id
                   - name
@@ -1086,6 +1122,10 @@ paths:
                     type: string
                   updated_at:
                     type: string
+                  latitude:
+                    nullable: true
+                  longitude:
+                    nullable: true
                 required:
                 - id
                 - name
@@ -1094,12 +1134,14 @@ paths:
                 - created_at
                 - updated_at
               example:
-                id: 1222
+                id: 1660
                 name: New Shop
                 address: 東京都新宿区1
                 google_map_url: https://maps.app.goo.gl/xyz
-                created_at: '2026-03-29T11:00:37.611+09:00'
-                updated_at: '2026-03-29T11:00:37.611+09:00'
+                created_at: '2026-03-31T09:58:35.163+09:00'
+                updated_at: '2026-03-31T09:58:35.163+09:00'
+                latitude:
+                longitude:
         '401':
           description: returns unauthorized error
           content:
@@ -1140,7 +1182,7 @@ paths:
         required: true
         schema:
           type: integer
-        example: 1227
+        example: 1665
       responses:
         '200':
           description: deletes the shop
@@ -1195,7 +1237,7 @@ paths:
         required: true
         schema:
           type: integer
-        example: 1221
+        example: 1659
       responses:
         '200':
           description: returns the shop with full menu details
@@ -1288,6 +1330,12 @@ paths:
                       - genre
                       - soup
                       - noodle
+                  latitude:
+                    type: number
+                    format: float
+                  longitude:
+                    type: number
+                    format: float
                 required:
                 - id
                 - name
@@ -1297,33 +1345,35 @@ paths:
                 - updated_at
                 - menus
               example:
-                id: 1220
+                id: 1658
                 name: Shop 29
-                address: '東京都新宿区 #<#<Class:0x0000ffff6a4db7e0>:0x0000ffff6a20d8b0>'
-                google_map_url: https://maps.app.goo.gl/#<#<Class:0x0000ffff6a4db7e0>:0x0000ffff6a20d8b0>
-                created_at: '2026-03-29T11:00:37.506+09:00'
-                updated_at: '2026-03-29T11:00:37.506+09:00'
+                address: '東京都新宿区 #<#<Class:0x0000ffff8cc0e108>:0x0000ffff8dae3f70>'
+                google_map_url: https://maps.app.goo.gl/#<#<Class:0x0000ffff8cc0e108>:0x0000ffff8dae3f70>
+                created_at: '2026-03-31T09:58:35.051+09:00'
+                updated_at: '2026-03-31T09:58:35.051+09:00'
                 menus:
-                - id: 928
+                - id: 1252
                   name: Ramen 15
-                  shop_id: 1220
-                  created_at: '2026-03-29T11:00:37.527+09:00'
-                  updated_at: '2026-03-29T11:00:37.531+09:00'
+                  shop_id: 1658
+                  created_at: '2026-03-31T09:58:35.074+09:00'
+                  updated_at: '2026-03-31T09:58:35.077+09:00'
                   genre:
-                    id: 553
+                    id: 751
                     name: Genre 7
-                    created_at: '2026-03-29T11:00:37.556+09:00'
-                    updated_at: '2026-03-29T11:00:37.556+09:00'
+                    created_at: '2026-03-31T09:58:35.101+09:00'
+                    updated_at: '2026-03-31T09:58:35.101+09:00'
                   soup:
-                    id: 472
+                    id: 646
                     name: Soup 5
-                    created_at: '2026-03-29T11:00:37.565+09:00'
-                    updated_at: '2026-03-29T11:00:37.565+09:00'
+                    created_at: '2026-03-31T09:58:35.110+09:00'
+                    updated_at: '2026-03-31T09:58:35.110+09:00'
                   noodle:
-                    id: 554
+                    id: 752
                     name: Noodle 9
-                    created_at: '2026-03-29T11:00:37.560+09:00'
-                    updated_at: '2026-03-29T11:00:37.560+09:00'
+                    created_at: '2026-03-31T09:58:35.105+09:00'
+                    updated_at: '2026-03-31T09:58:35.105+09:00'
+                latitude: 35.6812
+                longitude: 139.7671
         '401':
           description: returns unauthorized error
           content:
@@ -1364,7 +1414,7 @@ paths:
         required: true
         schema:
           type: integer
-        example: 1225
+        example: 1663
       requestBody:
         content:
           application/x-www-form-urlencoded:
@@ -1403,6 +1453,12 @@ paths:
                     type: string
                   updated_at:
                     type: string
+                  latitude:
+                    type: number
+                    format: float
+                  longitude:
+                    type: number
+                    format: float
                 required:
                 - name
                 - google_map_url
@@ -1412,11 +1468,13 @@ paths:
                 - updated_at
               example:
                 name: New Name
-                google_map_url: https://maps.app.goo.gl/#<#<Class:0x0000ffff6a4db7e0>:0x0000ffff6a2726c0>
-                id: 1223
-                address: '東京都新宿区 #<#<Class:0x0000ffff6a4db7e0>:0x0000ffff6a2726c0>'
-                created_at: '2026-03-29T11:00:37.637+09:00'
-                updated_at: '2026-03-29T11:00:37.651+09:00'
+                google_map_url: https://maps.app.goo.gl/#<#<Class:0x0000ffff8cc0e108>:0x0000ffff8c9efb10>
+                id: 1661
+                address: '東京都新宿区 #<#<Class:0x0000ffff8cc0e108>:0x0000ffff8c9efb10>'
+                created_at: '2026-03-31T09:58:35.188+09:00'
+                updated_at: '2026-03-31T09:58:35.205+09:00'
+                latitude: 35.6812
+                longitude: 139.7671
         '401':
           description: returns unauthorized error
           content:
@@ -1638,9 +1696,9 @@ paths:
                 - token
                 - user
               example:
-                token: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjo4MzYsImV4cCI6MTc3NTM1NDQzNywiaWF0IjoxNzc0NzQ5NjM3fQ.8e8e0Oc4WUDBvd1ii-NPgcT4AX93nLnfjBC95eAOgJI
+                token: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxMTMwLCJleHAiOjE3NzU1MjM1MTUsImlhdCI6MTc3NDkxODcxNX0.iuWK2VC0py5O6zZVcMNQ0VLKFY3Zs6Cgafe-X9oK1is
                 user:
-                  id: 836
+                  id: 1130
                   email: user@example.com
                   name: Test User
                   image: https://example.com/avatar.jpg
@@ -1705,7 +1763,7 @@ paths:
                 - email
                 - image
               example:
-                id: 866
+                id: 1160
                 name: User 30
                 email: user30@example.com
                 image: https://example.com/user_image.png
@@ -1759,12 +1817,12 @@ paths:
               - noodle_id
               - soup_id
             example:
-              menu_id: '931'
-              genre_id: '559'
-              noodle_id: '559'
-              soup_id: '479'
+              menu_id: '1255'
+              genre_id: '757'
+              noodle_id: '757'
+              soup_id: '653'
               menu:
-                shop_id: '1232'
+                shop_id: '1670'
                 name: 特製醤油ラーメン
       responses:
         '201':
@@ -1812,9 +1870,9 @@ paths:
                 - noodle_name
                 - soup_name
               example:
-                id: 154
+                id: 238
                 menu:
-                  id: 933
+                  id: 1257
                   name: 特製醤油ラーメン
                   genre_name: Genre 13
                   noodle_name: Noodle 14
@@ -1866,7 +1924,7 @@ paths:
         required: true
         schema:
           type: integer
-        example: 159
+        example: 243
       responses:
         '204':
           description: 削除できる
@@ -1901,7 +1959,7 @@ paths:
                 - errors
               example:
                 errors:
-                - Couldn't find MenuReport with 'id'=158 [WHERE "menu_reports"."user_id"
+                - Couldn't find MenuReport with 'id'=242 [WHERE "menu_reports"."user_id"
                   = $1]
     get:
       summary: show
@@ -1959,14 +2017,14 @@ paths:
                 - noodle_name
                 - soup_name
               example:
-                id: 155
+                id: 239
                 menu:
-                  id: 936
+                  id: 1260
                   name: Ramen 22
                   genre_name:
                   noodle_name:
                   soup_name:
-                  image_url: http://example.com/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsiZGF0YSI6OTE3LCJwdXIiOiJibG9iX2lkIn19--cc8abe78e56334599d3472779c74d29ed5323ded/ramen.png
+                  image_url: http://example.com/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsiZGF0YSI6MTIzNSwicHVyIjoiYmxvYl9pZCJ9fQ==--6fbaebe118fce9aa20ccfecaa9330d299836f06b/ramen.png
                 genre_name: Genre 15
                 noodle_name: Noodle 16
                 soup_name: Soup 12
@@ -1997,7 +2055,7 @@ paths:
         required: true
         schema:
           type: integer
-        example: 945
+        example: 1269
       responses:
         '200':
           description: returns a specific menu
@@ -2029,6 +2087,12 @@ paths:
                         type: string
                       google_map_url:
                         type: string
+                      latitude:
+                        type: number
+                        format: float
+                      longitude:
+                        type: number
+                        format: float
                     required:
                     - id
                     - name
@@ -2043,17 +2107,19 @@ paths:
                 - image_url
                 - shop
               example:
-                id: 945
+                id: 1269
                 name: 特製ラーメン
                 genre_name: ラーメン
                 noodle_name: 太麺
                 soup_name: 豚骨
-                image_url: http://example.com/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsiZGF0YSI6OTI2LCJwdXIiOiJibG9iX2lkIn19--01698caf899dc1fd0d0127984955190784bb5b86/ramen.png
+                image_url: http://example.com/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsiZGF0YSI6MTI0NCwicHVyIjoiYmxvYl9pZCJ9fQ==--cf9543c8ba6f08e0d8672f6294593bd4fc0a3f05/ramen.png
                 shop:
-                  id: 1244
+                  id: 1682
                   name: ラーメン屋
                   address: 東京都新宿区
                   google_map_url: https://maps.app.goo.gl/BvuQTxGsmKLJ68yL9
+                  latitude: 35.6812
+                  longitude: 139.7671
   "/api/v1/menus/{menu_id}/reviews":
     post:
       summary: create
@@ -2065,7 +2131,7 @@ paths:
         required: true
         schema:
           type: integer
-        example: 956
+        example: 1280
       requestBody:
         content:
           application/x-www-form-urlencoded:
@@ -2131,17 +2197,17 @@ paths:
                 - visited_at
                 - menu
               example:
-                id: 137
+                id: 179
                 rating: 4
                 comment: スープが濃厚でうまい
                 visited_at: '2026-03-21'
                 menu:
-                  id: 952
+                  id: 1276
                   name: Ramen 36
                   genre_name:
                   noodle_name:
                   soup_name:
-                  image_url: http://example.com/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsiZGF0YSI6OTMzLCJwdXIiOiJibG9iX2lkIn19--6aaf282edcf4ef6f43ebb064f12aded57f3d225a/ramen.png
+                  image_url: http://example.com/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsiZGF0YSI6MTI1MSwicHVyIjoiYmxvYl9pZCJ9fQ==--997ed13ed7d9de04c048dee543b7223ddcc80e29/ramen.png
         '401':
           description: 401を返す
           content:
@@ -2201,13 +2267,13 @@ paths:
         required: true
         schema:
           type: integer
-        example: 140
+        example: 182
       - name: menu_id
         in: path
         required: true
         schema:
           type: integer
-        example: 959
+        example: 1283
       requestBody:
         content:
           application/x-www-form-urlencoded:
@@ -2273,17 +2339,17 @@ paths:
                 - visited_at
                 - menu
               example:
-                id: 138
+                id: 180
                 rating: 5
                 comment: 最高！
                 visited_at: '2026-03-21'
                 menu:
-                  id: 957
+                  id: 1281
                   name: Ramen 41
                   genre_name:
                   noodle_name:
                   soup_name:
-                  image_url: http://example.com/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsiZGF0YSI6OTM4LCJwdXIiOiJibG9iX2lkIn19--cbbdff8ab27f8cfd5a0f6e004a28300f6ac72d58/ramen.png
+                  image_url: http://example.com/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsiZGF0YSI6MTI1NiwicHVyIjoiYmxvYl9pZCJ9fQ==--7b4a4571f12789e92ddec4fcd3c06603c58cb8e5/ramen.png
         '401':
           description: 401を返す
           content:
@@ -2315,7 +2381,7 @@ paths:
                 - errors
               example:
                 errors:
-                - Couldn't find Review with 'id'=139 [WHERE "reviews"."user_id" =
+                - Couldn't find Review with 'id'=181 [WHERE "reviews"."user_id" =
                   $1]
   "/api/v1/my/menu_reports":
     get:
@@ -2375,14 +2441,14 @@ paths:
                 - menu_reports
               example:
                 menu_reports:
-                - id: 163
+                - id: 247
                   menu:
-                    id: 944
+                    id: 1268
                     name: Ramen 30
                     genre_name:
                     noodle_name:
                     soup_name:
-                    image_url: http://example.com/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsiZGF0YSI6OTI1LCJwdXIiOiJibG9iX2lkIn19--f217b5819f0d07a3e7f5ed2bff313d6a84c2895d/ramen.png
+                    image_url: http://example.com/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsiZGF0YSI6MTI0MywicHVyIjoiYmxvYl9pZCJ9fQ==--bd0f29705866380c88e21b528307263ee6332b6d/ramen.png
                   genre_name: Genre 21
                   noodle_name: Noodle 22
                   soup_name: Soup 18
@@ -2443,12 +2509,12 @@ paths:
                 - menus
               example:
                 menus:
-                - id: 946
+                - id: 1270
                   name: 博多ラーメン
                   genre_name: ラーメン
                   noodle_name: 細麺
                   soup_name: 豚骨スープ
-                  image_url: http://example.com/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsiZGF0YSI6OTI3LCJwdXIiOiJibG9iX2lkIn19--b49d94d89b3e59bfe2ce7ac586025b409944cc15/ramen.png
+                  image_url: http://example.com/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsiZGF0YSI6MTI0NSwicHVyIjoiYmxvYl9pZCJ9fQ==--8ceda684fddc5c77953403e302fc3fa2ebfe2f31/ramen.png
   "/api/v1/recommended_menus":
     post:
       summary: create
@@ -2511,6 +2577,12 @@ paths:
                             type: string
                           google_map_url:
                             type: string
+                          latitude:
+                            type: number
+                            format: float
+                          longitude:
+                            type: number
+                            format: float
                         required:
                         - id
                         - name
@@ -2531,17 +2603,19 @@ paths:
                 - reason
               example:
                 recommended_menu:
-                  id: 948
+                  id: 1272
                   name: Ramen 32
                   genre_name: ラーメン
                   noodle_name: 太麺
                   soup_name: 豚骨
-                  image_url: http://example.com/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsiZGF0YSI6OTI5LCJwdXIiOiJibG9iX2lkIn19--1b96fbd088818f1d40a19dc3f9e6a21b82f32063/ramen.png
+                  image_url: http://example.com/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsiZGF0YSI6MTI0NywicHVyIjoiYmxvYl9pZCJ9fQ==--a927badb7960b3dd20404770ceaefc5a425b49ee/ramen.png
                   shop:
-                    id: 1247
+                    id: 1685
                     name: ラーメン屋
                     address: 東京都新宿区
                     google_map_url: https://maps.app.goo.gl/BvuQTxGsmKLJ68yL9
+                    latitude: 35.6812
+                    longitude: 139.7671
                 reason: 魚介つけ麺や二郎系ラーメンなど、濃厚でインパクトのある味をお好みのようですので、同じく濃厚な「豚骨」スープのラーメンをおすすめします。特に食べ応えのある太麺との相性は抜群で、鶏ガラとはまた違ったクリーミーで深みのある味わいをお楽しみいただけます。
         '400':
           description: returns an error if select_menu_ids is missing
@@ -2566,7 +2640,7 @@ paths:
       - Api::V1::Shop
       responses:
         '200':
-          description: returns all shops
+          description: nameパラメータなしは全件返す
           headers:
             Current-Page:
               "$ref": "#/components/headers/CurrentPage"
@@ -2596,6 +2670,12 @@ paths:
                           type: string
                         google_map_url:
                           type: string
+                        latitude:
+                          type: number
+                          format: float
+                        longitude:
+                          type: number
+                          format: float
                       required:
                       - id
                       - name
@@ -2605,10 +2685,31 @@ paths:
                 - shops
               example:
                 shops:
-                - id: 1262
-                  name: 九州 筑豊ラーメン山小屋
-                  address: 佐賀県嬉野市嬉野町大字下宿甲４００２−４
-                  google_map_url: https://maps.app.goo.gl/BvuQTxGsmKLJ68yL9
+                - id: 1708
+                  name: 博多ラーメン一蘭
+                  address: '東京都新宿区 #<#<Class:0x0000ffff8cc0e108>:0x0000ffff8dbfed38>'
+                  google_map_url: https://maps.app.goo.gl/#<#<Class:0x0000ffff8cc0e108>:0x0000ffff8dbfed38>
+                  latitude: 35.6812
+                  longitude: 139.7671
+                - id: 1709
+                  name: 札幌味噌ラーメン
+                  address: '東京都新宿区 #<#<Class:0x0000ffff8cc0e108>:0x0000ffff8dbfb138>'
+                  google_map_url: https://maps.app.goo.gl/#<#<Class:0x0000ffff8cc0e108>:0x0000ffff8dbfb138>
+                  latitude: 35.6812
+                  longitude: 139.7671
+                - id: 1710
+                  name: 東京醤油らーめん
+                  address: '東京都新宿区 #<#<Class:0x0000ffff8cc0e108>:0x0000ffff8dbf5378>'
+                  google_map_url: https://maps.app.goo.gl/#<#<Class:0x0000ffff8cc0e108>:0x0000ffff8dbf5378>
+                  latitude: 35.6812
+                  longitude: 139.7671
+      parameters:
+      - name: name
+        in: query
+        required: false
+        schema:
+          type: string
+        example: ramen
     post:
       summary: create
       tags:
@@ -2641,16 +2742,24 @@ paths:
                     type: string
                   google_map_url:
                     type: string
+                  latitude:
+                    type: number
+                    format: float
+                  longitude:
+                    type: number
+                    format: float
                 required:
                 - id
                 - name
                 - address
                 - google_map_url
               example:
-                id: 1264
+                id: 1712
                 name: ラーメン太郎
                 address: 東京都渋谷区道玄坂1-2-3
                 google_map_url: https://maps.app.goo.gl/dGfTAMwDfw29yLPc7
+                latitude: 35.6812
+                longitude: 139.7671
         '400':
           description: returns bad request error
           content:
@@ -2710,7 +2819,7 @@ paths:
         required: true
         schema:
           type: integer
-        example: 1263
+        example: 1711
       responses:
         '200':
           description: returns a specific shop
@@ -2727,16 +2836,24 @@ paths:
                     type: string
                   google_map_url:
                     type: string
+                  latitude:
+                    type: number
+                    format: float
+                  longitude:
+                    type: number
+                    format: float
                 required:
                 - id
                 - name
                 - address
                 - google_map_url
               example:
-                id: 1263
+                id: 1711
                 name: 九州 筑豊ラーメン山小屋
                 address: 佐賀県嬉野市嬉野町大字下宿甲４００２−４
                 google_map_url: https://maps.app.goo.gl/BvuQTxGsmKLJ68yL9
+                latitude: 33.3586
+                longitude: 130.0042
   "/api/v1/shops/{shop_id}/menus":
     get:
       summary: index
@@ -2796,6 +2913,12 @@ paths:
                               type: string
                             google_map_url:
                               type: string
+                            latitude:
+                              type: number
+                              format: float
+                            longitude:
+                              type: number
+                              format: float
                           required:
                           - id
                           - name
@@ -2813,17 +2936,19 @@ paths:
                 - menus
               example:
                 menus:
-                - id: 963
+                - id: 1287
                   name: Ramen 45
                   genre_name:
                   noodle_name:
                   soup_name:
-                  image_url: http://example.com/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsiZGF0YSI6OTQ0LCJwdXIiOiJibG9iX2lkIn19--beeff9f73fbf332662a5b2386bc965d0bf7b7d94/ramen.png
+                  image_url: http://example.com/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsiZGF0YSI6MTI2MiwicHVyIjoiYmxvYl9pZCJ9fQ==--ae006c387ff2264778eed594313e34241ca6b089/ramen.png
                   shop:
-                    id: 1261
+                    id: 1699
                     name: Shop 64
-                    address: '東京都新宿区 #<#<Class:0x0000ffff6a4db7e0>:0x0000ffff6a49c400>'
-                    google_map_url: https://maps.app.goo.gl/#<#<Class:0x0000ffff6a4db7e0>:0x0000ffff6a49c400>
+                    address: '東京都新宿区 #<#<Class:0x0000ffff8cc0e108>:0x0000ffff8cbb3a28>'
+                    google_map_url: https://maps.app.goo.gl/#<#<Class:0x0000ffff8cc0e108>:0x0000ffff8cbb3a28>
+                    latitude: 35.6812
+                    longitude: 139.7671
         '404':
           description: 存在しないshop_idは404を返す
           content:
