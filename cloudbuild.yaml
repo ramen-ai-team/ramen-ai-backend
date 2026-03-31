@@ -71,15 +71,32 @@ steps:
     args:
       - -c
       - |
-        if git diff --name-only HEAD~1 HEAD -- db/migrate/ | grep -q .; then
-          echo "Migration files changed, running db:migrate"
+        PREV_REVISION=$$(gcloud run services describe $_SERVICE_NAME \
+          --region=$_DEPLOY_REGION \
+          --platform=managed \
+          --format="value(status.traffic[0].revisionName)" \
+          --project=$_AR_PROJECT_ID 2>/dev/null)
+        PREV_SHA=$$(gcloud run revisions describe $$PREV_REVISION \
+          --region=$_DEPLOY_REGION \
+          --platform=managed \
+          --format="value(metadata.labels['commit-sha'])" \
+          --project=$_AR_PROJECT_ID 2>/dev/null)
+        if [ -z "$$PREV_SHA" ]; then
+          echo "No previous deployment found, running db:migrate"
+          RUN_MIGRATE=true
+        elif git diff --name-only $$PREV_SHA HEAD -- db/migrate/ | grep -q .; then
+          echo "Migration files changed since last deploy ($$PREV_SHA), running db:migrate"
+          RUN_MIGRATE=true
+        else
+          echo "No migration files changed since last deploy, skipping db:migrate"
+          RUN_MIGRATE=false
+        fi
+        if [ "$$RUN_MIGRATE" = "true" ]; then
           /buildstep/execute.sh \
             -i $_AR_HOSTNAME/$_AR_PROJECT_ID/$_AR_REPOSITORY/$REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA \
             -e RAILS_ENV=production \
             -e RAILS_MASTER_KEY=$$RAILS_MASTER_KEY \
             -- bundle exec rails db:migrate
-        else
-          echo "No migration files changed, skipping db:migrate"
         fi
 
   - id: Import Data
