@@ -154,8 +154,6 @@ availableSecrets:
   secretManager:
     - versionName: projects/943228427206/secrets/RAILS_MASTER_KEY/versions/2
       env: "RAILS_MASTER_KEY"
-    - versionName: projects/943228427206/secrets/GOOGLE_MAPS_API_KEY/versions/latest
-      env: "GOOGLE_MAPS_API_KEY"
 tags:
   - gcp-cloud-build-deploy-cloud-run
   - gcp-cloud-build-deploy-cloud-run-managed
