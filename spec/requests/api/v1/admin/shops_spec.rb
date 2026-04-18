@@ -75,7 +75,7 @@ RSpec.describe 'Api::V1::Admin::Shops', type: :request do
   describe 'POST /api/v1/admin/shops' do
     context 'when admin is authenticated' do
       it 'creates a new shop with valid params' do
-        shop_params = { shop: { name: 'New Shop', address: '東京都新宿区1', google_map_url: 'https://maps.app.goo.gl/xyz' } }
+        shop_params = { shop: { name: 'New Shop', address: '東京都新宿区1', google_map_url: 'https://maps.app.goo.gl/xyz', latitude: 35.6812, longitude: 139.7671 } }
 
         expect {
           post '/api/v1/admin/shops', params: shop_params, headers: admin_auth_headers_for(admin_user)

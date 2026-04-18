@@ -53,6 +53,6 @@ class Api::V1::Admin::ShopsController < Api::V1::Admin::ApplicationController
   end
 
   def shop_params
-    params.require(:shop).permit(:name, :address, :google_map_url)
+    params.require(:shop).permit(:name, :address, :google_map_url, :latitude, :longitude)
   end
 end
