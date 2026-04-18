@@ -42,6 +42,20 @@ RSpec.describe Shop, type: :model do
       end
     end
 
+    describe 'coordinate validations' do
+      it 'is invalid without latitude' do
+        shop = build(:shop, latitude: nil)
+        expect(shop).not_to be_valid
+        expect(shop.errors[:latitude]).to include("can't be blank")
+      end
+
+      it 'is invalid without longitude' do
+        shop = build(:shop, longitude: nil)
+        expect(shop).not_to be_valid
+        expect(shop.errors[:longitude]).to include("can't be blank")
+      end
+    end
+
     describe 'google_map_url uniqueness' do
       let!(:existing_shop) { create(:shop, google_map_url: 'https://maps.app.goo.gl/unique123') }
 
