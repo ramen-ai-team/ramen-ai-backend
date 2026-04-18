@@ -8,22 +8,22 @@ namespace :shops do
     failed = 0
 
     shops.each do |shop|
-      place_id = GoogleMaps::PlaceIdExtractor.extract(shop.google_map_url)
-      if place_id.nil?
-        puts "[SKIP] #{shop.name} (id=#{shop.id}): place_id取得失敗"
+      search_info = GoogleMaps::PlaceIdExtractor.extract(shop.google_map_url)
+      if search_info.nil?
+        puts "[SKIP] #{shop.name} (id=#{shop.id}): search_info取得失敗"
         failed += 1
         next
       end
 
-      details = GoogleMaps::PlacesClient.fetch_place_details(place_id)
+      details = GoogleMaps::PlacesClient.fetch_place_details(search_info)
       puts "  details: #{details.inspect}"
       if details.nil?
-        puts "[SKIP] #{shop.name} (id=#{shop.id}): Places API失敗 (place_id=#{place_id})"
+        puts "[SKIP] #{shop.name} (id=#{shop.id}): Places API失敗 (search_info=#{search_info.inspect})"
         failed += 1
         next
       end
       if details[:latitude].nil?
-        puts "[SKIP] #{shop.name} (id=#{shop.id}): geometryなし (place_id=#{place_id})"
+        puts "[SKIP] #{shop.name} (id=#{shop.id}): 座標なし (search_info=#{search_info.inspect})"
         failed += 1
         next
       end

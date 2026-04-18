@@ -2,37 +2,38 @@ require 'rails_helper'
 
 RSpec.describe GoogleMaps::PlacesClient do
   describe '.fetch_place_details' do
-    let(:place_id) { 'ChIJ1234567890abcdef' }
+    let(:search_info) { { name: 'ラーメン太郎', latitude: 35.6812, longitude: 139.7671 } }
     let(:api_key) { 'test_api_key' }
 
     before do
       allow(ENV).to receive(:[]).with("GOOGLE_MAPS_API_KEY").and_return(api_key)
     end
 
-    context 'with valid place_id' do
+    context 'when place is found' do
       let(:response_body) do
         {
-          displayName: { text: 'ラーメン太郎' },
-          formattedAddress: '東京都渋谷区道玄坂1-2-3',
-          nationalPhoneNumber: '03-1234-5678',
-          location: { latitude: 35.6812, longitude: 139.7671 }
+          places: [
+            {
+              displayName: { text: 'ラーメン太郎' },
+              formattedAddress: '東京都渋谷区道玄坂1-2-3',
+              nationalPhoneNumber: '03-1234-5678',
+              location: { latitude: 35.6812, longitude: 139.7671 }
+            }
+          ]
         }.to_json
       end
 
       before do
-        stub_request(:get, "https://places.googleapis.com/v1/places/#{place_id}")
-          .with(
-            query: { languageCode: 'ja' },
-            headers: {
-              'X-Goog-Api-Key' => api_key,
-              'X-Goog-FieldMask' => 'displayName,formattedAddress,nationalPhoneNumber,location'
-            }
-          )
+        stub_request(:post, "https://places.googleapis.com/v1/places:searchText")
+          .with(headers: {
+            'X-Goog-Api-Key' => api_key,
+            'X-Goog-FieldMask' => 'places.displayName,places.formattedAddress,places.nationalPhoneNumber,places.location'
+          })
           .to_return(status: 200, body: response_body, headers: { 'Content-Type' => 'application/json' })
       end
 
       it 'returns place details' do
-        result = described_class.fetch_place_details(place_id)
+        result = described_class.fetch_place_details(search_info)
 
         expect(result).to eq({
           name: 'ラーメン太郎',
@@ -44,50 +45,36 @@ RSpec.describe GoogleMaps::PlacesClient do
       end
     end
 
-    context 'with invalid place_id' do
-      let(:response_body) do
-        {
-          error: {
-            code: 404,
-            message: 'Requested entity was not found.',
-            status: 'NOT_FOUND'
-          }
-        }.to_json
-      end
+    context 'when no places are found' do
+      let(:response_body) { { places: [] }.to_json }
 
       before do
-        stub_request(:get, "https://places.googleapis.com/v1/places/#{place_id}")
-          .with(
-            query: { languageCode: 'ja' },
-            headers: {
-              'X-Goog-Api-Key' => api_key,
-              'X-Goog-FieldMask' => 'displayName,formattedAddress,nationalPhoneNumber,location'
-            }
-          )
-          .to_return(status: 404, body: response_body, headers: { 'Content-Type' => 'application/json' })
+        stub_request(:post, "https://places.googleapis.com/v1/places:searchText")
+          .with(headers: {
+            'X-Goog-Api-Key' => api_key,
+            'X-Goog-FieldMask' => 'places.displayName,places.formattedAddress,places.nationalPhoneNumber,places.location'
+          })
+          .to_return(status: 200, body: response_body, headers: { 'Content-Type' => 'application/json' })
       end
 
       it 'returns nil' do
-        result = described_class.fetch_place_details(place_id)
+        result = described_class.fetch_place_details(search_info)
         expect(result).to be_nil
       end
     end
 
     context 'when API returns error status' do
       before do
-        stub_request(:get, "https://places.googleapis.com/v1/places/#{place_id}")
-          .with(
-            query: { languageCode: 'ja' },
-            headers: {
-              'X-Goog-Api-Key' => api_key,
-              'X-Goog-FieldMask' => 'displayName,formattedAddress,nationalPhoneNumber,location'
-            }
-          )
+        stub_request(:post, "https://places.googleapis.com/v1/places:searchText")
+          .with(headers: {
+            'X-Goog-Api-Key' => api_key,
+            'X-Goog-FieldMask' => 'places.displayName,places.formattedAddress,places.nationalPhoneNumber,places.location'
+          })
           .to_return(status: 500, body: '', headers: {})
       end
 
       it 'returns nil' do
-        result = described_class.fetch_place_details(place_id)
+        result = described_class.fetch_place_details(search_info)
         expect(result).to be_nil
       end
     end
@@ -100,7 +87,7 @@ RSpec.describe GoogleMaps::PlacesClient do
       it 'logs error and returns nil' do
         expect(Rails.logger).to receive(:error).with(/Google Maps API key is not configured/)
 
-        result = described_class.fetch_place_details(place_id)
+        result = described_class.fetch_place_details(search_info)
         expect(result).to be_nil
       end
     end

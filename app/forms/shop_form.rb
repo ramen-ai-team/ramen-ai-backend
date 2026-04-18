@@ -13,13 +13,13 @@ class ShopForm
     existing_shop = Shop.find_by(google_map_url: google_map_url)
     return existing_shop if existing_shop
 
-    place_id = GoogleMaps::PlaceIdExtractor.extract(google_map_url)
-    if place_id.nil?
+    search_info = GoogleMaps::PlaceIdExtractor.extract(google_map_url)
+    if search_info.nil?
       errors.add(:google_map_url, "から店舗情報を取得できませんでした")
       return false
     end
 
-    place_details = GoogleMaps::PlacesClient.fetch_place_details(place_id)
+    place_details = GoogleMaps::PlacesClient.fetch_place_details(search_info)
     if place_details.nil?
       errors.add(:google_map_url, "から店舗情報を取得できませんでした")
       return false

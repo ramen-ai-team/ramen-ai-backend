@@ -13,10 +13,16 @@ module GoogleMaps
 
       return nil unless target_url.include?("google.com/maps")
 
-      match = target_url.match(/1s([^!]+)/)
-      return nil unless match
+      coord_match = target_url.match(/@([-\d.]+),([-\d.]+)/)
+      name_match = target_url.match(%r{/maps/place/([^/@]+)})
 
-      match[1]
+      return nil unless coord_match && name_match
+
+      {
+        name: URI.decode_www_form_component(name_match[1]),
+        latitude: coord_match[1].to_f,
+        longitude: coord_match[2].to_f
+      }
     end
 
     def self.resolve_redirect(url)

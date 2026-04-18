@@ -2,12 +2,16 @@ require 'rails_helper'
 
 RSpec.describe GoogleMaps::PlaceIdExtractor do
   describe '.extract' do
-    context 'with valid Google Maps URL containing Place ID' do
+    context 'with valid Google Maps URL' do
       let(:url) { 'https://www.google.com/maps/place/Ramen+Shop/@35.6812,139.7671,17z/data=!3m1!4b1!4m6!3m5!1s0x60188b8e1234abcd:0x1234567890abcdef!8m2!3d35.6812!4d139.7671' }
 
-      it 'extracts Place ID from URL' do
+      it 'extracts name and coordinates from URL' do
         result = described_class.extract(url)
-        expect(result).to eq('0x60188b8e1234abcd:0x1234567890abcdef')
+        expect(result).to eq({
+          name: 'Ramen Shop',
+          latitude: 35.6812,
+          longitude: 139.7671
+        })
       end
     end
 
@@ -20,9 +24,13 @@ RSpec.describe GoogleMaps::PlaceIdExtractor do
           .to_return(status: 301, headers: { 'Location' => full_url })
       end
 
-      it 'follows redirect and extracts Place ID from full URL' do
+      it 'follows redirect and extracts name and coordinates' do
         result = described_class.extract(short_url)
-        expect(result).to eq('0x60188b8e1234abcd:0x1234567890abcdef')
+        expect(result).to eq({
+          name: 'Ramen Shop',
+          latitude: 35.6812,
+          longitude: 139.7671
+        })
       end
     end
 

@@ -72,7 +72,6 @@ RSpec.describe Api::V1::ShopsController, type: :request do
     let(:user) { create(:user) }
     let(:google_map_url) { 'https://maps.app.goo.gl/dGfTAMwDfw29yLPc7' }
     let(:full_url) { 'https://www.google.com/maps/place/Ramen+Shop/@35.6812,139.7671,17z/data=!3m1!4b1!4m6!3m5!1s0x60188b8e1234abcd:0x1234567890abcdef!8m2!3d35.6812!4d139.7671' }
-    let(:place_id) { '0x60188b8e1234abcd:0x1234567890abcdef' }
     let(:api_key) { 'test_api_key' }
 
     before do
@@ -84,22 +83,21 @@ RSpec.describe Api::V1::ShopsController, type: :request do
     context 'with valid Google Maps URL' do
       let(:places_api_response) do
         {
-          displayName: { text: 'ラーメン太郎' },
-          formattedAddress: '東京都渋谷区道玄坂1-2-3',
-          nationalPhoneNumber: '03-1234-5678',
-          location: { latitude: 35.6812, longitude: 139.7671 }
+          places: [{
+            displayName: { text: 'ラーメン太郎' },
+            formattedAddress: '東京都渋谷区道玄坂1-2-3',
+            nationalPhoneNumber: '03-1234-5678',
+            location: { latitude: 35.6812, longitude: 139.7671 }
+          }]
         }.to_json
       end
 
       before do
-        stub_request(:get, "https://places.googleapis.com/v1/places/#{place_id}")
-          .with(
-            query: { languageCode: 'ja' },
-            headers: {
-              'X-Goog-Api-Key' => api_key,
-              'X-Goog-FieldMask' => 'displayName,formattedAddress,nationalPhoneNumber,location'
-            }
-          )
+        stub_request(:post, "https://places.googleapis.com/v1/places:searchText")
+          .with(headers: {
+            'X-Goog-Api-Key' => api_key,
+            'X-Goog-FieldMask' => 'places.displayName,places.formattedAddress,places.nationalPhoneNumber,places.location'
+          })
           .to_return(status: 200, body: places_api_response, headers: { 'Content-Type' => 'application/json' })
       end
 
@@ -144,14 +142,11 @@ RSpec.describe Api::V1::ShopsController, type: :request do
 
     context 'when Places API returns error' do
       before do
-        stub_request(:get, "https://places.googleapis.com/v1/places/#{place_id}")
-          .with(
-            query: { languageCode: 'ja' },
-            headers: {
-              'X-Goog-Api-Key' => api_key,
-              'X-Goog-FieldMask' => 'displayName,formattedAddress,nationalPhoneNumber,location'
-            }
-          )
+        stub_request(:post, "https://places.googleapis.com/v1/places:searchText")
+          .with(headers: {
+            'X-Goog-Api-Key' => api_key,
+            'X-Goog-FieldMask' => 'places.displayName,places.formattedAddress,places.nationalPhoneNumber,places.location'
+          })
           .to_return(status: 500, body: '', headers: {})
       end
 

@@ -3,10 +3,10 @@ require "json"
 
 module GoogleMaps
   class PlacesClient
-    PLACES_API_BASE_URL = "https://places.googleapis.com/v1/places"
-    FIELD_MASK = "displayName,formattedAddress,nationalPhoneNumber,location"
+    SEARCH_TEXT_URL = "https://places.googleapis.com/v1/places:searchText"
+    FIELD_MASK = "places.displayName,places.formattedAddress,places.nationalPhoneNumber,places.location"
 
-    def self.fetch_place_details(place_id)
+    def self.fetch_place_details(search_info)
       api_key = ENV["GOOGLE_MAPS_API_KEY"]
 
       if api_key.blank?
@@ -14,12 +14,25 @@ module GoogleMaps
         return nil
       end
 
-      uri = URI("#{PLACES_API_BASE_URL}/#{place_id}")
-      uri.query = URI.encode_www_form(languageCode: "ja")
+      uri = URI(SEARCH_TEXT_URL)
 
-      request = Net::HTTP::Get.new(uri)
+      request = Net::HTTP::Post.new(uri)
       request["X-Goog-Api-Key"] = api_key
       request["X-Goog-FieldMask"] = FIELD_MASK
+      request["Content-Type"] = "application/json"
+      request.body = {
+        textQuery: search_info[:name],
+        locationBias: {
+          circle: {
+            center: {
+              latitude: search_info[:latitude],
+              longitude: search_info[:longitude]
+            },
+            radius: 50.0
+          }
+        },
+        languageCode: "ja"
+      }.to_json
 
       response = Net::HTTP.start(uri.host, uri.port, use_ssl: true) { |http| http.request(request) }
       unless response.is_a?(Net::HTTPSuccess)
@@ -33,12 +46,18 @@ module GoogleMaps
         return nil
       end
 
+      place = data.dig(:places, 0)
+      if place.nil?
+        Rails.logger.error("Places API: no results found for #{search_info[:name]}")
+        return nil
+      end
+
       {
-        name: data.dig(:displayName, :text),
-        address: data[:formattedAddress],
-        phone_number: data[:nationalPhoneNumber],
-        latitude: data.dig(:location, :latitude),
-        longitude: data.dig(:location, :longitude)
+        name: place.dig(:displayName, :text),
+        address: place[:formattedAddress],
+        phone_number: place[:nationalPhoneNumber],
+        latitude: place.dig(:location, :latitude),
+        longitude: place.dig(:location, :longitude)
       }
     rescue StandardError => e
       Rails.logger.error("Failed to fetch place details: #{e.message}")
