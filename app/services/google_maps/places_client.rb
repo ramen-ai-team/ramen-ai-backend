@@ -3,7 +3,8 @@ require "json"
 
 module GoogleMaps
   class PlacesClient
-    PLACES_API_URL = "https://maps.googleapis.com/maps/api/place/details/json"
+    PLACES_API_BASE_URL = "https://places.googleapis.com/v1/places"
+    FIELD_MASK = "displayName,formattedAddress,nationalPhoneNumber,location"
 
     def self.fetch_place_details(place_id)
       api_key = ENV["GOOGLE_MAPS_API_KEY"]
@@ -13,34 +14,31 @@ module GoogleMaps
         return nil
       end
 
-      uri = URI(PLACES_API_URL)
-      params = {
-        place_id: place_id,
-        key: api_key,
-        fields: "name,formatted_address,formatted_phone_number,geometry",
-        language: "ja"
-      }
-      uri.query = URI.encode_www_form(params)
+      uri = URI("#{PLACES_API_BASE_URL}/#{place_id}")
+      uri.query = URI.encode_www_form(languageCode: "ja")
 
-      response = Net::HTTP.get_response(uri)
+      request = Net::HTTP::Get.new(uri)
+      request["X-Goog-Api-Key"] = api_key
+      request["X-Goog-FieldMask"] = FIELD_MASK
+
+      response = Net::HTTP.start(uri.host, uri.port, use_ssl: true) { |http| http.request(request) }
       unless response.is_a?(Net::HTTPSuccess)
-        Rails.logger.error("Places API HTTP error: #{response.code} #{response.message}")
+        Rails.logger.error("Places API HTTP error: #{response.code} #{response.message} - #{response.body}")
         return nil
       end
 
       data = JSON.parse(response.body, symbolize_names: true)
-      unless data[:status] == "OK"
-        Rails.logger.error("Places API status error: #{data[:status]} - #{data[:error_message]}")
+      if data[:error]
+        Rails.logger.error("Places API error: #{data.dig(:error, :status)} - #{data.dig(:error, :message)}")
         return nil
       end
 
-      result = data[:result]
       {
-        name: result[:name],
-        address: result[:formatted_address],
-        phone_number: result[:formatted_phone_number],
-        latitude: result.dig(:geometry, :location, :lat),
-        longitude: result.dig(:geometry, :location, :lng)
+        name: data.dig(:displayName, :text),
+        address: data[:formattedAddress],
+        phone_number: data[:nationalPhoneNumber],
+        latitude: data.dig(:location, :latitude),
+        longitude: data.dig(:location, :longitude)
       }
     rescue StandardError => e
       Rails.logger.error("Failed to fetch place details: #{e.message}")
