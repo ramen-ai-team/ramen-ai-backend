@@ -38,7 +38,6 @@ Rails.application.routes.draw do
         resources :noodles, only: [:index]
         resources :users, only: [:index]
         resources :menu_reports, only: [:index]
-        resources :reviews, only: [:index]
       end
     end
   end
