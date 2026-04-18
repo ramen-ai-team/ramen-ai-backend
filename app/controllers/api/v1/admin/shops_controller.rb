@@ -24,12 +24,17 @@ class Api::V1::Admin::ShopsController < Api::V1::Admin::ApplicationController
   end
 
   def create
-    @shop = Shop.new(shop_params)
+    form = ShopForm.new(google_map_url: params.dig(:shop, :google_map_url))
 
-    if @shop.save
-      render json: @shop, status: :created
+    if form.valid?
+      shop = form.save
+      if shop
+        render json: shop, status: :created
+      else
+        render json: { errors: form.errors.full_messages }, status: :service_unavailable
+      end
     else
-      render json: { errors: @shop.errors.full_messages }, status: :unprocessable_entity
+      render json: { errors: form.errors.full_messages }, status: :unprocessable_entity
     end
   end
 
@@ -53,6 +58,6 @@ class Api::V1::Admin::ShopsController < Api::V1::Admin::ApplicationController
   end
 
   def shop_params
-    params.require(:shop).permit(:name, :address, :google_map_url, :latitude, :longitude)
+    params.require(:shop).permit(:name, :address, :google_map_url)
   end
 end
