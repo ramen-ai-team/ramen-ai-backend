@@ -151,11 +151,17 @@ paths:
                 - error
               example:
                 error: Unauthorized
-  "/api/v1/admin/menu_reports":
+  "/api/v1/admin/users/{user_id}/menu_reports":
     get:
       summary: index
       tags:
       - Api::V1::Admin::MenuReport
+      parameters:
+      - name: user_id
+        in: path
+        required: true
+        schema:
+          type: integer
       responses:
         '200':
           description: returns empty array when no menu_reports exist
