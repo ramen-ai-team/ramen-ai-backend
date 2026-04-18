@@ -30,17 +30,19 @@ RSpec.describe ShopForm, type: :model do
       allow(ENV).to receive(:[]).with("GOOGLE_MAPS_API_KEY").and_return(api_key)
       stub_request(:get, google_map_url)
         .to_return(status: 301, headers: { 'Location' => full_url })
-      stub_request(:get, "https://maps.googleapis.com/maps/api/place/details/json")
-        .with(query: { place_id: place_id, key: api_key, fields: 'name,formatted_address,formatted_phone_number,geometry', language: 'ja' })
+      stub_request(:get, "https://places.googleapis.com/v1/places/#{place_id}")
+        .with(
+          query: { languageCode: 'ja' },
+          headers: {
+            'X-Goog-Api-Key' => api_key,
+            'X-Goog-FieldMask' => 'displayName,formattedAddress,nationalPhoneNumber,location'
+          }
+        )
         .to_return(status: 200, body: {
-          result: {
-            name: 'ラーメン太郎',
-            formatted_address: '東京都渋谷区道玄坂1-2-3',
-            formatted_phone_number: '03-1234-5678',
-            place_id: place_id,
-            geometry: { location: { lat: 35.6812, lng: 139.7671 } }
-          },
-          status: 'OK'
+          displayName: { text: 'ラーメン太郎' },
+          formattedAddress: '東京都渋谷区道玄坂1-2-3',
+          nationalPhoneNumber: '03-1234-5678',
+          location: { latitude: 35.6812, longitude: 139.7671 }
         }.to_json, headers: { 'Content-Type' => 'application/json' })
     end
 
@@ -96,8 +98,14 @@ RSpec.describe ShopForm, type: :model do
 
     context 'when Places API returns error' do
       before do
-        stub_request(:get, "https://maps.googleapis.com/maps/api/place/details/json")
-          .with(query: { place_id: place_id, key: api_key, fields: 'name,formatted_address,formatted_phone_number,geometry', language: 'ja' })
+        stub_request(:get, "https://places.googleapis.com/v1/places/#{place_id}")
+          .with(
+            query: { languageCode: 'ja' },
+            headers: {
+              'X-Goog-Api-Key' => api_key,
+              'X-Goog-FieldMask' => 'displayName,formattedAddress,nationalPhoneNumber,location'
+            }
+          )
           .to_return(status: 500, body: '', headers: {})
       end
 

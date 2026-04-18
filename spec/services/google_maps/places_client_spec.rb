@@ -12,20 +12,22 @@ RSpec.describe GoogleMaps::PlacesClient do
     context 'with valid place_id' do
       let(:response_body) do
         {
-          result: {
-            name: 'ラーメン太郎',
-            formatted_address: '東京都渋谷区道玄坂1-2-3',
-            formatted_phone_number: '03-1234-5678',
-            place_id: place_id,
-            geometry: { location: { lat: 35.6812, lng: 139.7671 } }
-          },
-          status: 'OK'
+          displayName: { text: 'ラーメン太郎' },
+          formattedAddress: '東京都渋谷区道玄坂1-2-3',
+          nationalPhoneNumber: '03-1234-5678',
+          location: { latitude: 35.6812, longitude: 139.7671 }
         }.to_json
       end
 
       before do
-        stub_request(:get, "https://maps.googleapis.com/maps/api/place/details/json")
-          .with(query: { place_id: place_id, key: api_key, fields: 'name,formatted_address,formatted_phone_number,geometry', language: 'ja' })
+        stub_request(:get, "https://places.googleapis.com/v1/places/#{place_id}")
+          .with(
+            query: { languageCode: 'ja' },
+            headers: {
+              'X-Goog-Api-Key' => api_key,
+              'X-Goog-FieldMask' => 'displayName,formattedAddress,nationalPhoneNumber,location'
+            }
+          )
           .to_return(status: 200, body: response_body, headers: { 'Content-Type' => 'application/json' })
       end
 
@@ -45,15 +47,24 @@ RSpec.describe GoogleMaps::PlacesClient do
     context 'with invalid place_id' do
       let(:response_body) do
         {
-          result: {},
-          status: 'INVALID_REQUEST'
+          error: {
+            code: 404,
+            message: 'Requested entity was not found.',
+            status: 'NOT_FOUND'
+          }
         }.to_json
       end
 
       before do
-        stub_request(:get, "https://maps.googleapis.com/maps/api/place/details/json")
-          .with(query: { place_id: place_id, key: api_key, fields: 'name,formatted_address,formatted_phone_number,geometry', language: 'ja' })
-          .to_return(status: 200, body: response_body, headers: { 'Content-Type' => 'application/json' })
+        stub_request(:get, "https://places.googleapis.com/v1/places/#{place_id}")
+          .with(
+            query: { languageCode: 'ja' },
+            headers: {
+              'X-Goog-Api-Key' => api_key,
+              'X-Goog-FieldMask' => 'displayName,formattedAddress,nationalPhoneNumber,location'
+            }
+          )
+          .to_return(status: 404, body: response_body, headers: { 'Content-Type' => 'application/json' })
       end
 
       it 'returns nil' do
@@ -64,8 +75,14 @@ RSpec.describe GoogleMaps::PlacesClient do
 
     context 'when API returns error status' do
       before do
-        stub_request(:get, "https://maps.googleapis.com/maps/api/place/details/json")
-          .with(query: { place_id: place_id, key: api_key, fields: 'name,formatted_address,formatted_phone_number,geometry', language: 'ja' })
+        stub_request(:get, "https://places.googleapis.com/v1/places/#{place_id}")
+          .with(
+            query: { languageCode: 'ja' },
+            headers: {
+              'X-Goog-Api-Key' => api_key,
+              'X-Goog-FieldMask' => 'displayName,formattedAddress,nationalPhoneNumber,location'
+            }
+          )
           .to_return(status: 500, body: '', headers: {})
       end
 
